@@ -1,3 +1,42 @@
+/* Quita los márgenes de relleno y asegura box-sizing correcto */
+body, html {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Ajusta box-sizing para todos los elementos */
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+/* Estilo específico para first-div */
+.first-div {
+  background-image: url('/src/assets/image4.png');
+  background-repeat: no-repeat;
+  background-position: right bottom; /* Ajusta según tus necesidades */
+  background-size: 40%; /* Ajusta el tamaño de la imagen de fondo */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  height: 100vh; /* Asegúrate de que el div cubra toda la altura de la pantalla */
+  width: 100vw; /* Asegúrate de que el div cubra todo el ancho de la pantalla */
+  padding: 0;
+  margin: 0; /* Asegúrate de que no haya margen en el div */
+  overflow: hidden; /* Evita las barras de desplazamiento */
+  position: relative; /* Asegúrate de que no haya desbordamiento posicional */
+
+}
+/* Estilo para el segundo div */
+.second-div {
+  width: 80%;
+  height: 80%;
+  margin: 0 auto;
+  overflow: hidden; /* Asegúrate de que no haya desbordamiento */
+}
+
 .App {
   text-align: center;
 }
@@ -37,21 +76,14 @@
   }
 }
 
-/* 
-Cambios realizados por MAHL 
-Cuerpo del DIV
-*/
-.first-div {
-  padding-top: 0px; 
-  height: 88.7vh;
-}
-
 .second-div {
   width: 80%;
   height: 80%;
   margin: 0 auto;
 }
 
+
+/* Estilo para el cuadro dentro de second-div */
 .box-div {
   border: 1px solid #ccc;
   border-radius: 20px;
@@ -59,4 +91,5 @@ Cuerpo del DIV
   box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);
   height: 100%;
   background-color: #fff;
+  overflow: hidden; /* Asegúrate de que no haya desbordamiento */
 }

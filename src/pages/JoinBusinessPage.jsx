@@ -1,6 +1,5 @@
 import React from 'react'
 import { TextField, Button, Box } from '@mui/material';
-
 import '../css/App.css'
 
 function JoinBusinessPage() {

@@ -1,19 +1,53 @@
 import React from 'react';
-import '../css/App.css'
+import HeaderP from '../components/HeaderP';
+import Button from '@mui/material/Button'; 
+import '../css/Home.css';
 
-const HomePage = () => {
+function HomePage() {
+  const scrollToBenefits = () => {
+    document.getElementById('benefits').scrollIntoView({ behavior: 'smooth' });
+  };
 
   return (
-
-    <div className='first-div'>
-      <div className='second-div'>
-        <div className='box-div'>
-          <h2>Vista de servicios</h2>
-          <p>Bienvenido a la página de inicio.</p>
+    <div className="home-container">
+      <HeaderP />
+      <div className="hero-section">
+        <h1>Community: Donde cada <br />interacción cuenta</h1>
+        <Button variant="contained" onClick={scrollToBenefits}>
+          Descubra la comunidad
+        </Button>
+      </div>
+      <div className="community-content">
+        <div className="community-benefits" id="benefits">
+          <h2>Beneficios de la comunidad</h2>
+          <ul>
+            <li>Conexión con otros usuarios</li>
+            <li>Compartir ideas y experiencias</li>
+            <li>Aprender de otros</li>
+            <li>Sentirse apoyado y valorado</li>
+            <li>Hacer un impacto positivo en el mundo</li>
+            
+          </ul>
+          <ul>
+            <li>Conexión con otros usuarios</li>
+            <li>Compartir ideas y experiencias</li>
+            <li>Aprender de otros</li>
+            <li>Sentirse apoyado y valorado</li>
+            <li>Hacer un impacto positivo en el mundo</li>
+            
+          </ul>
+          <ul>
+            <li>Conexión con otros usuarios</li>
+            <li>Compartir ideas y experiencias</li>
+            <li>Aprender de otros</li>
+            <li>Sentirse apoyado y valorado</li>
+            <li>Hacer un impacto positivo en el mundo</li>
+            
+          </ul>
         </div>
       </div>
     </div>
   );
-};
+}
 
 export default HomePage;
