@@ -1,10 +1,15 @@
 import React from 'react';
-import { TextField, InputAdornment, IconButton } from '@mui/material';
+import { TextField, InputAdornment, IconButton, TextFieldProps } from '@mui/material';
 import { Search as SearchIcon } from '@mui/icons-material';
 
 const tealBlue = '#2EC6BD';
 
-const SearchBar = ({ width, maxWidth }) => {
+interface SearchBarProps {
+  width?: string | number;
+  maxWidth?: string | number;
+}
+
+const SearchBar: React.FC<SearchBarProps> = ({ width, maxWidth }) => {
   return (
     <TextField
       variant="outlined"

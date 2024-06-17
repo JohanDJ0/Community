@@ -3,9 +3,9 @@ import HeaderP from '../components/HeaderP';
 import Button from '@mui/material/Button'; 
 import '../css/Home.css';
 
-function HomePage() {
-  const scrollToBenefits = () => {
-    document.getElementById('benefits').scrollIntoView({ behavior: 'smooth' });
+const HomePage: React.FC = () => {
+  const scrollToBenefits = (): void => {
+    document.getElementById('benefits')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
@@ -26,7 +26,6 @@ function HomePage() {
             <li>Aprender de otros</li>
             <li>Sentirse apoyado y valorado</li>
             <li>Hacer un impacto positivo en el mundo</li>
-            
           </ul>
           <ul>
             <li>Conexión con otros usuarios</li>
@@ -34,7 +33,6 @@ function HomePage() {
             <li>Aprender de otros</li>
             <li>Sentirse apoyado y valorado</li>
             <li>Hacer un impacto positivo en el mundo</li>
-            
           </ul>
           <ul>
             <li>Conexión con otros usuarios</li>
@@ -42,7 +40,6 @@ function HomePage() {
             <li>Aprender de otros</li>
             <li>Sentirse apoyado y valorado</li>
             <li>Hacer un impacto positivo en el mundo</li>
-            
           </ul>
         </div>
       </div>

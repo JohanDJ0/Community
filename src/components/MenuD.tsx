@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -11,29 +11,42 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Groups2SharpIcon from '@mui/icons-material/Groups2Sharp';
-import { Typography } from '@mui/material';
+import Typography from '@mui/material/Typography';
 import PersonSharpIcon from '@mui/icons-material/PersonSharp';
 import EmojiEventsSharpIcon from '@mui/icons-material/EmojiEventsSharp';
 import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import GTranslateSharpIcon from '@mui/icons-material/GTranslateSharp';
 import LoginRoundedIcon from '@mui/icons-material/LoginRounded';
-import logo from '../assets/Logo.png';
 import PersonIcon from '@mui/icons-material/Person';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import SearchIcon from '@mui/icons-material/Search';
+import logo from '../assets/Logo.png';
+import { useAuth0 } from '@auth0/auth0-react';
 
-const MenuD = () => {
-  const [open, setOpen] = React.useState(false);
-  const [selectedLanguage, setSelectedLanguage] = React.useState('');
+const MenuD: React.FC = () => {
+  const { logout } = useAuth0();
 
-  const toggleDrawer = (newOpen) => () => {
+
+  
+  const [open, setOpen] = useState<boolean>(false);
+  const [selectedLanguage, setSelectedLanguage] = useState<string>('');
+
+  const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
   };
 
-  const handleLanguageChange = (event) => {
-    setSelectedLanguage(event.target.value);
+  const handleLanguageChange = (event: SelectChangeEvent<string>) => {
+    setSelectedLanguage(event.target.value as string);
+  };
+
+  const handleLogout = () => {
+    logout({
+      logoutParams: {
+        returnTo: window.location.origin,
+      },
+    });
   };
 
   const DrawerList = (
@@ -93,7 +106,7 @@ const MenuD = () => {
         <ListItem key='Unirse a un negocio' disablePadding>
           <ListItemButton component={Link} to="/JoinBusiness">
             <ListItemIcon>
-              <SearchIcon/>
+              <SearchIcon />
             </ListItemIcon>
             <ListItemText primary='Unirse a un negocio' />
           </ListItemButton>
@@ -121,11 +134,11 @@ const MenuD = () => {
           </ListItem>
 
           <ListItem key='Cerrar sesión' disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
+            <ListItemButton onClick={handleLogout}>
+              <ListItemIcon >
                 <LoginRoundedIcon />
               </ListItemIcon>
-              <ListItemText primary="Cerrar sesión"/>
+              <ListItemText primary="Cerrar sesión" />
             </ListItemButton>
           </ListItem>
 

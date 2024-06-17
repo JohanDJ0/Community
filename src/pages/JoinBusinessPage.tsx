@@ -1,6 +1,6 @@
-import React from 'react'
+import React from 'react';
 import { TextField, Button, Box } from '@mui/material';
-import '../css/App.css'
+import '../css/App.css';
 
 function JoinBusinessPage() {
   return (
@@ -10,27 +10,29 @@ function JoinBusinessPage() {
           <h2>Unirse a un negocio</h2>
           <Box mt={2}>
             <TextField
-              laber="Nombre del negocio"
+              label="Nombre del negocio"  // Corregido: 'laber' a 'label'
               variant="filled"
               fullWidth
-              stryle={{ marginBottom: '10px' }}
+              style={{ marginBottom: '10px' }}  // Corregido: 'stryle' a 'style'
             />
           </Box>
           <Box mt={2} display="flex" justifyContent="center">
-            <Button variant='contained'
+            <Button
+              variant='contained'
               sx={{
-                backgroundColor: '#2EC6BD', '&:hover': {
+                backgroundColor: '#2EC6BD',
+                '&:hover': {
                   backgroundColor: '#2EC6BD',
                 },
-              }}>
+              }}
+            >
               Unirse
             </Button>
-
           </Box>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default JoinBusinessPage
+export default JoinBusinessPage;

@@ -4,10 +4,14 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import logo from '../img/Abstract Colorful Technology Solutions Professional Logo (1).png';
+import logo from '../img/Abstract Colorful Technology Solutions Professional Logo (1).png'; 
 import { Link } from 'react-router-dom';
+import {useAuth0} from '@auth0/auth0-react'
 
-export default function MenuP() {
+const MenuP: React.FC = () => {
+const { loginWithRedirect} = useAuth0()
+
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{ backgroundColor: 'white' }}> 
@@ -19,10 +23,10 @@ export default function MenuP() {
             </Typography>
           </Box>
           <Box>
-            <Button component={Link} to="/login" color="inherit" sx={{ color: 'black' }}>
+            <Button onClick={() => loginWithRedirect()} color="inherit" sx={{ color: 'black' }}>
               Sign in
             </Button>
-            <Link to="/Login" style={{ color: 'black', textDecoration: 'none', marginLeft: '10px' }}>
+            <Link to="/signup" style={{ color: 'black', textDecoration: 'none', marginLeft: '10px' }}>
               Sign up
             </Link>
           </Box>
@@ -31,3 +35,5 @@ export default function MenuP() {
     </Box>
   );
 }
+
+export default MenuP;
