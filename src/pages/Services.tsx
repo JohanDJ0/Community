@@ -9,6 +9,7 @@ const Services = () => {
         <div className='box-div'>
           <h2>Vista de servicios</h2>
           <p>Bienvenido a la página de inicio.</p>
+          
         </div>
       </div>
     </div>  )

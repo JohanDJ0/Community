@@ -16,7 +16,9 @@ root.render(
   <React.StrictMode>
     <Auth0Provider 
     domain={domain} 
-    clientId={clientId} redirectUri={window.location.origin}>
+    clientId={clientId} 
+    redirectUri="http://localhost:3000/Profile"
+    >
     <App />
     </Auth0Provider>
   </React.StrictMode>

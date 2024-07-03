@@ -12,6 +12,8 @@ import Login from './pages/Login';
 const Layout = ({ children }) => {
   const location = useLocation();
 
+
+  
   return (
     <>
       {location.pathname !== '/' && location.pathname !== '/Login' && <Header />}
@@ -23,6 +25,9 @@ const Layout = ({ children }) => {
     </>
   );
 };
+
+
+
 
 const App = () => {
   return (

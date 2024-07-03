@@ -12,7 +12,6 @@ body, html {
   box-sizing: inherit;
 }
 
-/* Estilo específico para first-div */
 .first-div {
   background-image: url('/src/assets/image4.png');
   background-repeat: no-repeat;
@@ -27,7 +26,6 @@ body, html {
   margin: 0; /* Asegúrate de que no haya margen en el div */
   overflow: hidden; /* Evita las barras de desplazamiento */
   position: relative; /* Asegúrate de que no haya desbordamiento posicional */
-
 }
 /* Estilo para el segundo div */
 .second-div {
@@ -79,17 +77,15 @@ body, html {
 .second-div {
   width: 80%;
   height: 80%;
-  margin: 0 auto;
 }
 
 
 /* Estilo para el cuadro dentro de second-div */
 .box-div {
-  border: 1px solid #ccc;
+  border: 3px solid #ccc;
   border-radius: 20px;
-  padding: 20px;
-  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);
+  padding: 50px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); /* Sombra más pronunciada */
   height: 100%;
   background-color: #fff;
-  overflow: hidden; /* Asegúrate de que no haya desbordamiento */
 }

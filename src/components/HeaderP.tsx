@@ -5,12 +5,11 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import logo from '../img/Abstract Colorful Technology Solutions Professional Logo (1).png'; 
-import { Link } from 'react-router-dom';
 import {useAuth0} from '@auth0/auth0-react'
+import { Stack } from '@mui/material';
 
 const MenuP: React.FC = () => {
 const { loginWithRedirect} = useAuth0()
-
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -23,12 +22,15 @@ const { loginWithRedirect} = useAuth0()
             </Typography>
           </Box>
           <Box>
-            <Button onClick={() => loginWithRedirect()} color="inherit" sx={{ color: 'black' }}>
-              Sign in
+            <Stack spacing={2} direction="row">
+            <Button variant="contained" onClick={() => loginWithRedirect()} color="inherit" sx={{ color: 'black' }}>
+              Login
             </Button>
-            <Link to="/signup" style={{ color: 'black', textDecoration: 'none', marginLeft: '10px' }}>
+            <Button variant="outlined" onClick={() => loginWithRedirect()} color="inherit" sx={{ color: 'black' }}>
               Sign up
-            </Link>
+            </Button>
+            </Stack>
+
           </Box>
         </Toolbar>
       </AppBar>
