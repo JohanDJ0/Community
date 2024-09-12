@@ -53,7 +53,7 @@ const MenuD: React.FC = () => {
     <Box sx={{ width: 250, display: 'flex', flexDirection: 'column', height: '100%' }} role="presentation" onClick={toggleDrawer(false)}>
       <Box sx={{ display: 'flex', alignItems: 'center', padding: 2 }}>
         <img src={logo} alt="logo" style={{ width: 50, height: 50, marginRight: 10 }} />
-        <Typography variant="h5">Community</Typography>
+        <Typography variant="h5" sx={{ color: 'black' ,fontWeight: 'bold'}} >Community</Typography>
       </Box>
       <List>
         <ListItem key='Servicios' disablePadding>

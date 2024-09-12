@@ -10,6 +10,10 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import { styled } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
+import Popover from '@mui/material/Popover';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
 
 // Estilos para el componente Search
 const Search = styled('div')(({ theme }) => ({
@@ -52,12 +56,40 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const Header: React.FC = () => {
-  const [open, setOpen] = useState(false);
+// Estilos para el componente de notificaciones
+const NotificationsWrapper = styled('div')(({ theme }) => ({
+  width: '300px',
+  maxHeight: '400px',
+  overflowY: 'auto',
+}));
 
-  const toggleDrawer = (newOpen: boolean) => () => {
-    setOpen(newOpen);
+const Notifications = () => (
+  <NotificationsWrapper>
+    <List>
+      <ListItem button>
+        <ListItemText primary="Flexible Identifiers Important Update: New Error Codes and Improved Signup Experience for Organization Invitations" />
+      </ListItem>
+      <ListItem button>
+        <ListItemText primary="A new profile for Access Tokens is now Generally Available" />
+      </ListItem>
+      {/* Añadir más notificaciones aquí */}
+    </List>
+  </NotificationsWrapper>
+);
+
+const Header: React.FC = () => {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
   };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -81,8 +113,14 @@ const Header: React.FC = () => {
           <Box sx={{ flexGrow: 1 }} />
 
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <IconButton size="large" aria-label="show 17 new notifications" color="inherit" sx={{ color: 'black' }}>
-              <Badge badgeContent={17} color="info">
+            <IconButton
+              size="large"
+              aria-label="show 17 new notifications"
+              color="inherit"
+              sx={{ color: 'black' }}
+              onClick={handleClick}
+            >
+              <Badge badgeContent={2} color="info">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
@@ -95,14 +133,32 @@ const Header: React.FC = () => {
               aria-haspopup="true"
               color="inherit"
               sx={{ color: 'black' }}
+              onClick={handleClick}
             >
-              <Badge badgeContent={17} color="info">
+              <Badge badgeContent={2} color="info">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
           </Box>
         </Toolbar>
       </AppBar>
+
+      <Popover
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
+        <Notifications />
+      </Popover>
     </Box>
   );
 };

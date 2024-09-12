@@ -17,7 +17,7 @@ const { loginWithRedirect} = useAuth0()
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <img src={logo} alt="Logo" style={{ marginRight: '10px', height: '40px' }} />
-            <Typography variant="h6" component="div" sx={{ color: 'black' }}> 
+            <Typography variant="h6" component="div" sx={{ color: 'black' ,fontWeight: 'bold'}}> 
               Community 
             </Typography>
           </Box>

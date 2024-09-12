@@ -8,12 +8,12 @@ import ProfilePage from './pages/ProfilePage';
 import Header from './components/Header';
 import Services from './pages/Services';
 import Login from './pages/Login';
-
+import ServiceDetail from './pages/ServiceDetail';
 const Layout = ({ children }) => {
   const location = useLocation();
 
 
-  
+
   return (
     <>
       {location.pathname !== '/' && location.pathname !== '/Login' && <Header />}
@@ -41,6 +41,8 @@ const App = () => {
           <Route path="/Profile" element={<ProfilePage />} />
           <Route path="/Services" element={<Services />} />
           <Route path="/Login" element={<Login />} />
+          <Route path="/services/:id" element={<ServiceDetail />} />
+
         </Routes>
       </Layout>
     </Router>
