@@ -24,14 +24,29 @@ import DarkModeIcon from '@mui/icons-material/DarkMode';
 import SearchIcon from '@mui/icons-material/Search';
 import logo from '../assets/Logo.png';
 import { useAuth0 } from '@auth0/auth0-react';
+import { ThemeProvider, createTheme, useTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 
 const MenuD: React.FC = () => {
   const { logout } = useAuth0();
-
-
-  
   const [open, setOpen] = useState<boolean>(false);
   const [selectedLanguage, setSelectedLanguage] = useState<string>('');
+  const [mode, setMode] = useState<'light' | 'dark'>('light');
+  
+  const theme = createTheme({
+    palette: {
+      mode,
+      ...(mode === 'dark' && {
+        background: {
+          default: '#000000', // Color de fondo negro personalizado
+          paper: '#1E1E1E',   // Negro más suave para elementos como tarjetas
+        },
+        text: {
+          primary: '#ffffff', // Asegurar que el texto sea legible en modo oscuro
+        },
+      }),
+    },
+  });
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
@@ -53,7 +68,7 @@ const MenuD: React.FC = () => {
     <Box sx={{ width: 250, display: 'flex', flexDirection: 'column', height: '100%' }} role="presentation" onClick={toggleDrawer(false)}>
       <Box sx={{ display: 'flex', alignItems: 'center', padding: 2 }}>
         <img src={logo} alt="logo" style={{ width: 50, height: 50, marginRight: 10 }} />
-        <Typography variant="h5" sx={{ color: 'black' ,fontWeight: 'bold'}} >Community</Typography>
+        <Typography variant="h5" sx={{ color: 'black', fontWeight: 'bold' }}>Community</Typography>
       </Box>
       <List>
         <ListItem key='Servicios' disablePadding>
@@ -62,7 +77,7 @@ const MenuD: React.FC = () => {
               <Groups2SharpIcon />
             </ListItemIcon>
             <ListItemText primary='Servicios' />
-          </ListItemButton >
+          </ListItemButton>
         </ListItem>
 
         <ListItem key='Seguidos' disablePadding>
@@ -114,13 +129,12 @@ const MenuD: React.FC = () => {
       </List>
       <Box sx={{ mt: 'auto' }}>
         <List>
-
           <ListItem key='Modo oscuro' disablePadding>
-            <ListItemButton>
+            <ListItemButton onClick={() => setMode(mode === 'light' ? 'dark' : 'light')}>
               <ListItemIcon>
                 <DarkModeIcon />
               </ListItemIcon>
-              <ListItemText primary='Modo oscuro' />
+              <ListItemText primary={`Modo ${mode === 'light' ? 'oscuro' : 'claro'}`} />
             </ListItemButton>
           </ListItem>
 
@@ -141,14 +155,14 @@ const MenuD: React.FC = () => {
               <ListItemText primary="Cerrar sesión" />
             </ListItemButton>
           </ListItem>
-
         </List>
       </Box>
     </Box>
   );
 
   return (
-    <div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
       <IconButton
         edge="start"
         color="inherit"
@@ -160,7 +174,7 @@ const MenuD: React.FC = () => {
       <Drawer open={open} onClose={toggleDrawer(false)}>
         {DrawerList}
       </Drawer>
-    </div>
+    </ThemeProvider>
   );
 };
 

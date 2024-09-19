@@ -10,10 +10,10 @@ function JoinBusinessPage() {
           <h2>Unirse a un negocio</h2>
           <Box mt={2}>
             <TextField
-              label="Nombre del negocio"  // Corregido: 'laber' a 'label'
+              label="Nombre del negocio"  
               variant="filled"
               fullWidth
-              style={{ marginBottom: '10px' }}  // Corregido: 'stryle' a 'style'
+              style={{ marginBottom: '10px' }}  
             />
           </Box>
           <Box mt={2} display="flex" justifyContent="center">

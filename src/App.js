@@ -42,7 +42,6 @@ const App = () => {
           <Route path="/Services" element={<Services />} />
           <Route path="/Login" element={<Login />} />
           <Route path="/services/:id" element={<ServiceDetail />} />
-
         </Routes>
       </Layout>
     </Router>

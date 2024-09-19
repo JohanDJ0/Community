@@ -18,7 +18,6 @@ function ProfilePage() {
                 <p>{user?.email}</p>
               </Stack>
             </Stack>
-            
           </div>
         </div>
       </div>

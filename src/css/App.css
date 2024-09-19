@@ -15,17 +15,14 @@ body, html {
 .first-div {
   background-image: url('/src/assets/image4.png');
   background-repeat: no-repeat;
-  background-position: right bottom; /* Ajusta según tus necesidades */
-  background-size: 40%; /* Ajusta el tamaño de la imagen de fondo */
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  height: 100vh; /* Asegúrate de que el div cubra toda la altura de la pantalla */
-  width: 100vw; /* Asegúrate de que el div cubra todo el ancho de la pantalla */
+  background-position: right bottom;
+  background-size: 40%;
+  height: 100vh;
+  width: 100vw;
   padding: 0;
-  margin: 0; /* Asegúrate de que no haya margen en el div */
-  overflow: hidden; /* Evita las barras de desplazamiento */
-  position: relative; /* Asegúrate de que no haya desbordamiento posicional */
+  margin: 0;
+  overflow: hidden;
+  position: relative;
 }
 /* Estilo para el segundo div */
 .second-div {
@@ -57,7 +54,6 @@ body, html {
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
 }
 
 .App-link {
@@ -76,14 +72,22 @@ body, html {
 .second-div {
   width: 80%;
   height: 80%;
+  margin: 0 auto;
+  overflow: auto; /* Permite que se muestre el scroll si es necesario */
 }
+
 
 
 /* Estilo para el cuadro dentro de second-div */
+/* Elimina el fondo blanco estático para que pueda ajustarse al tema dinámicamente */
 .box-div {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Distribuye espacio entre elementos */
   border: 3px solid #ccc;
   border-radius: 20px;
-  padding: 50px;
+  padding: 20px; /* Ajusta el padding para mejor distribución */
   height: 100%;
-  background-color: #fff;
+  box-sizing: border-box;
 }
+

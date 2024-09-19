@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Card, CardMedia, CardContent, Typography,Box  } from '@mui/material';
+import { Card, CardMedia, CardContent, Typography, Box } from '@mui/material';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import GradeIcon from '@mui/icons-material/Grade';
 import ShareIcon from '@mui/icons-material/Share';
 import BackHandIcon from '@mui/icons-material/BackHand';
+import Rating from '@mui/material/Rating';
+
+interface Novedad {
+  name: string;
+  description: string;
+}
 
 interface ServiceDetailProps {
   id: number;
@@ -13,6 +19,7 @@ interface ServiceDetailProps {
   image: string | null | false;  // Permitir que la imagen sea null o false
   qualification: number;
   description: string;
+  novedades: Novedad[];
 }
 
 const ServiceDetail: React.FC = () => {
@@ -56,13 +63,16 @@ const ServiceDetail: React.FC = () => {
     <div className='first-div'>
       <div className='second-div'>
         <div className='box-div'>
-          <Card>
+          {/* Contenedor con scroll para imagen y contenido */}
+          <Card style={{ maxHeight: '500px', overflowY: 'auto' }}>
             <Box position="relative" width="100%" height="300px">
               <CardMedia
                 component="img"
                 height="300"
-                image={service.image ? ` data:image/jpg;base64,${atob(service.image)}` : "https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg"}
+                image={service.image ? `data:image/jpg;base64,${atob(service.image)}` : "https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg"}
                 alt={service.name}
+                className='image-service'
+                style={{ filter: 'brightness(0.7)' }}
               />
               <Typography
                 variant="h1"
@@ -87,19 +97,40 @@ const ServiceDetail: React.FC = () => {
                   padding: '5px',
                 }}
               >
-                Calificación: {service.qualification}
-
+                <Rating name="read-only" value={service.qualification} readOnly />
               </Typography>
             </Box>
 
+            {/* Contenido desplazable de la tarjeta */}
             <CardContent>
+              <Typography variant="body2" color="text.secondary" align='left' paddingBottom={'5px'}>
+                Descripción: {service.description}
+              </Typography>
+
               <Stack spacing={2} direction="row">
+                <Button variant="contained" startIcon={<GradeIcon />}>Novedades</Button>
                 <Button variant="contained" startIcon={<GradeIcon />}>Reseñas</Button>
                 <Button variant="contained" startIcon={<BackHandIcon />}>Propuestas</Button>
                 <Button variant="outlined" startIcon={<ShareIcon />}>Compartir</Button>
               </Stack>
-              <Typography variant="body2" color="text.secondary">
-                Descripción: {service.description}
+              
+
+              <Typography align='left' paddingTop={'10px'}>
+                {/* Aquí se muestran las novedades */}
+                {service.novedades && service.novedades.length > 0 ? (
+                  service.novedades.map((novedad, index) => (
+                    <div key={index}>
+                      <Typography variant="subtitle1" fontWeight="bold">
+                        {novedad.name} 
+                      </Typography>
+                      <Typography variant="body2">
+                        {novedad.description}
+                      </Typography>
+                    </div>
+                  ))
+                ) : (
+                  <Typography variant="body2">No hay novedades disponibles.</Typography>
+                )}
               </Typography>
             </CardContent>
           </Card>
