@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import HeaderP from '../components/HeaderP';
+import HeaderP from '../../components/HeaderP';
 import Button from '@mui/material/Button';
-import '../css/Home.css';
+import '../../css/Home.css';
 import { Typography, Box } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import ImageCarousel from "../components/ImageCarousel";
+import ImageCarousel from "../../components/ImageCarousel";
 import { Card, CardContent } from "@mui/material";
 import Footer from 'components/Footer';
 const HomePage: React.FC = () => {

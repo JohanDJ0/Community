@@ -31,7 +31,6 @@ body.default {
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
 }
 
 .App-link {
@@ -65,5 +64,4 @@ body.default {
   padding: 20px;
   box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);
   height: 100%;
-  background-color: #fff;
 } 

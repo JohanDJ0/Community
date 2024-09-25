@@ -56,7 +56,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-// Estilos para el componente de notificaciones
 const NotificationsWrapper = styled('div')(({ theme }) => ({
   width: '300px',
   maxHeight: '400px',
@@ -72,7 +71,6 @@ const Notifications = () => (
       <ListItem button>
         <ListItemText primary="A new profile for Access Tokens is now Generally Available" />
       </ListItem>
-      {/* Añadir más notificaciones aquí */}
     </List>
   </NotificationsWrapper>
 );

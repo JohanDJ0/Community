@@ -5,11 +5,21 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import logo from '../img/Abstract Colorful Technology Solutions Professional Logo (1).png';
-import { useAuth0 } from '@auth0/auth0-react'
+import { useAuth0 } from '@auth0/auth0-react';
 import { Stack } from '@mui/material';
 
 const MenuP: React.FC = () => {
-  const { loginWithRedirect } = useAuth0()
+  const { loginWithRedirect } = useAuth0();
+
+  const handleSignUp = () => {
+    // Guarda la información de que el usuario se está registrando en localStorage
+    localStorage.setItem('isSignUp', 'true');
+    loginWithRedirect({
+      authorizationParams: {
+        screen_hint: 'signup',
+      },
+    });
+  };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -33,27 +43,18 @@ const MenuP: React.FC = () => {
               </Button>
               <Button
                 variant="outlined"
-                onClick={() =>
-                  loginWithRedirect({
-                    authorizationParams: {
-                      screen_hint: 'signup',
-                    },
-                  })
-                }
+                onClick={handleSignUp}
                 color="inherit"
                 sx={{ color: 'black' }}
               >
                 Sign up
               </Button>
-
-
             </Stack>
-
           </Box>
         </Toolbar>
       </AppBar>
     </Box>
   );
-}
+};
 
 export default MenuP;

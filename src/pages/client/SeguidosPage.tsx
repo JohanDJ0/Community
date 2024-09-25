@@ -1,12 +1,12 @@
 import React from 'react';
-import '../css/App.css'
+import '../../css/App.css';
 
-const Rewards = () => {
+const Seguidos = () => {
   return (
     <div className='first-div'>
       <div className='second-div'>
         <div className='box-div'>
-          <h2>Vista de Recompensas</h2>
+          <h2>Vista de Seguidos</h2>
           {/*<MenuD />*/}
           <p>Bienvenido a la página de inicio.</p>
         </div>
@@ -15,4 +15,4 @@ const Rewards = () => {
   );
 };
 
-export default Rewards;
+export default Seguidos;

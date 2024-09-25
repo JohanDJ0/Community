@@ -129,14 +129,14 @@ const MenuD: React.FC = () => {
       </List>
       <Box sx={{ mt: 'auto' }}>
         <List>
-          <ListItem key='Modo oscuro' disablePadding>
-            <ListItemButton onClick={() => setMode(mode === 'light' ? 'dark' : 'light')}>
-              <ListItemIcon>
-                <DarkModeIcon />
-              </ListItemIcon>
-              <ListItemText primary={`Modo ${mode === 'light' ? 'oscuro' : 'claro'}`} />
-            </ListItemButton>
-          </ListItem>
+        <ListItem key='Modo oscuro' disablePadding>
+      <ListItemButton onClick={() => setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'))}>
+        <ListItemIcon>
+          <DarkModeIcon />
+        </ListItemIcon>
+        <ListItemText primary={`Modo ${mode === 'light' ? 'oscuro' : 'claro'}`} />
+      </ListItemButton>
+    </ListItem>
 
           <ListItem key='Perfil' disablePadding>
             <ListItemButton component={Link} to="/Profile">

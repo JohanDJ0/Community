@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import '../css/App.css';
 import { Card, CardMedia, CardContent, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-
+import '../../css/App.css';
 interface Service {
   id: number;
   name: string;

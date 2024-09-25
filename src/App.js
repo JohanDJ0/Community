@@ -1,14 +1,17 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
-import HomePage from './pages/HomePage';
-import SeguidosPage from './pages/SeguidosPage';
-import RewardsPage from './pages/RewardsPage';
-import JoinBusinessPage from './pages/JoinBusinessPage';
-import ProfilePage from './pages/ProfilePage';
+import HomePage from './pages/client/HomePage';
+import SeguidosPage from './pages/client/SeguidosPage';
+import RewardsPage from './pages/client/RewardsPage';
+import JoinBusinessPage from './pages/client/JoinBusinessPage';
+import ProfilePage from './pages/client/ProfilePage';
 import Header from './components/Header';
-import Services from './pages/Services';
-import Login from './pages/Login';
-import ServiceDetail from './pages/ServiceDetail';
+import Services from './pages/client/Services';
+import Login from './pages/client/Login';
+import ServiceDetail from './pages/client/ServiceDetail';
+import CrearServicePage from './pages/owner/CrearServicePage';
+
+
 const Layout = ({ children }) => {
   const location = useLocation();
 
@@ -42,6 +45,7 @@ const App = () => {
           <Route path="/Services" element={<Services />} />
           <Route path="/Login" element={<Login />} />
           <Route path="/services/:id" element={<ServiceDetail />} />
+          <Route path='/crearservice' element={<CrearServicePage />} />
         </Routes>
       </Layout>
     </Router>

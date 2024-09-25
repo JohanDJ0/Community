@@ -64,7 +64,7 @@ const ImageCarousel: React.FC = () => {
         </div>
         <div>
           <img
-            src="https://w.wallhaven.cc/full/83/wallhaven-83gkd1.jpg"
+            src="https://w.wallhaven.cc/full/9d/wallhaven-9dp3y1.jpg"
             alt="Imagen 4"
             style={imageStyle}
           />
