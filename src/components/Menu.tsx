@@ -12,13 +12,19 @@ const MenuP: React.FC = () => {
   const { loginWithRedirect } = useAuth0();
 
   const handleSignUp = () => {
-    // Guarda la información de que el usuario se está registrando en localStorage
     localStorage.setItem('isSignUp', 'true');
+
+    // Redirige a la vista /VistaRol después de registrarse
     loginWithRedirect({
       authorizationParams: {
         screen_hint: 'signup',
+        redirect_uri: `${window.location.origin}/VistaRol`,
       },
     });
+  };
+
+  const handleLogin = () => {
+    loginWithRedirect(); // Solo maneja el inicio de sesión
   };
 
   return (
@@ -35,7 +41,7 @@ const MenuP: React.FC = () => {
             <Stack spacing={2} direction="row">
               <Button
                 variant="contained"
-                onClick={() => loginWithRedirect()}
+                onClick={handleLogin}
                 color="inherit"
                 sx={{ color: 'black' }}
               >

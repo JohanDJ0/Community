@@ -40,7 +40,7 @@ const ImageCarousel: React.FC = () => {
       <Slider {...settings}>
         <div>
           <img
-            src="https://w.wallhaven.cc/full/9d/wallhaven-9dr2xk.png"
+            src="https://w.wallhaven.cc/full/ex/wallhaven-exmxpw.jpg"
             alt="Imagen 1"
             style={imageStyle}
           />

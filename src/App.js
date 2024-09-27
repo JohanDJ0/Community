@@ -9,7 +9,7 @@ import Header from './components/Header';
 import Services from './pages/client/Services';
 import Login from './pages/client/Login';
 import ServiceDetail from './pages/client/ServiceDetail';
-import CrearServicePage from './pages/owner/CrearServicePage';
+import VistaRol from './pages/owner/VistaRol';
 
 
 const Layout = ({ children }) => {
@@ -19,7 +19,7 @@ const Layout = ({ children }) => {
 
   return (
     <>
-      {location.pathname !== '/' && location.pathname !== '/Login' && <Header />}
+{location.pathname !== '/' && location.pathname !== '/Login'&& location.pathname !== '/VistaRol' && <Header />}
       <div className="App">
         <div className="content">
           {children}
@@ -45,7 +45,7 @@ const App = () => {
           <Route path="/Services" element={<Services />} />
           <Route path="/Login" element={<Login />} />
           <Route path="/services/:id" element={<ServiceDetail />} />
-          <Route path='/crearservice' element={<CrearServicePage />} />
+          <Route path='/VistaRol' element={<VistaRol />} />
         </Routes>
       </Layout>
     </Router>

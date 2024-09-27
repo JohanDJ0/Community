@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import HeaderP from '../../components/HeaderP';
+import HeaderP from '../../components/Menu';
 import Button from '@mui/material/Button';
 import '../../css/Home.css';
 import { Typography, Box } from '@mui/material';

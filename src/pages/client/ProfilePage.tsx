@@ -1,24 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import '../../css/App.css';
 import { useAuth0 } from '@auth0/auth0-react';
 import Avatar from '@mui/material/Avatar';
-import { Stack, Modal, Box, Typography, Button } from '@mui/material';
+import { Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom'; // Importar useNavigate
 
 function ProfilePage() {
   const { user, isAuthenticated } = useAuth0();
-  const [openModal, setOpenModal] = useState(false);
   const navigate = useNavigate(); // Hook para navegar entre rutas
-
-  // Mostrar el modal si el usuario ingresa con el botón de "Sign up"
-  useEffect(() => {
-    const isSignUp = localStorage.getItem('isSignUp') === 'true';
-
-    if (isSignUp) {
-      setOpenModal(true);
-      localStorage.removeItem('isSignUp'); // Eliminar la bandera después de mostrar el modal
-    }
-  }, []);
 
   // Enviar datos a la base de datos cuando el usuario esté autenticado
   useEffect(() => {
@@ -52,15 +41,6 @@ function ProfilePage() {
     }
   }, [isAuthenticated, user]);
 
-  const handleCloseModal = () => {
-    setOpenModal(false);
-  };
-
-  const handleNavigateToCrearService = () => {
-    handleCloseModal(); // Cierra el modal antes de redirigir
-    navigate('/CrearService'); // Redirigir a la página de Crear Service
-  };
-
   return (
     isAuthenticated && (
       <div className="first-div">
@@ -76,38 +56,6 @@ function ProfilePage() {
             </Stack>
           </div>
         </div>
-
-        {/* Modal para seleccionar rol */}
-        <Modal open={openModal} onClose={handleCloseModal}>
-          <Box
-            sx={{
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: '100vw',
-              height: '100vh',
-              bgcolor: 'background.paper',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-              p: 4,
-            }}
-          >
-            <Typography variant="h4" component="h2" sx={{ mb: 4 }}>
-              Seleccionar Rol
-            </Typography>
-            <Stack direction="row" spacing={2}>
-              <Button variant="contained" onClick={handleNavigateToCrearService}>
-                Dueño de un negocio
-              </Button>
-              <Button variant="contained" onClick={handleCloseModal}>
-                Cliente
-              </Button>
-            </Stack>
-          </Box>
-        </Modal>
       </div>
     )
   );
