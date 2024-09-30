@@ -1,17 +1,63 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { RadioGroup, FormControlLabel, Radio, Button, Typography, TextField, Fade } from '@mui/material';
-import { useNavigate } from 'react-router-dom'; // Importar el hook useNavigate
+import { useNavigate } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
 
 function VistaRol() {
   const [rol, setRol] = useState('');
   const [businessName, setBusinessName] = useState('');
   const [businessDescription, setBusinessDescription] = useState('');
-  const [businessImage, setBusinessImage] = useState<File | null>(null); // Especificar que puede ser un File o null
-  const navigate = useNavigate(); // Inicializar useNavigate
+  const [businessImage, setBusinessImage] = useState<File | null>(null);
+  const navigate = useNavigate();
+  const { user, isAuthenticated } = useAuth0();
+
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      console.log("Nombre del usuario:", user.name);
+      console.log("Email del usuario:", user.email);
+      console.log("Picture URL:", user.picture);
+      console.log("Sub ID (Auth0 ID):", user.sub);
+      const sendUserData = async () => {
+        try {
+          // Realiza la petición POST a tu servidor de Odoo
+          const response = await fetch('/signup', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              "params": {
+                name: user.name,
+                email: user.email,
+                //password: 'password123', // Puedes establecer una contraseña aquí
+                user_type: 'user', // Se usa el rol seleccionado en el formulario
+              }
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error('Error al enviar los datos al servidor');
+          }
+
+          const data = await response.json();
+          console.log('Datos enviados con éxito:', data);
+
+          if (data.status) {
+            navigate('/services'); // Redirigir a /services si la respuesta es exitosa
+          } else {
+            console.error('Error en la respuesta del servidor:', data.message);
+          }
+        } catch (error) {
+          console.error('Error al enviar los datos:', error);
+        }
+      };
+
+      sendUserData();
+    }
+  }, [isAuthenticated, user, navigate]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRol(event.target.value);
-    // Resetear los campos del formulario al cambiar de rol
     if (event.target.value === 'cliente') {
       setBusinessName('');
       setBusinessDescription('');
@@ -23,11 +69,9 @@ function VistaRol() {
     if (rol) {
       console.log(`Rol seleccionado: ${rol}`);
 
-      // Redireccionar basado en el rol seleccionado
       if (rol === 'cliente') {
-        navigate('/services'); // Redirigir a /services si el rol es Cliente
+        navigate('/services');
       } else if (rol === 'dueño') {
-        // Aquí podrías manejar el envío del formulario o los datos de negocio
         console.log('Datos del negocio:', { businessName, businessDescription, businessImage });
       }
     } else {
@@ -42,7 +86,7 @@ function VistaRol() {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        height: '100vh', // Altura completa de la pantalla
+        height: '100vh',
         textAlign: 'center',
       }}
     >
@@ -64,15 +108,14 @@ function VistaRol() {
             onChange={handleChange}
             style={{
               display: 'flex',
-              flexDirection: 'row', // Alineación horizontal
-              justifyContent: 'center', // Centrar los radios horizontalmente
+              flexDirection: 'row',
+              justifyContent: 'center',
             }}
           >
             <FormControlLabel value="cliente" control={<Radio />} label="Cliente" />
             <FormControlLabel value="dueño" control={<Radio />} label="Dueño" />
           </RadioGroup>
 
-          {/* Botón de Submit Superior, que se oculta al desplegar el formulario */}
           {rol !== 'dueño' && (
             <Button
               variant="contained"
@@ -84,7 +127,6 @@ function VistaRol() {
             </Button>
           )}
 
-          {/* Formulario para el rol de Dueño */}
           <Fade in={rol === 'dueño'} timeout={500}>
             <div style={{ marginTop: '20px', display: rol === 'dueño' ? 'block' : 'none' }}>
               <Typography variant="h6">Formulario de Registro del Negocio</Typography>
@@ -112,14 +154,14 @@ function VistaRol() {
                   accept="image/*"
                   onChange={(e) => {
                     if (e.target.files) {
-                      setBusinessImage(e.target.files[0]); // Ahora es seguro acceder a e.target.files
+                      setBusinessImage(e.target.files[0]);
                     }
                   }}
                   style={{
                     display: 'block',
                     margin: '0 auto',
                     padding: '10px',
-                    border: '2px dashed #3f51b5', // Bordes del campo de archivo
+                    border: '2px dashed #3f51b5',
                     borderRadius: '5px',
                     backgroundColor: '#f9f9f9',
                     cursor: 'pointer',
@@ -130,7 +172,6 @@ function VistaRol() {
                 </Typography>
               </div>
 
-              {/* Botón de Submit Inferior */}
               <Button
                 variant="contained"
                 color="primary"
