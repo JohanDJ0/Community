@@ -71,7 +71,7 @@ function VistaRol() {
 
       if (rol === 'cliente') {
         navigate('/services');
-      } else if (rol === 'dueño') {
+      } else if (rol === 'owner') {
         console.log('Datos del negocio:', { businessName, businessDescription, businessImage });
       }
     } else {
@@ -101,7 +101,7 @@ function VistaRol() {
           }}
         >
           <Typography variant="h5" gutterBottom>
-            Vista para seleccionar un rol
+            Ya casí acabamos...
           </Typography>
           <RadioGroup
             value={rol}
@@ -112,11 +112,11 @@ function VistaRol() {
               justifyContent: 'center',
             }}
           >
-            <FormControlLabel value="cliente" control={<Radio />} label="Cliente" />
-            <FormControlLabel value="dueño" control={<Radio />} label="Dueño" />
+            <FormControlLabel value="user" control={<Radio />} label="Cliente" />
+            <FormControlLabel value="owner" control={<Radio />} label="Dueño" />
           </RadioGroup>
 
-          {rol !== 'dueño' && (
+          {rol !== 'owner' && (
             <Button
               variant="contained"
               color="primary"
@@ -127,11 +127,35 @@ function VistaRol() {
             </Button>
           )}
 
-          <Fade in={rol === 'dueño'} timeout={500}>
-            <div style={{ marginTop: '20px', display: rol === 'dueño' ? 'block' : 'none' }}>
-              <Typography variant="h6">Formulario de Registro del Negocio</Typography>
+          <Fade in={rol === 'owner'} timeout={500}>
+            <div style={{ marginTop: '20px', display: rol === 'owner' ? 'block' : 'none' }}>
+              <Typography variant="h6">Registro de Negocio</Typography>
               <TextField
                 label="Nombre del Negocio"
+                variant="outlined"
+                fullWidth
+                value={businessName}
+                onChange={(e) => setBusinessName(e.target.value)}
+                style={{ marginBottom: '10px' }}
+              />
+              <TextField
+                label="Dirección"
+                variant="outlined"
+                fullWidth
+                value={businessName}
+                onChange={(e) => setBusinessName(e.target.value)}
+                style={{ marginBottom: '10px' }}
+              />
+              <TextField
+                label="Número de teléfono"
+                variant="outlined"
+                fullWidth
+                value={businessName}
+                onChange={(e) => setBusinessName(e.target.value)}
+                style={{ marginBottom: '10px' }}
+              />
+              <TextField
+                label="Correo"
                 variant="outlined"
                 fullWidth
                 value={businessName}
