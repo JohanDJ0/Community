@@ -107,7 +107,7 @@ function VistaRol() {
             direction: businessDirection,
             number_phone: businessPhone,
             email: businessEmail,
-            //image: base64Image, // La imagen en base64
+            image: base64Image, // La imagen en base64
             owner: ownerId,
             description: businessDescription
           }
