@@ -61,6 +61,7 @@ function VistaRol() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || 'Error al enviar los datos al servidor');
       console.log('Usuario registrado:', data);
+      localStorage.setItem('rol', 'cliente')
       navigate('/services');
     } catch (error) {
       console.error('Error al registrar usuario:', error);
@@ -124,6 +125,7 @@ function VistaRol() {
         if (!responseBusiness.ok) throw new Error(result.message || 'Error al registrar negocio');
 
         console.log('Negocio registrado:', result);
+        localStorage.setItem('rol', 'dueño')
         navigate('/services');
       }
     } catch (error) {
