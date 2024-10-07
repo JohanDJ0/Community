@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Auth0Provider } from '@auth0/auth0-react';
-
+import "./config/i18next.config";
 
 const domain = process.env.REACT_APP_AUTH0_DOMAIN
 const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID
@@ -17,7 +17,7 @@ root.render(
     <Auth0Provider 
     domain={domain} 
     clientId={clientId} 
-    redirectUri="http://localhost:3000/Services"
+    redirectUri="http://localhost:3000/Login"
     >
     <App />
     </Auth0Provider>

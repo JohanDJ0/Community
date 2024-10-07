@@ -45,7 +45,7 @@ const MenuP: React.FC = () => {
                 color="inherit"
                 sx={{ color: 'black' }}
               >
-                Login
+                Iniciar sesión
               </Button>
               <Button
                 variant="outlined"
@@ -53,7 +53,7 @@ const MenuP: React.FC = () => {
                 color="inherit"
                 sx={{ color: 'black' }}
               >
-                Sign up
+                Regístrate
               </Button>
             </Stack>
           </Box>

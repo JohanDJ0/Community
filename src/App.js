@@ -11,15 +11,12 @@ import Login from './pages/client/Login';
 import ServiceDetail from './pages/client/ServiceDetail';
 import VistaRol from './pages/owner/VistaRol';
 
-
 const Layout = ({ children }) => {
   const location = useLocation();
 
-
-
   return (
     <>
-{location.pathname !== '/' && location.pathname !== '/Login'&& location.pathname !== '/VistaRol' && <Header />}
+{location.pathname !== '/' && location.pathname !== '/Login' && location.pathname !== '/VistaRol' && <Header />}
       <div className="App">
         <div className="content">
           {children}
@@ -42,8 +39,8 @@ const App = () => {
           <Route path="/Rewards" element={<RewardsPage />} />
           <Route path="/JoinBusiness" element={<JoinBusinessPage />} />
           <Route path="/Profile" element={<ProfilePage />} />
-          <Route path="/Services" element={<Services />} />
           <Route path="/Login" element={<Login />} />
+          <Route path="/Services" element={<Services />} />
           <Route path="/services/:id" element={<ServiceDetail />} />
           <Route path='/VistaRol' element={<VistaRol />} />
         </Routes>

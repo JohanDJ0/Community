@@ -57,11 +57,13 @@ function VistaRol() {
           },
         }),
       });
-
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || 'Error al enviar los datos al servidor');
+      const tokenUser = data.result?.token;
+
       console.log('Usuario registrado:', data);
-      localStorage.setItem('rol', 'cliente')
+      localStorage.setItem('rol', 'user');
+      localStorage.setItem('token', tokenUser);
       navigate('/services');
     } catch (error) {
       console.error('Error al registrar usuario:', error);
@@ -86,6 +88,7 @@ function VistaRol() {
         const userData = await responseUser.json();
         if (!responseUser.ok) throw new Error(userData.message || 'Error al registrar usuario como dueño');
         const ownerId = userData.result?.id;
+        const tokenUser = userData.result?.token;
 
         // Validación de los campos del negocio
         if (!businessName || !businessDirection || !businessPhone || !businessEmail) {
@@ -125,7 +128,8 @@ function VistaRol() {
         if (!responseBusiness.ok) throw new Error(result.message || 'Error al registrar negocio');
 
         console.log('Negocio registrado:', result);
-        localStorage.setItem('rol', 'dueño')
+        localStorage.setItem('rol', 'owner');
+        localStorage.setItem('token', tokenUser);
         navigate('/services');
       }
     } catch (error) {

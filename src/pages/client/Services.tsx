@@ -15,9 +15,6 @@ const Services: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const userRole = localStorage.getItem('rol');
-    console.log('Rol del usuario desde localStorage:', userRole);
-
     fetch("/services")
       .then((res) => res.json())
       .then((result: Service[]) => {
