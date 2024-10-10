@@ -5,7 +5,12 @@ import Avatar from '@mui/material/Avatar';
 import { Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom'; // Importar useNavigate
 
-function ProfilePage() {
+// Agrega 'darkMode' como prop
+interface ServicesProps {
+  darkMode: boolean;
+}
+
+const ProfilePage: React.FC<ServicesProps> = ({ darkMode }) => {
   const { user, isAuthenticated } = useAuth0();
   const navigate = useNavigate(); // Hook para navegar entre rutas
 
@@ -41,23 +46,26 @@ function ProfilePage() {
     }
   }, [isAuthenticated, user]);
 
+  // Cambia `false` por `null`
+  if (!isAuthenticated) {
+    return null; // O podrías redirigir a una página de inicio de sesión
+  }
+
   return (
-    isAuthenticated && (
-      <div className="first-div">
-        <div className="second-div">
-          <div className="box-div">
-            <Stack direction="row" spacing={2} alignItems="center">
-              <Avatar src={user?.picture} sx={{ width: 200, height: 200 }} />
-              <Stack direction="column" spacing={1}>
-                <h2>{user?.name}</h2>
-                <p>{user?.email}</p>
-                <p>ID del Usuario: {user?.sub}</p> {/* Mostrar el ID del usuario */}
-              </Stack>
+    <div className="first-div">
+      <div className="second-div">
+        <div className={`box-div ${darkMode ? 'dark' : 'light'}`}> 
+          <Stack direction="row" spacing={2} alignItems="center">
+            <Avatar src={user?.picture} sx={{ width: 200, height: 200 }} />
+            <Stack direction="column" spacing={1}>
+              <h2>{user?.name}</h2>
+              <p>{user?.email}</p>
+              <p>ID del Usuario: {user?.sub}</p> {/* Mostrar el ID del usuario */}
             </Stack>
-          </div>
+          </Stack>
         </div>
       </div>
-    )
+    </div>
   );
 }
 

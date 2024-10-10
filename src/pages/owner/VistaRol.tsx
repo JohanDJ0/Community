@@ -3,7 +3,13 @@ import { RadioGroup, FormControlLabel, Radio, Button, Typography, TextField, Fad
 import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 
-function VistaRol() {
+// Define the props interface including darkMode
+interface ServicesProps {
+  darkMode: boolean;
+}
+
+// Modify the component to accept darkMode as a prop
+const VistaRol: React.FC<ServicesProps> = ({ darkMode }) => {
   const [rol, setRol] = useState<string>('');
   const [businessName, setBusinessName] = useState<string>('');
   const [businessDescription, setBusinessDescription] = useState<string>('');
@@ -34,7 +40,6 @@ function VistaRol() {
     setBusinessEmail('');
   };
 
-  // Convertir imagen a base64
   const convertImageToBase64 = (file: File): Promise<string | ArrayBuffer | null> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -90,7 +95,6 @@ function VistaRol() {
         const ownerId = userData.result?.id;
         const tokenUser = userData.result?.token;
 
-        // Validación de los campos del negocio
         if (!businessName || !businessDirection || !businessPhone || !businessEmail) {
           setIsValid(false);
           return;
@@ -98,26 +102,23 @@ function VistaRol() {
 
         setIsValid(true);
 
-        // Convertir imagen a base64 si existe
         let base64Image = null;
         if (businessImage) {
           base64Image = await convertImageToBase64(businessImage);
         }
 
-        // Registro del negocio (servicio)
         const businessData = {
           params: {
             name: businessName,
             direction: businessDirection,
             number_phone: businessPhone,
             email: businessEmail,
-            image: base64Image, // La imagen en base64
+            image: base64Image,
             owner: ownerId,
             description: businessDescription
           }
         };
 
-        console.log(businessData)
         const responseBusiness = await fetch('/services/create', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -155,9 +156,24 @@ function VistaRol() {
   };
 
   return (
-    <div className="first-div" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', textAlign: 'center' }}>
+    <div className="first-div" 
+      style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh', 
+        textAlign: 'center',
+        backgroundColor: darkMode ? '#333' : '#fff' // Use darkMode prop for background
+      }}>
       <div className="second-div">
-        <div className="box-div" style={{ backgroundColor: '#f5f5f5', padding: '30px', borderRadius: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+        <div className="box-div" 
+          style={{ 
+            backgroundColor: darkMode ? '#444' : '#f5f5f5', // Use darkMode prop for card background
+            color: darkMode ? '#fff' : '#000',
+            padding: '30px', 
+            borderRadius: '10px', 
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' 
+          }}>
           <Typography variant="h5" gutterBottom>Ya casi acabamos...</Typography>
           
           <RadioGroup value={rol} onChange={handleChange} row style={{ justifyContent: 'center' }}>
@@ -182,12 +198,11 @@ function VistaRol() {
               <TextField label="Descripción del Negocio" variant="outlined" fullWidth multiline rows={4} value={businessDescription} onChange={(e) => setBusinessDescription(e.target.value)} style={{ marginBottom: '10px' }} />
 
               <div style={{ marginBottom: '10px' }}>
-                <input type="file" accept="image/*" onChange={(e) => setBusinessImage(e.target.files?.[0] || null)} style={{ display: 'block', margin: '0 auto', padding: '10px', border: '2px dashed #3f51b5', borderRadius: '5px', backgroundColor: '#f9f9f9', cursor: 'pointer' }} />
-                <Typography variant="caption" color="textSecondary" style={{ marginTop: '5px' }}>Agregar imagen del negocio</Typography>
+                <input type="file" accept="image/*" onChange={(e) => setBusinessImage(e.target.files?.[0] || null)} style={{ display: 'block', margin: '10px 0' }} />
               </div>
 
-              <Button variant="contained" color="primary" onClick={handleSubmit} style={{ marginTop: '20px' }}>
-                Submit
+              <Button variant="contained" color="primary" onClick={handleSubmit}>
+                Registrar negocio
               </Button>
             </div>
           </Fade>
@@ -195,6 +210,6 @@ function VistaRol() {
       </div>
     </div>
   );
-}
+};
 
 export default VistaRol;

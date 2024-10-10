@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardMedia, CardContent, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import '../../css/App.css';
+
 interface Service {
   id: number;
   name: string;
@@ -10,7 +11,12 @@ interface Service {
   description: string | boolean;
 }
 
-const Services: React.FC = () => {
+// Agrega 'darkMode' como prop
+interface ServicesProps {
+  darkMode: boolean;
+}
+
+const Services: React.FC<ServicesProps> = ({ darkMode }) => {
   const [data, setData] = useState<Service[]>([]);
   const navigate = useNavigate();
 
@@ -32,12 +38,12 @@ const Services: React.FC = () => {
 
   const handleServiceClick = (id: number) => {
     navigate(`/services/${id}`);
-  }
+  };
 
   return (
     <div className='first-div'>
       <div className='second-div'>
-        <div className='box-div'>
+        <div className={`box-div ${darkMode ? 'dark' : 'light'}`}> {/* Aplica la clase según el modo */}
           {data.length === 0 ? (
             <p>Cargando...</p>
           ) : (
@@ -45,14 +51,12 @@ const Services: React.FC = () => {
               {data.map((item) => (
                 <Card key={item.id} style={{ marginBottom: '20px', cursor: 'pointer' }} onClick={() => handleServiceClick(item.id)}>
                   <div style={{ display: 'flex' }}>
-                  <CardMedia
+                    <CardMedia
                       component="img"
                       style={{ width: '180px', height: 'auto' }}
-                      image={item.image ?` data:image/jpeg;base64,${atob(item.image)} `: "https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg"}
+                      image={item.image ? `data:image/jpeg;base64,${atob(item.image)}` : "https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg"}
                       alt={item.name}
                     />
-                    
-                    
                     <CardContent>
                       <Typography variant="h5" component="div">
                         {item.name}
@@ -73,6 +77,6 @@ const Services: React.FC = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Services;

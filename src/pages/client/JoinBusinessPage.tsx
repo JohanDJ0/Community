@@ -1,9 +1,13 @@
 import React, { useState } from 'react'; // Importamos React y el hook useState para manejar el estado del componente
 import { TextField, Button, Box } from '@mui/material'; // Importamos componentes de Material UI
 import '../../css/App.css';
+// Agrega 'darkMode' como prop
+interface ServicesProps {
+  darkMode: boolean;
+}
 
 // Definimos el componente funcional JoinBusinessPage
-const JoinBusinessPage: React.FC = () => {
+const JoinBusinessPage:  React.FC<ServicesProps> = ({ darkMode }) =>  {
   // Definimos dos variables de estado:
   // - businessName para almacenar el valor del input (nombre del negocio)
   // - isValid para controlar la clase de validación (si es válido o no)
@@ -54,7 +58,7 @@ const JoinBusinessPage: React.FC = () => {
     // Estructura principal del componente:
     <div className='first-div'>
       <div className='second-div'>
-        <div className='box-div'>
+      <div className={`box-div ${darkMode ? 'dark' : 'light'}`}> 
           <h2>Unirse a un negocio</h2> {/* Título de la página */}
 
           {/* Caja de texto para ingresar el código de acceso del negocio */}

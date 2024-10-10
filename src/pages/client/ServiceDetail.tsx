@@ -21,8 +21,12 @@ interface ServiceDetailProps {
   description: string;
   novedades: Novedad[];
 }
+// Agrega 'darkMode' como prop
+interface ServicesProps {
+  darkMode: boolean;
+}
 
-const ServiceDetail: React.FC = () => {
+const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) =>  {
   const { id } = useParams<{ id: string }>();
   const [service, setService] = useState<ServiceDetailProps | null>(null);
 
@@ -61,9 +65,8 @@ const ServiceDetail: React.FC = () => {
 
   return (
     <div className='first-div'>
-      <div className='second-div'>
-        <div className='box-div'>
-          {/* Contenedor con scroll para imagen y contenido */}
+      <div className='second-div' >
+      <div className={`box-div ${darkMode ? 'dark' : 'light'}`}> 
           <Card style={{ maxHeight: '500px', overflowY: 'auto' }}>
             <Box position="relative" width="100%" height="300px">
               <CardMedia

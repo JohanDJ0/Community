@@ -21,9 +21,9 @@ const Search = styled('div')(({ theme }) => ({
   left: '50%',
   transform: 'translateX(-50%)',
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: theme.palette.common.white,
+  backgroundColor: theme.palette.background.default, // Cambiar a fondo del tema
   '&:hover': {
-    backgroundColor: theme.palette.common.white,
+    backgroundColor: theme.palette.background.default,
   },
   marginLeft: 0,
   width: '100%',
@@ -75,7 +75,7 @@ const Notifications = () => (
   </NotificationsWrapper>
 );
 
-const Header: React.FC = () => {
+const Header: React.FC<{ toggleDarkMode: () => void }> = ({ toggleDarkMode }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -91,17 +91,17 @@ const Header: React.FC = () => {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" sx={{ backgroundColor: 'white' }} elevation={0}>
+      <AppBar position="static" sx={{ backgroundColor: (theme) => theme.palette.background.default }} elevation={0}>
         <Toolbar sx={{ position: 'relative' }}>
-          <Box sx={{ color: 'black' }}>
-            <MenuD />
+          <Box sx={{ color: (theme) => theme.palette.text.primary }}>
+            <MenuD toggleDarkMode={toggleDarkMode} />
           </Box>
 
-          <Typography variant="h6" noWrap component="div" sx={{ color: 'black' }}>
+          <Typography variant="h6" noWrap component="div" sx={{ color: (theme) => theme.palette.text.primary }}>
             Community
           </Typography>
 
-          <Search sx={{ color: 'black' }}>
+          <Search sx={{ color: (theme) => theme.palette.text.primary }}>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
@@ -115,7 +115,7 @@ const Header: React.FC = () => {
               size="large"
               aria-label="show 17 new notifications"
               color="inherit"
-              sx={{ color: 'black' }}
+              sx={{ color: (theme) => theme.palette.text.primary }}
               onClick={handleClick}
             >
               <Badge badgeContent={2} color="info">
@@ -130,7 +130,6 @@ const Header: React.FC = () => {
               aria-label="Notifications"
               aria-haspopup="true"
               color="inherit"
-              sx={{ color: 'black' }}
               onClick={handleClick}
             >
               <Badge badgeContent={2} color="info">

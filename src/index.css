@@ -1,11 +1,24 @@
+body {
+  transition: background-color 0.3s, color 0.3s; /* Añade una transición suave */
+}
+
 body.default {
-  background-position: right bottom; /* Ajusta según tus necesidades */
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+body[data-theme='dark'] {
+  background-color: #121212; /* Fondo oscuro */
+  color: white; /* Texto claro */
+}
+
+body[data-theme='light'] {
+  background-color: white; /* Fondo claro */
+  color: black; /* Texto oscuro */
 }
 
 .App {
@@ -46,12 +59,6 @@ body.default {
   }
 }
 
-
-.first-div {
-  padding-top: 0px; 
-  height: 91vh;
-}
-
 .second-div {
   width: 80%;
   height: 80%;
@@ -64,5 +71,16 @@ body.default {
   padding: 20px;
   box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);
   height: 100%;
-  overflow-y: auto; 
+  overflow-y: auto;
+  transition: background-color 0.3s ease; /* Añade una transición suave */
+}
+
+.box-div.light {
+  background-color: white; /* Color de fondo claro */
+  color: black; /* Color de texto claro */
+}
+
+.box-div.dark {
+  background-color: #333; /* Color de fondo oscuro */
+  color: white; /* Color de texto oscuro */
 }
