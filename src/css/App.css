@@ -27,6 +27,15 @@ body, html {
   overflow: hidden;
   
 }
+/* styles.css o en el archivo CSS de tu componente */
+.fade {
+  transition: opacity 1s ease;
+  opacity: 0;
+}
+
+.fade-in {
+  opacity: 1;
+}
 
 
 

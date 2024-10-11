@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardMedia, CardContent, Typography } from '@mui/material';
+import { Rating } from '@mui/material'; // Importa el componente Rating
 import { useNavigate } from 'react-router-dom';
 import '../../css/App.css';
 
@@ -43,7 +44,7 @@ const Services: React.FC<ServicesProps> = ({ darkMode }) => {
   return (
     <div className='first-div'>
       <div className='second-div'>
-        <div className={`box-div ${darkMode ? 'dark' : 'light'}`}> {/* Aplica la clase según el modo */}
+        <div className={`box-div ${darkMode ? 'dark' : 'light'}`}> 
           {data.length === 0 ? (
             <p>Cargando...</p>
           ) : (
@@ -61,9 +62,13 @@ const Services: React.FC<ServicesProps> = ({ darkMode }) => {
                       <Typography variant="h5" component="div">
                         {item.name}
                       </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Calificación: {item.qualification}
-                      </Typography>
+                      {/* Usar Rating para mostrar la calificación en estrellas */}
+                      <Rating
+                        name={`rating-${item.id}`} // Asegúrate de que cada Rating tenga un nombre único
+                        value={item.qualification} // Valor de la calificación
+                        precision={0.5} // Precisión para permitir medios puntos
+                        readOnly // Para que el Rating sea solo de lectura
+                      />
                       <Typography variant="body2" color="text.secondary">
                         Descripción: {typeof item.description === "string" ? item.description : "No disponible"}
                       </Typography>

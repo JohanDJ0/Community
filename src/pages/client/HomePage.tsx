@@ -7,7 +7,13 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ImageCarousel from "../../components/ImageCarousel";
 import { Card, CardContent } from "@mui/material";
 import Footer from 'components/Footer';
-const HomePage: React.FC = () => {
+
+
+// Agrega 'darkMode' como prop
+interface ServicesProps {
+  darkMode: boolean;
+}
+const HomePage: React.FC<ServicesProps> = ({ darkMode }) => {
   const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
@@ -179,7 +185,6 @@ const HomePage: React.FC = () => {
               Meet the Developers
             </Typography>
 
-            {/* Desarrolladores */}
             <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', marginBottom: '16px' }}>
               {[
                 { name: "Miguel Angel", role: "Lead Developer", avatar: "https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg" },

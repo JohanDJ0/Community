@@ -12,6 +12,10 @@ import ServiceDetail from './pages/client/ServiceDetail';
 import VistaRol from './pages/owner/VistaRol';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
+import MyServicePage from 'pages/owner/MyServicePage';
+import ServiceReviewsPage from 'pages/owner/ServiceReviewsPage';
+import EmpleadosPage from 'pages/owner/EmpleadosPage';
+import MyRewardsPage from 'pages/owner/MyRewardsPage';
 
 const Layout = ({ children, toggleDarkMode }) => {
   const location = useLocation();
@@ -63,7 +67,7 @@ const App = () => {
       <Router>
         <Layout toggleDarkMode={toggleDarkMode}>
           <Routes>
-            <Route path="/" element={<HomePage />} />
+            <Route path="/" element={<HomePage darkMode={darkMode}  />} />
             <Route path="/Seguidos" element={<SeguidosPage darkMode={darkMode} />} />
             <Route path="/Rewards" element={<RewardsPage darkMode={darkMode} />} />
             <Route path="/JoinBusiness" element={<JoinBusinessPage darkMode={darkMode} />} />
@@ -72,6 +76,11 @@ const App = () => {
             <Route path="/Services" element={<Services darkMode={darkMode} />} />
             <Route path="/services/:id" element={<ServiceDetail darkMode={darkMode} />} />
             <Route path="/VistaRol" element={<VistaRol darkMode={darkMode} />} />
+            <Route path="/MyService" element={<MyServicePage darkMode={darkMode}/>}/>
+            <Route path="/services/:id/reviews" element={<ServiceReviewsPage darkMode={darkMode} />} />
+            <Route path='/Empleados' element={<EmpleadosPage darkMode={darkMode}/>}/>
+            <Route path='/MyRewards' element={<MyRewardsPage darkMode={darkMode}/>}/>
+
           </Routes>
         </Layout>
       </Router>

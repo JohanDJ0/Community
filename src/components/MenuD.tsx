@@ -103,15 +103,23 @@ const MenuD: React.FC<{ toggleDarkMode: () => void }> = ({ toggleDarkMode }) => 
           </ListItemButton>
         </ListItem>
         <ListItem key='Mi negocio' disablePadding>
-          <ListItemButton>
+          <ListItemButton component={Link} to="/MyService">
             <ListItemIcon>
               <StoreIcon />
             </ListItemIcon>
             <ListItemText primary={t("itemListMyService")} />
           </ListItemButton>
         </ListItem>
+        <ListItem key='Empleados' disablePadding>
+          <ListItemButton component={Link} to="/Empleados">
+            <ListItemIcon>
+              <PersonIcon /> 
+            </ListItemIcon>
+            <ListItemText primary="Empleados" /> 
+          </ListItemButton>
+        </ListItem>
         <ListItem key='Mis recompensas' disablePadding>
-          <ListItemButton>
+          <ListItemButton component={Link} to="/MyRewards">
             <ListItemIcon>
               <FiberSmartRecordIcon />
             </ListItemIcon>
@@ -235,17 +243,16 @@ const MenuD: React.FC<{ toggleDarkMode: () => void }> = ({ toggleDarkMode }) => 
       </Box>
     </Box>
   );
-  
 
   return (
-    <Suspense fallback="Cargando traducciones">
-      <IconButton edge="start" color="inherit" aria-label="menu" onClick={toggleDrawer(true)}>
+    <div>
+      <IconButton onClick={toggleDrawer(true)} edge="start" color="inherit" aria-label="menu">
         <MenuIcon />
       </IconButton>
-      <Drawer open={open} onClose={toggleDrawer(false)}>
-        {userRole === 'owner' ? DrawerListOwner : DrawerListClient}
+      <Drawer anchor='left' open={open} onClose={toggleDrawer(false)}>
+        {userRole === "client" ? DrawerListClient : DrawerListOwner}
       </Drawer>
-    </Suspense>
+    </div>
   );
 };
 

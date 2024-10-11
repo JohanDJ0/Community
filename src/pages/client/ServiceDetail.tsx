@@ -7,7 +7,8 @@ import GradeIcon from '@mui/icons-material/Grade';
 import ShareIcon from '@mui/icons-material/Share';
 import BackHandIcon from '@mui/icons-material/BackHand';
 import Rating from '@mui/material/Rating';
-
+import { useNavigate } from 'react-router-dom';
+import AddIcon from '@mui/icons-material/Add';
 interface Novedad {
   name: string;
   description: string;
@@ -26,8 +27,9 @@ interface ServicesProps {
   darkMode: boolean;
 }
 
-const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) =>  {
+const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();  // Aquí inicializas navigate
   const [service, setService] = useState<ServiceDetailProps | null>(null);
 
   useEffect(() => {
@@ -66,7 +68,7 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) =>  {
   return (
     <div className='first-div'>
       <div className='second-div' >
-      <div className={`box-div ${darkMode ? 'dark' : 'light'}`}> 
+        <div className={`box-div ${darkMode ? 'dark' : 'light'}`}>
           <Card style={{ maxHeight: '500px', overflowY: 'auto' }}>
             <Box position="relative" width="100%" height="300px">
               <CardMedia
@@ -112,11 +114,18 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) =>  {
 
               <Stack spacing={2} direction="row">
                 <Button variant="contained" startIcon={<GradeIcon />}>Novedades</Button>
-                <Button variant="contained" startIcon={<GradeIcon />}>Reseñas</Button>
+                <Button
+                  variant="contained"
+                  startIcon={<GradeIcon />}
+                  onClick={() => navigate(`/services/${id}/reviews`)}
+                >
+                  Reseñas
+                </Button>
                 <Button variant="contained" startIcon={<BackHandIcon />}>Propuestas</Button>
                 <Button variant="outlined" startIcon={<ShareIcon />}>Compartir</Button>
+                <Button variant="contained" startIcon={<AddIcon />}>Seguir</Button>
               </Stack>
-              
+
 
               <Typography align='left' paddingTop={'10px'}>
                 {/* Aquí se muestran las novedades */}
@@ -124,7 +133,7 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) =>  {
                   service.novedades.map((novedad, index) => (
                     <div key={index}>
                       <Typography variant="subtitle1" fontWeight="bold">
-                        {novedad.name} 
+                        {novedad.name}
                       </Typography>
                       <Typography variant="body2">
                         {novedad.description}
