@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MenuD from './MenuD';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -14,6 +14,8 @@ import Popover from '@mui/material/Popover';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
+import HomeIcon from '@mui/icons-material/Home';
+import MenuIcon from '@mui/icons-material/Menu';
 
 // Estilos para el componente Search
 const Search = styled('div')(({ theme }) => ({
@@ -21,7 +23,7 @@ const Search = styled('div')(({ theme }) => ({
   left: '50%',
   transform: 'translateX(-50%)',
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: theme.palette.background.default, // Cambiar a fondo del tema
+  backgroundColor: theme.palette.background.default,
   '&:hover': {
     backgroundColor: theme.palette.background.default,
   },
@@ -77,6 +79,18 @@ const Notifications = () => (
 
 const Header: React.FC<{ toggleDarkMode: () => void }> = ({ toggleDarkMode }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -94,14 +108,15 @@ const Header: React.FC<{ toggleDarkMode: () => void }> = ({ toggleDarkMode }) =>
       <AppBar position="static" sx={{ backgroundColor: (theme) => theme.palette.background.default }} elevation={0}>
         <Toolbar sx={{ position: 'relative' }}>
           <Box sx={{ color: (theme) => theme.palette.text.primary }}>
-            <MenuD toggleDarkMode={toggleDarkMode} />
+            {/* Oculta el botón de hamburguesa en pantallas pequeñas */}
+            {windowWidth >= 600 && <MenuD toggleDarkMode={toggleDarkMode} />}
           </Box>
 
           <Typography variant="h6" noWrap component="div" sx={{ color: (theme) => theme.palette.text.primary }}>
             Community
           </Typography>
 
-          <Search sx={{ color: (theme) => theme.palette.text.primary }}>
+          <Search sx={{ color: (theme) => theme.palette.text.primary, display: { xs: 'none', sm: 'block' } }}>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
@@ -115,7 +130,7 @@ const Header: React.FC<{ toggleDarkMode: () => void }> = ({ toggleDarkMode }) =>
               size="large"
               aria-label="show 17 new notifications"
               color="inherit"
-              sx={{ color: (theme) => theme.palette.text.primary }}
+              sx={{ color: (theme) => theme.palette.text.primary }} 
               onClick={handleClick}
             >
               <Badge badgeContent={2} color="info">
@@ -130,6 +145,7 @@ const Header: React.FC<{ toggleDarkMode: () => void }> = ({ toggleDarkMode }) =>
               aria-label="Notifications"
               aria-haspopup="true"
               color="inherit"
+              sx={{ color: (theme) => theme.palette.text.primary }} 
               onClick={handleClick}
             >
               <Badge badgeContent={2} color="info">
@@ -139,6 +155,29 @@ const Header: React.FC<{ toggleDarkMode: () => void }> = ({ toggleDarkMode }) =>
           </Box>
         </Toolbar>
       </AppBar>
+      <Box 
+        sx={{ 
+          display: { xs: 'flex', md: 'none' }, 
+          justifyContent: 'space-around', 
+          backgroundColor: (theme) => theme.palette.background.default, 
+          position: 'fixed', 
+          bottom: '0', // Ajusta esta distancia para elevar la barra
+          left: 0, 
+          right: 0, 
+          padding: '8px 0',
+          zIndex: 1000 // Asegúrate de que esté por encima de otros elementos
+        }} 
+      >
+        <IconButton aria-label="search" color="inherit">
+          <SearchIcon />
+        </IconButton>
+        <IconButton aria-label="home" color="inherit">
+          <HomeIcon />
+        </IconButton>
+        <IconButton aria-label="menu" color="inherit">
+        <MenuD toggleDarkMode={toggleDarkMode} />
+        </IconButton>
+      </Box>
 
       <Popover
         id={id}

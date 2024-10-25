@@ -15,6 +15,7 @@ interface ServicesProps {
 
 const EmpleadosPage: React.FC<ServicesProps> = ({ darkMode }) => {
   const [employees, setEmployees] = useState<Employee[]>([]);
+  const isSmallScreen = window.innerWidth < 600; // Ajusta el tamaño de la pantalla según necesites
 
   useEffect(() => {
     // Datos de empleados de ejemplo
@@ -24,7 +25,7 @@ const EmpleadosPage: React.FC<ServicesProps> = ({ darkMode }) => {
         name: 'Juan Pérez',
         age: 30,
         email: 'juan.perez@example.com',
-        photo: 'https://w.wallhaven.cc/full/3k/wallhaven-3kg1wd.jpg', 
+        photo: 'https://juegosmoda2049.neocities.org/DALL%C2%B7E%202024-01-16%2015.58.30%20-%20In%20a%20post-apocalyptic%20world,%20harpy%20eagles%20have%20evolved%20into%20the%20next%20dominant%20species%20on%20Earth,%20having%20both%20bird%20and%20humanoid%20characteristics.%20These%20e.png', 
       },
       {
         id: 2,
@@ -56,44 +57,50 @@ const EmpleadosPage: React.FC<ServicesProps> = ({ darkMode }) => {
     <div className={`first-div ${darkMode ? 'dark' : 'light'}`}>
       <div className='second-div'>
         <div className={`box-div ${darkMode ? 'dark' : 'light'}`}>
-          <h2>Vista de Empleados</h2>
           <div style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'space-around',
-            margin: '10px 0',
+            maxHeight: isSmallScreen ? '400px' : '500px',
+            overflowY: 'auto',
           }}>
-            {employees.length === 0 ? (
-              <p>Cargando empleados...</p>
-            ) : (
-              employees.map((employee) => (
-                <Card
-                  key={employee.id}
-                  style={{
-                    margin: '10px',
-                    width: '300px',
-                    borderRadius: '12px', // Añadir border-radius
-                    overflow: 'hidden', // Para que el border-radius funcione correctamente
-                  }}
-                >
-                  <CardMedia
-                    component="img"
-                    style={{ height: '150px' }}
-                    image={employee.photo || 'https://via.placeholder.com/150'}
-                    alt={employee.name}
-                  />
-                  <CardContent>
-                    <Typography variant="h6">{employee.name}</Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Edad: {employee.age}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Correo: {employee.email}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              ))
-            )}
+            <div style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              justifyContent: 'space-around',
+              margin: '10px 0',
+            }}>
+              {employees.length === 0 ? (
+                <p>Cargando empleados...</p>
+              ) : (
+                employees.map((employee) => (
+                  <Card
+                    key={employee.id}
+                    style={{
+                      margin: '10px',
+                      width: '300px',
+                      borderRadius: '12px',
+                      overflow: 'hidden',
+                      backgroundColor: darkMode ? '#1e1e1e' : '#ffffff',
+                      color: darkMode ? '#ffffff' : '#000000',
+                    }}
+                  >
+                    <CardMedia
+                      component="img"
+                      style={{ height: '150px' }}
+                      image={employee.photo || 'https://via.placeholder.com/150'}
+                      alt={employee.name}
+                    />
+                    <CardContent>
+                      <Typography variant="h6">{employee.name}</Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Edad: {employee.age}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Correo: {employee.email}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                ))
+              )}
+            </div>
           </div>
         </div>
       </div>

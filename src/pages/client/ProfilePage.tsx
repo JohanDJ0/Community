@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import '../../css/App.css';
 import { useAuth0 } from '@auth0/auth0-react';
 import Avatar from '@mui/material/Avatar';
-import { Stack } from '@mui/material';
+import { Stack, useMediaQuery } from '@mui/material';
 import { useNavigate } from 'react-router-dom'; // Importar useNavigate
 
 // Agrega 'darkMode' como prop
@@ -13,6 +13,9 @@ interface ServicesProps {
 const ProfilePage: React.FC<ServicesProps> = ({ darkMode }) => {
   const { user, isAuthenticated } = useAuth0();
   const navigate = useNavigate(); // Hook para navegar entre rutas
+
+  // Verificar si la pantalla es pequeña
+  const isSmallScreen = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 
   // Enviar datos a la base de datos cuando el usuario esté autenticado
   useEffect(() => {
@@ -54,10 +57,10 @@ const ProfilePage: React.FC<ServicesProps> = ({ darkMode }) => {
   return (
     <div className="first-div">
       <div className="second-div">
-        <div className={`box-div ${darkMode ? 'dark' : 'light'}`}> 
-          <Stack direction="row" spacing={2} alignItems="center">
+        <div className={`box-div ${darkMode ? 'dark' : 'light'}`}>
+          <Stack direction={isSmallScreen ? "column" : "row"} spacing={2} alignItems="center">
             <Avatar src={user?.picture} sx={{ width: 200, height: 200 }} />
-            <Stack direction="column" spacing={1}>
+            <Stack direction="column" spacing={1} alignItems={isSmallScreen ? "center" : "flex-start"}>
               <h2>{user?.name}</h2>
               <p>{user?.email}</p>
               <p>ID del Usuario: {user?.sub}</p> {/* Mostrar el ID del usuario */}
@@ -67,6 +70,6 @@ const ProfilePage: React.FC<ServicesProps> = ({ darkMode }) => {
       </div>
     </div>
   );
-}
+};
 
 export default ProfilePage;

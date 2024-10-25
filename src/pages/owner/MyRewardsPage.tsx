@@ -17,6 +17,7 @@ interface ServicesProps {
 
 const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
   const [rewards, setRewards] = useState<Reward[]>([]);
+  const isSmallScreen = window.innerWidth < 600; // Ajusta el tamaño de la pantalla según necesites
 
   useEffect(() => {
     // Datos de recompensas de ejemplo
@@ -77,13 +78,27 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
   return (
     <div className={`first-div ${darkMode ? 'dark' : 'light'}`}>
       <div className='second-div'>
-        <div className={`box-div ${darkMode ? 'dark' : 'light'}`} style={{ position: 'relative', paddingBottom: '60px', overflow: 'hidden' }}>
-          <h2>Vista de Mis Recompensas</h2>
-          <div style={{ maxHeight: '400px', overflowY: 'auto', marginBottom: '20px' }}>
+        <div
+          className={`box-div ${darkMode ? 'dark' : 'light'}`}
+          style={{ position: 'relative', paddingBottom: '60px', overflow: 'hidden' }}
+        >
+          <div
+            style={{
+              maxHeight: isSmallScreen ? '400px' : '500px',
+              overflowY: 'auto',
+              marginBottom: '20px',
+            }}
+          >
             {rewards.length === 0 ? (
               <p>Cargando recompensas...</p>
             ) : (
-              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  justifyContent: 'space-around',
+                }}
+              >
                 {rewards.map((reward) => (
                   <Card
                     key={reward.id}

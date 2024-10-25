@@ -16,11 +16,10 @@ import MyServicePage from 'pages/owner/MyServicePage';
 import ServiceReviewsPage from 'pages/owner/ServiceReviewsPage';
 import EmpleadosPage from 'pages/owner/EmpleadosPage';
 import MyRewardsPage from 'pages/owner/MyRewardsPage';
-
+import PropuestasPage from 'pages/client/PropuestasPage';
 const Layout = ({ children, toggleDarkMode }) => {
   const location = useLocation();
 
-  // Controlar el scroll del body
    // Bloquear el scroll del body en todas las vistas
    useEffect(() => {
     document.body.style.overflow = 'hidden'; // Desactiva el scroll en todas las páginas
@@ -80,6 +79,7 @@ const App = () => {
             <Route path="/services/:id/reviews" element={<ServiceReviewsPage darkMode={darkMode} />} />
             <Route path='/Empleados' element={<EmpleadosPage darkMode={darkMode}/>}/>
             <Route path='/MyRewards' element={<MyRewardsPage darkMode={darkMode}/>}/>
+            <Route path='/Propuestas' element={<PropuestasPage darkMode={darkMode}/>}/>
 
           </Routes>
         </Layout>

@@ -1,6 +1,9 @@
 body {
   transition: background-color 0.3s, color 0.3s; /* Añade una transición suave */
+  overflow: hidden; /* Evita que aparezcan barras de desplazamiento */
+
 }
+
 
 body.default {
   margin: 0;
@@ -10,12 +13,10 @@ body.default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
 body[data-theme='dark'] {
   background-color: #121212; /* Fondo oscuro */
   color: white; /* Texto claro */
-  background-image: none; /* No mostrar imagen en tema oscuro */
-
+  background-image: none; /* Sin imagen de fondo en tema oscuro */
 }
 
 body[data-theme='light'] {
@@ -39,8 +40,8 @@ body[data-theme='light'] {
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+  background-color: #282c34; /* Considera cambiar esto para que coincida con el fondo oscuro */
+  min-height: 100vh; /* Mantiene el tamaño mínimo de la ventana */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -72,9 +73,9 @@ body[data-theme='light'] {
   border-radius: 20px;
   padding: 20px;
   box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);
-  height: 100%;
+  height: 100%; /* Mantiene el 100% de la altura de su contenedor padre */
   overflow-y: auto;
-  transition: background-color 0.3s ease; /* Añade una transición suave */
+  transition: background-color 0.3s ease; /* Transición suave */
 }
 
 .box-div.light {
@@ -85,4 +86,6 @@ body[data-theme='light'] {
 .box-div.dark {
   background-color: #333; /* Color de fondo oscuro */
   color: white; /* Color de texto oscuro */
+  background-image: none; /* Elimina la imagen de fondo en modo oscuro */
+
 }

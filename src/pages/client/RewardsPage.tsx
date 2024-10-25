@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardMedia, Typography, Button } from '@mui/material';
+import { useMediaQuery } from '@mui/material'; // Importar el hook useMediaQuery
 import '../../css/App.css'; // Asegúrate de que este archivo tenga los estilos que necesitas.
 
 interface Reward {
@@ -17,6 +18,7 @@ interface ServicesProps {
 
 const Rewards: React.FC<ServicesProps> = ({ darkMode }) => {
   const [rewards, setRewards] = useState<Reward[]>([]);
+  const isSmallScreen = useMediaQuery('(max-width:600px)'); // Verificar si la pantalla es menor a 600px
 
   useEffect(() => {
     // Datos de recompensas de ejemplo
@@ -62,12 +64,13 @@ const Rewards: React.FC<ServicesProps> = ({ darkMode }) => {
     <div className={`first-div ${darkMode ? 'dark' : 'light'}`}>
       <div className='second-div'>
         <div className={`box-div ${darkMode ? 'dark' : 'light'}`}>
-          <h2>Vista de Recompensas</h2>
           <div style={{
             display: 'flex',
             flexWrap: 'wrap',
             justifyContent: 'space-around',
             margin: '10px 0',
+            maxHeight: isSmallScreen ? '400px' : '500px', // Ajusta maxHeight según el tamaño de la pantalla
+            overflowY: 'auto' // Asegúrate de permitir el desplazamiento si el contenido excede el maxHeight
           }}>
             {rewards.length === 0 ? (
               <p>Cargando recompensas...</p>

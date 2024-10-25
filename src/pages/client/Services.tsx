@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardMedia, CardContent, Typography } from '@mui/material';
-import { Rating } from '@mui/material'; // Importa el componente Rating
+import { Rating } from '@mui/material'; 
 import { useNavigate } from 'react-router-dom';
+import { useMediaQuery } from '@mui/material'; // Importar el hook useMediaQuery
 import '../../css/App.css';
 
 interface Service {
@@ -20,6 +21,7 @@ interface ServicesProps {
 const Services: React.FC<ServicesProps> = ({ darkMode }) => {
   const [data, setData] = useState<Service[]>([]);
   const navigate = useNavigate();
+  const isSmallScreen = useMediaQuery('(max-width:600px)'); // Verificar si la pantalla es menor a 600px
 
   useEffect(() => {
     fetch("/services")
@@ -48,26 +50,30 @@ const Services: React.FC<ServicesProps> = ({ darkMode }) => {
           {data.length === 0 ? (
             <p>Cargando...</p>
           ) : (
-            <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
+            <div style={{ maxHeight: isSmallScreen ? '400px' : '500px', overflowY: 'auto' }}>
               {data.map((item) => (
                 <Card key={item.id} style={{ marginBottom: '20px', cursor: 'pointer' }} onClick={() => handleServiceClick(item.id)}>
-                  <div style={{ display: 'flex' }}>
+                  <div style={{ display: isSmallScreen ? 'block' : 'flex', alignItems: isSmallScreen ? 'center' : 'flex-start' }}>
                     <CardMedia
                       component="img"
-                      style={{ width: '180px', height: 'auto' }}
+                      style={{
+                        width: isSmallScreen ? '100%' : '180px', // 100% en pantallas pequeñas, 180px en pantallas grandes
+                        height: isSmallScreen ? 'auto' : '180px', // auto en pantallas pequeñas, 180px en pantallas grandes
+                        objectFit: 'cover', // Mantiene la proporción y cubre el área
+                        margin: isSmallScreen ? '0 auto' : '0' // Centrar imagen si es pantalla pequeña
+                      }} 
                       image={item.image ? `data:image/jpeg;base64,${atob(item.image)}` : "https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg"}
                       alt={item.name}
                     />
-                    <CardContent>
+                    <CardContent style={{ textAlign: 'left' }}>
                       <Typography variant="h5" component="div">
                         {item.name}
                       </Typography>
-                      {/* Usar Rating para mostrar la calificación en estrellas */}
                       <Rating
-                        name={`rating-${item.id}`} // Asegúrate de que cada Rating tenga un nombre único
-                        value={item.qualification} // Valor de la calificación
-                        precision={0.5} // Precisión para permitir medios puntos
-                        readOnly // Para que el Rating sea solo de lectura
+                        name={`rating-${item.id}`} 
+                        value={item.qualification} 
+                        precision={0.5} 
+                        readOnly 
                       />
                       <Typography variant="body2" color="text.secondary">
                         Descripción: {typeof item.description === "string" ? item.description : "No disponible"}

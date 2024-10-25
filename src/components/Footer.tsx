@@ -19,7 +19,6 @@ const Footer = () => {
     >
 
 
-      {/* Sección de íconos sociales */}
       <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
         <IconButton href="https://twitter.com" color="inherit">
           <TwitterIcon />
@@ -35,7 +34,6 @@ const Footer = () => {
         </IconButton>
       </Box>
 
-      {/* Sección de términos y copyright */}
       <Typography variant="body2" color="textSecondary" sx={{ mb: 2 }}>
         © 2024 CommunityWeb
       </Typography>

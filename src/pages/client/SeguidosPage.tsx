@@ -1,6 +1,7 @@
 import React from 'react';
 import { Card, CardMedia, CardContent, Typography, Button } from '@mui/material';
 import { Rating } from '@mui/material'; // Importa el componente Rating
+import { useMediaQuery } from '@mui/material'; // Importar el hook useMediaQuery
 import '../../css/App.css';
 
 // Agrega 'darkMode' como prop
@@ -34,27 +35,46 @@ const Seguidos: React.FC<ServicesProps> = ({ darkMode }) => {
     },
   ];
 
+  const isSmallScreen = useMediaQuery('(max-width:600px)'); // Verificar si la pantalla es menor a 600px
+
   return (
     <div className='first-div'>
       <div className='second-div'>
         <div className={`box-div ${darkMode ? 'dark' : 'light'}`}>
-          <div style={{ maxHeight: '500px', overflowY: 'auto' }}>
+        <div style={{ maxHeight: isSmallScreen ? '400px' : '500px', overflowY: 'auto' }}>
             {serviciosSeguidos.map((servicio) => (
-              <Card key={servicio.id} style={{ marginBottom: '20px', display: 'flex', flexDirection: 'row' }}>
+              <Card 
+                key={servicio.id} 
+                style={{ 
+                  marginBottom: '20px', 
+                  display: 'flex', 
+                  flexDirection: isSmallScreen ? 'column' : 'row', // Cambiar la dirección según el tamaño de pantalla
+                }}
+              >
                 <CardMedia
                   component="img"
-                  style={{ width: '180px', height: 'auto' }} // Tamaño fijo para la imagen
+                  style={{ 
+                    width: isSmallScreen ? '100%' : '180px', // 100% en pantallas pequeñas, 180px en pantallas grandes
+                    height: isSmallScreen ? 'auto' : '180px', // auto en pantallas pequeñas, 180px en pantallas grandes
+                    objectFit: 'cover', // Mantiene la proporción y cubre el área
+                    marginBottom: isSmallScreen ? '10px' : '0' // Añadir margen en pantallas pequeñas
+                  }} 
                   image={servicio.image ? servicio.image : "https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg"}
                   alt={servicio.name}
                 />
                 <CardContent style={{ flex: 1, position: 'relative', paddingBottom: '20px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ textAlign: 'left' }}>
                     <Typography variant="h5" component="div">
                       {servicio.name}
                     </Typography>
                     <Button 
                       variant="contained" 
-                      style={{ backgroundColor: '#2EC6BD', color: 'white' }} 
+                      style={{ 
+                        backgroundColor: '#2EC6BD', 
+                        color: 'white', 
+                        padding: '5px 10px', // Ajustar el tamaño del botón
+                        marginTop: '5px' // Espacio entre el título y el botón
+                      }} 
                     >
                       Dejar de seguir
                     </Button>

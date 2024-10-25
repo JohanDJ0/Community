@@ -17,6 +17,7 @@ import { useAuth0 } from '@auth0/auth0-react'; // Importar useAuth0
 import AddIcon from '@mui/icons-material/Add';
 
 interface Review {
+  name: string; // Nombre de la reseña
   description: string; // Comentario
   rating: number; // Calificación
   written_by: string; // Usuario
@@ -44,61 +45,105 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
   const [serviceName, setServiceName] = useState<string | null>(null); // Para almacenar el nombre del servicio
   const [fade, setFade] = useState(false); // Estado para manejar la transición
   const [openModal, setOpenModal] = useState(false);
+
   const [newReview, setNewReview] = useState<Review>({
+    name: '',
     description: '',
     rating: 0,
-    written_by: (isAuthenticated && user && user.name) || '', 
+    written_by: (isAuthenticated && user && user.name) || '',
   });
 
 
-  const handleOpenModal = () => {
-    // Asigna el nombre de usuario al abrir el modal
-    setNewReview({
-      description: '',
-      rating: 0,
-      written_by: (isAuthenticated && user && user.name) || '', // Asignar el nombre del usuario autenticado o una cadena vacía
-    });
-    setOpenModal(true);
-  };
 
   const handleCloseModal = () => {
     setOpenModal(false);
-    setNewReview({ description: '', rating: 0, written_by: (isAuthenticated && user && user.name) || '' }); // Resetea el formulario
+    setNewReview({ name: '', description: '', rating: 0, written_by: (isAuthenticated && user && user.name) || '' }); // Resetea el formulario
+  };
+  const handleOpenModal = () => {
+    const token = localStorage.getItem("token"); // Obtener el token del almacenamiento local
+    setNewReview({
+      name: '',
+      description: '',
+      rating: 0,
+      written_by: token || '', // Asigna el token del usuario autenticado o una cadena vacía
+    });
+    setOpenModal(true);
   };
   const handleSubmitReview = () => {
-    fetch(`http://18.117.103.214/reviews/create`, {
+    if (!newReview.name || !newReview.description || !newReview.rating) {
+      console.error('Todos los campos son obligatorios');
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error('Token no encontrado');
+      return;
+    }
+
+    const reviewData = {
+      params: {
+        name: newReview.name,
+        description: newReview.description,
+        rating: newReview.rating,
+        written_by: token,
+        service_id: id,
+      },
+    };
+
+    fetch('http://18.117.103.214/reviews/create', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify({
-        ...newReview,
-        service_id: id, // Asegúrate de incluir el ID del servicio
-        /* 
-          description: 'No me gustó',
-          qualification: 3.5,
-          written_by: localstorage.getItem('token'),
-          
-        */
-      }),
+      body: JSON.stringify(reviewData), // Cambia esto para reflejar la estructura correcta
     })
-      .then((res) => {
-        if (!res.ok) throw new Error('Error al crear la reseña');
-        return res.json();
-      })
-      .then((responseData) => {
-        console.log('Reseña creada con éxito:', responseData);
-        // Agrega la nueva reseña a la lista de reseñas
-        setService((prevService) => ({
-          ...prevService!,
-          reviews: [...prevService!.reviews, newReview],
-        }));
-        handleCloseModal();
+      .then(response => response.json())
+      .then((data) => {
+        if (data.result && data.result.success) {
+          console.log("Reseña creada con éxito:", data.result.Message); // Mensaje de éxito
+          handleCloseModal(); // Cerrar el modal al crear la reseña con éxito
+        } else {
+          console.error("Error al crear la reseña:", data.result?.Message || "Error desconocido");
+        }
       })
       .catch((error) => {
-        console.error('Error al crear la reseña:', error);
+        console.error("Error al crear la reseña:", error.message || "Error desconocido");
       });
   };
+
+
+
+
+
+  // Función para obtener reseñas
+  const fetchReviews = () => {
+    fetch(`http://18.117.103.214/reviews/${id}`)
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        throw new Error('Error en la respuesta del servidor');
+      })
+      .then((responseData) => {
+        console.log('Datos de la API:', responseData);
+        setService(prevService => ({
+          ...prevService!,
+          reviews: responseData, 
+        }));
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error al obtener las reseñas del servicio:', error);
+        setError('No se pudo cargar la información del servicio.');
+        setLoading(false);
+      });
+  };
+
+
+  // Llama a esta función en el evento correspondiente, por ejemplo, al hacer clic en un botón
+
 
   useEffect(() => {
     let isMounted = true;
@@ -163,6 +208,11 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
       .catch((error) => {
         console.error('Error al obtener los detalles del servicio:', error);
       });
+
+    // Llamar a fetchReviews cada 5 segundos
+    const intervalId = setInterval(() => {
+      fetchReviews();
+    }, 5000);
 
     return () => {
       isMounted = false;
@@ -279,6 +329,14 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
             <DialogContent>
               <FormControl fullWidth margin="normal">
                 <TextField
+                  label="Nombre de la reseña"
+                  value={newReview.name}
+                  onChange={(e) => setNewReview({ ...newReview, name: e.target.value })}
+                />
+              </FormControl>
+
+              <FormControl fullWidth margin="normal">
+                <TextField
                   label="Descripción"
                   multiline
                   rows={4}
@@ -286,13 +344,15 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
                   onChange={(e) => setNewReview({ ...newReview, description: e.target.value })}
                 />
               </FormControl>
+
               <FormControl fullWidth margin="normal">
                 <TextField
                   label="Nombre de Usuario"
-                  value={newReview.written_by} // Este campo se llenará automáticamente
+          value={user?.name || "Nombre no disponible"} // Mostrar el nombre del usuario
                   disabled // Puedes deshabilitarlo si deseas que el usuario no pueda editarlo
                 />
               </FormControl>
+
               <FormControl fullWidth margin="normal">
                 <Rating
                   name="simple-controlled"
@@ -306,10 +366,8 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
             <DialogActions>
               <Button onClick={handleCloseModal}>Cancelar</Button>
               <Button onClick={handleSubmitReview}>Crear Reseña</Button>
-
             </DialogActions>
           </Dialog>
-
 
         </div>
       </div>

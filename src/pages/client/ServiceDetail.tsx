@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Card, CardMedia, CardContent, Typography, Box } from '@mui/material';
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Card, CardMedia, CardContent, Typography, Box, Button, Stack, Rating } from '@mui/material';
 import GradeIcon from '@mui/icons-material/Grade';
 import ShareIcon from '@mui/icons-material/Share';
 import BackHandIcon from '@mui/icons-material/BackHand';
-import Rating from '@mui/material/Rating';
-import { useNavigate } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
+import { useMediaQuery } from '@mui/material';
+
 interface Novedad {
   name: string;
   description: string;
@@ -17,20 +15,22 @@ interface Novedad {
 interface ServiceDetailProps {
   id: number;
   name: string;
-  image: string | null | false;  // Permitir que la imagen sea null o false
+  image: string | null | false;
   qualification: number;
   description: string;
   novedades: Novedad[];
 }
-// Agrega 'darkMode' como prop
+
 interface ServicesProps {
   darkMode: boolean;
 }
 
 const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();  // Aquí inicializas navigate
+  const navigate = useNavigate();
   const [service, setService] = useState<ServiceDetailProps | null>(null);
+  const isSmallScreen = useMediaQuery('(max-width:600px)');
+  const isExtraSmallScreen = useMediaQuery('(max-width:375px)'); // Para pantallas pequeñas como iPhone SE
 
   useEffect(() => {
     let isMounted = true;
@@ -43,10 +43,8 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
       })
       .then((responseData) => {
         if (isMounted) {
-          console.log('Datos recibidos:', responseData);  // Log de los datos
-
           if (responseData && responseData.length > 0) {
-            setService(responseData[0]);  // Acceder al primer elemento en el array "responseData"
+            setService(responseData[0]);
           } else {
             console.error('Estructura de datos inesperada:', responseData);
           }
@@ -67,20 +65,20 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
 
   return (
     <div className='first-div'>
-      <div className='second-div' >
+      <div className='second-div'>
         <div className={`box-div ${darkMode ? 'dark' : 'light'}`}>
-          <Card style={{ maxHeight: '500px', overflowY: 'auto' }}>
-            <Box position="relative" width="100%" height="300px">
+          <Card style={{ maxHeight: isSmallScreen ? '400px' : '500px', overflowY: 'auto' }}>
+            <Box position="relative" width="100%" height={isSmallScreen ? '200px' : '300px'}>
               <CardMedia
                 component="img"
-                height="300"
+                height={isSmallScreen ? '200' : '300'}
                 image={service.image ? `data:image/jpg;base64,${atob(service.image)}` : "https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg"}
                 alt={service.name}
                 className='image-service'
                 style={{ filter: 'brightness(0.7)' }}
               />
               <Typography
-                variant="h1"
+                variant={isSmallScreen ? "h5" : "h1"}
                 style={{
                   position: 'absolute',
                   bottom: '30px',
@@ -106,29 +104,50 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
               </Typography>
             </Box>
 
-            {/* Contenido desplazable de la tarjeta */}
             <CardContent>
-              <Typography variant="body2" color="text.secondary" align='left' paddingBottom={'5px'}>
-                Descripción: {service.description}
-              </Typography>
-
-              <Stack spacing={2} direction="row">
-                <Button variant="contained" startIcon={<GradeIcon />}>Novedades</Button>
+              <Stack spacing={1} direction="row">
+                <Button 
+                  variant="contained" 
+                  startIcon={<GradeIcon />} 
+                  style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}
+                >
+                  Novedades
+                </Button>
                 <Button
                   variant="contained"
                   startIcon={<GradeIcon />}
                   onClick={() => navigate(`/services/${id}/reviews`)}
+                  style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 4px' : '6px 12px' }}
                 >
                   Reseñas
                 </Button>
-                <Button variant="contained" startIcon={<BackHandIcon />}>Propuestas</Button>
-                <Button variant="outlined" startIcon={<ShareIcon />}>Compartir</Button>
-                <Button variant="contained" startIcon={<AddIcon />}>Seguir</Button>
+                <Button 
+                  variant="contained" 
+                  startIcon={<BackHandIcon />} 
+                  style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}
+                >
+                  Propuestas
+                </Button>
+                <Button 
+                  variant="outlined" 
+                  startIcon={<ShareIcon />} 
+                  style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}
+                >
+                  Compartir
+                </Button>
+                <Button 
+                  variant="contained" 
+                  startIcon={<AddIcon />} 
+                  style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}
+                >
+                  Seguir
+                </Button>
               </Stack>
-
+              <Typography variant="body2" color="text.secondary" align='left' paddingBottom={'5px'}>
+                Descripción: {service.description}
+              </Typography>
 
               <Typography align='left' paddingTop={'10px'}>
-                {/* Aquí se muestran las novedades */}
                 {service.novedades && service.novedades.length > 0 ? (
                   service.novedades.map((novedad, index) => (
                     <div key={index}>
