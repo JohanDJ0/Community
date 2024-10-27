@@ -127,10 +127,12 @@ const VistaRol: React.FC<ServicesProps> = ({ darkMode }) => {
 
         const result = await responseBusiness.json();
         if (!responseBusiness.ok) throw new Error(result.message || 'Error al registrar negocio');
-
+        const serviceId = result.result?.id
+        
         console.log('Negocio registrado:', result);
         localStorage.setItem('rol', 'owner');
         localStorage.setItem('token', tokenUser);
+        localStorage.setItem('service', serviceId)
         navigate('/services');
       }
     } catch (error) {
