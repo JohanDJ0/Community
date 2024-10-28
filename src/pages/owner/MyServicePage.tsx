@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 interface ServicesProps {
   darkMode: boolean;
 }
+
 const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
   const navigate = useNavigate();
 
@@ -22,4 +23,5 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
     </div>
   );
 };
-export default MyServicePage
+
+export default MyServicePage;
