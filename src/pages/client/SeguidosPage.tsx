@@ -8,7 +8,10 @@ import { useNavigate } from 'react-router-dom';
 interface Followed {
   id: number,
   name: string,
-  direction: string
+  direction: string,
+  qualification: number,
+  description: string,
+  image: string
 }
 
 interface ServicesProps {
@@ -19,7 +22,7 @@ const Seguidos: React.FC<ServicesProps> = ({ darkMode }) => {
   const [data, setData] = useState<Followed[]>([]);
   const navigate = useNavigate();
   const isSmallScreen = useMediaQuery('(max-width:600px)');
-
+  const tokenU = localStorage.getItem('token');
   const serviciosSeguidos = [
     {
       id: 1,
@@ -31,7 +34,6 @@ const Seguidos: React.FC<ServicesProps> = ({ darkMode }) => {
   ];
 
   useEffect(() => {
-    const tokenU = localStorage.getItem('token');
     fetch("/followed", {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -57,6 +59,26 @@ const Seguidos: React.FC<ServicesProps> = ({ darkMode }) => {
     });
   }, []);
 
+  const unfollowService = (id: number) => {
+    fetch(`/followed/unlink/${id}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        params: {
+          token: tokenU
+        }
+      })
+    })
+    .then((res) => res.json())
+    .then((response) => {
+      console.log("Se dejo de seguir al negocio")
+      window.location.reload();
+    })
+    .catch((error) => {
+      console.error('Error al obtener los datos:', error);
+    });
+  };
+
   return (
     <div className='first-div'>
       <div className='second-div'>
@@ -72,7 +94,7 @@ const Seguidos: React.FC<ServicesProps> = ({ darkMode }) => {
                     flexDirection: isSmallScreen ? 'column' : 'row',
                   }}
                 >
-                  {/* <CardMedia
+                  <CardMedia
                     component="img"
                     style={{ 
                       width: isSmallScreen ? '100%' : '180px',
@@ -80,15 +102,16 @@ const Seguidos: React.FC<ServicesProps> = ({ darkMode }) => {
                       objectFit: 'cover',
                       marginBottom: isSmallScreen ? '10px' : '0'
                     }} 
-                    image={servicio.image ? servicio.image : "https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg"}
+                    image={servicio.image ? `data:image/jpeg;base64,${atob(servicio.image)}` : "https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg"}
                     alt={servicio.name}
-                  /> */}
+                  />
                   <CardContent style={{ flex: 1, position: 'relative', paddingBottom: '20px' }}>
                     <div style={{ textAlign: 'left' }}>
                       <Typography variant="h5" component="div">
-                        {servicio.name}
+                        {servicio.name} | {servicio.direction}
                       </Typography>
                       <Button 
+                        onClick={() => unfollowService(servicio.id)}
                         variant="contained" 
                         style={{ 
                           backgroundColor: '#2EC6BD', 
@@ -101,15 +124,15 @@ const Seguidos: React.FC<ServicesProps> = ({ darkMode }) => {
                       </Button>
                     </div>
                     <div style={{ marginTop: '10px', textAlign: 'left' }}>
-                      {/* <Rating
+                      <Rating
                         name={`rating-${servicio.id}`}
                         value={servicio.qualification}
                         precision={0.5}
                         readOnly
                       />
                       <Typography variant="body2" color="text.secondary">
-                        Descripción: {servicio.description}
-                      </Typography> */}
+                        {servicio.description}
+                      </Typography>
                     </div>
                   </CardContent>
                 </Card>
