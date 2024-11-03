@@ -17,6 +17,7 @@ import ServiceReviewsPage from 'pages/owner/ServiceReviewsPage';
 import EmpleadosPage from 'pages/owner/EmpleadosPage';
 import MyRewardsPage from 'pages/owner/MyRewardsPage';
 import PropuestasPage from 'pages/client/PropuestasPage';
+import ProposalDetail from 'pages/client/ProposalDetail';
 const Layout = ({ children, toggleDarkMode }) => {
   const location = useLocation();
 
@@ -79,8 +80,8 @@ const App = () => {
             <Route path="/services/:id/reviews" element={<ServiceReviewsPage darkMode={darkMode} />} />
             <Route path='/Empleados' element={<EmpleadosPage darkMode={darkMode}/>}/>
             <Route path='/MyRewards' element={<MyRewardsPage darkMode={darkMode}/>}/>
-            <Route path='/Propuestas' element={<PropuestasPage darkMode={darkMode}/>}/>
-
+            <Route path='/propuestas' element={<PropuestasPage darkMode={darkMode} />} />
+            <Route path="/proposal/:id" element={<ProposalDetail darkMode={darkMode}/>} />
           </Routes>
         </Layout>
       </Router>

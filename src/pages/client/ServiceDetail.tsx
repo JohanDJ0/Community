@@ -106,9 +106,9 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
 
             <CardContent>
               <Stack spacing={1} direction="row">
-                <Button 
-                  variant="contained" 
-                  startIcon={<GradeIcon />} 
+                <Button
+                  variant="contained"
+                  startIcon={<GradeIcon />}
                   style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}
                 >
                   Novedades
@@ -121,23 +121,26 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                 >
                   Reseñas
                 </Button>
-                <Button 
-                  variant="contained" 
-                  startIcon={<BackHandIcon />} 
+                <Button
+                  variant="contained"
+                  startIcon={<BackHandIcon />}
+                  onClick={() => navigate(`/propuestas`)}
+
                   style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}
                 >
                   Propuestas
                 </Button>
-                <Button 
-                  variant="outlined" 
-                  startIcon={<ShareIcon />} 
+
+                <Button
+                  variant="outlined"
+                  startIcon={<ShareIcon />}
                   style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}
                 >
                   Compartir
                 </Button>
-                <Button 
-                  variant="contained" 
-                  startIcon={<AddIcon />} 
+                <Button
+                  variant="contained"
+                  startIcon={<AddIcon />}
                   style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}
                 >
                   Seguir
