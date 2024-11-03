@@ -1,10 +1,12 @@
 // Propuestas.tsx
-import React from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Avatar, Chip, Typography } from '@mui/material';
-import Paper from '@mui/material/Paper';
+import React, { useState } from 'react';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Avatar, Chip, Typography, Button, Box, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Paper } from '@mui/material';
 import { Link } from 'react-router-dom'; // Importa Link
 
 const Propuestas: React.FC = () => {
+  const [open, setOpen] = useState(false);
+  const [proposalName, setProposalName] = useState('');
+  const [proposalDescription, setProposalDescription] = useState('');
   // Datos de ejemplo para la tabla
   const data = [
     {
@@ -25,8 +27,50 @@ const Propuestas: React.FC = () => {
     },
     // Puedes agregar más elementos si es necesario
   ];
+  // Funciones para abrir y cerrar el modal
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
 
+  const handleClose = () => {
+    setOpen(false);
+  };
   return (
+    <Box>
+      {/* Botón para abrir el modal */}
+      <Box display="flex" justifyContent="flex-end" p={2}>
+        <Button variant="contained" color="primary" onClick={handleClickOpen}>
+          Crear Propuesta
+        </Button>
+      </Box>
+     {/* Modal para crear una propuesta */}
+     <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>Crear Nueva Propuesta</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Nombre de la Propuesta"
+            fullWidth
+            value={proposalName}
+            onChange={(e) => setProposalName(e.target.value)}
+          />
+          <TextField
+            margin="dense"
+            label="Descripción"
+            fullWidth
+            multiline
+            rows={4}
+            value={proposalDescription}
+            onChange={(e) => setProposalDescription(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">Cancelar</Button>
+          <Button onClick={handleClose} color="primary">Guardar</Button>
+        </DialogActions>
+      </Dialog>
+
     <TableContainer component={Paper}>
       <Table>
         <TableHead>
@@ -58,6 +102,8 @@ const Propuestas: React.FC = () => {
         </TableBody>
       </Table>
     </TableContainer>
+    </Box>
+
   );
 };
 
