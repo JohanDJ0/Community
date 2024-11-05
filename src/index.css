@@ -68,6 +68,12 @@ body[data-theme='light'] {
   margin: 0 auto;
 }
 
+.second-div-2{
+  width: 50%;
+  height: 80%;
+  margin: 0 auto;
+
+}
 .box-div {
   border: 1px solid #ccc;
   border-radius: 20px;
@@ -88,4 +94,10 @@ body[data-theme='light'] {
   color: white; /* Color de texto oscuro */
   background-image: none; /* Elimina la imagen de fondo en modo oscuro */
 
+}
+@media (max-width: 500px) {
+  .second-div-2 {
+    width: 90%; /* Ajuste para pantalla pequeña */
+    height: 80vh; /* Cambia la altura al 80% de la altura de la ventana */
+  }
 }

@@ -14,7 +14,6 @@ const MenuP: React.FC = () => {
   const handleSignUp = () => {
     localStorage.setItem('isSignUp', 'true');
 
-    // Redirige a la vista /VistaRol después de registrarse
     loginWithRedirect({
       authorizationParams: {
         screen_hint: 'signup',
@@ -24,7 +23,7 @@ const MenuP: React.FC = () => {
   };
 
   const handleLogin = () => {
-    loginWithRedirect(); // Solo maneja el inicio de sesión
+    loginWithRedirect();
   };
 
   return (
@@ -33,7 +32,15 @@ const MenuP: React.FC = () => {
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <img src={logo} alt="Logo" style={{ marginRight: '10px', height: '40px' }} />
-            <Typography variant="h6" component="div" sx={{ color: 'black', fontWeight: 'bold' }}>
+            <Typography
+              variant="h6"
+              component="div"
+              sx={{
+                color: 'black',
+                fontWeight: 'bold',
+                display: { xs: 'none', sm: 'block' }, // Ocultar en pantallas pequeñas
+              }}
+            >
               Community
             </Typography>
           </Box>

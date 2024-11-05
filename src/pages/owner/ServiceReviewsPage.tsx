@@ -87,7 +87,7 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
         description: newReview.description,
         rating: newReview.rating,
         written_by: token,
-        service_id: id,
+        service_id: Number(id),
       },
     };
 
@@ -97,14 +97,13 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify(reviewData),
+      body: JSON.stringify(reviewData), // Cambia esto para reflejar la estructura correcta
     })
       .then(response => response.json())
       .then((data) => {
         if (data.result && data.result.success) {
-          console.log("Reseña creada con éxito:", data.result.Message);
-          handleCloseModal();
-          fetchReviews(); // Llamar a fetchReviews para obtener las reseñas actualizadas
+          console.log("Reseña creada con éxito:", data.result.Message); // Mensaje de éxito
+          handleCloseModal(); // Cerrar el modal al crear la reseña con éxito
         } else {
           console.error("Error al crear la reseña:", data.result?.Message || "Error desconocido");
         }

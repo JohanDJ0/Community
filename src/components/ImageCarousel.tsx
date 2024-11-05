@@ -1,76 +1,95 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-const ImageCarousel: React.FC = () => {
+interface Service {
+  id: number;
+  name: string;
+  image: string;
+  qualification: number;
+  description: string | boolean;
+}
+interface ServicesProps {
+  darkMode: boolean;
+}
+
+const ImageCarousel: React.FC<ServicesProps> = ({ darkMode }) =>{
+  const [data, setData] = useState<Service[]>([]);
+  const [loading, setLoading] = useState(true); // Nuevo estado para manejar la carga
+
+  useEffect(() => {
+    setLoading(true); // Establece el estado de carga en true al iniciar la solicitud
+    fetch("/services")
+      .then((res) => res.json())
+      .then((result: Service[]) => {
+        if (Array.isArray(result)) {
+          setData(result);
+        } else {
+          console.error("Formato de datos inesperado:", result);
+        }
+        setLoading(false); // Establece el estado de carga en false una vez que se obtienen los datos
+      })
+      .catch((error) => {
+        console.error("Error al obtener los datos:", error);
+        setLoading(false); // Manejo de error: establece el estado de carga en false
+      });
+  }, []);
+
   const settings = {
     dots: false,
     infinite: true,
-    speed: 4000, // Ajusta la velocidad de transición (en milisegundos)
-    slidesToShow: 3, // Mostrar 3 imágenes al mismo tiempo
+    speed: 4000,
+    slidesToShow: 3,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 0, // Velocidad de autoplay (0 para movimiento continuo)
-    cssEase: "linear", // Transición suave
+    autoplaySpeed: 0,
+    cssEase: "linear",
     pauseOnHover: false,
-    draggable: false, // Desactiva el arrastre para evitar problemas de rendimiento
-    swipe: false, // Desactiva el deslizamiento táctil
+    draggable: false,
+    swipe: false,
   };
 
-  // Estilo para las imágenes con márgenes
   const imageStyle: React.CSSProperties = {
-    width: "calc(100% - 20px)", // Ajusta el ancho para que se adapte al contenedor
+    width: "calc(100% - 20px)",
     height: "300px",
     objectFit: "cover",
     borderRadius: "10px",
     margin: "0 10px",
   };
 
-  // Estilo para el texto debajo de cada imagen
   const textStyle: React.CSSProperties = {
     textAlign: "center",
     marginTop: "10px",
-    fontSize: "1rem",
-    color: "#333", // Ajusta el color según tu diseño
+    fontSize: "1.5rem",
+    color: "#333",
+    fontWeight: "bold",
   };
 
   return (
-    <div style={{ width: "100%", margin: "0 auto", overflow: "hidden" }}>
-      <Slider {...settings}>
-        <div>
-          <img
-            src="https://w.wallhaven.cc/full/ex/wallhaven-exmxpw.jpg"
-            alt="Imagen 1"
-            style={imageStyle}
-          />
-          <div style={textStyle}>Texto para Imagen 1</div>
-        </div>
-        <div>
-          <img
-            src="https://w.wallhaven.cc/full/ex/wallhaven-exg77k.jpg"
-            alt="Imagen 2"
-            style={imageStyle}
-          />
-          <div style={textStyle}>Texto para Imagen 2</div>
-        </div>
-        <div>
-          <img
-            src="https://w.wallhaven.cc/full/43/wallhaven-433rg3.jpg"
-            alt="Imagen 3"
-            style={imageStyle}
-          />
-          <div style={textStyle}>Texto para Imagen 3</div>
-        </div>
-        <div>
-          <img
-            src="https://w.wallhaven.cc/full/9d/wallhaven-9dp3y1.jpg"
-            alt="Imagen 4"
-            style={imageStyle}
-          />
-          <div style={textStyle}>Texto para Imagen 4</div>
-        </div>
-      </Slider>
+    <div style={{ width: "100%", margin: "0 auto", overflow: "hidden",color: darkMode ? '#aaa' : '#000'  }}>
+      {loading ? (
+        <p>Obteniendo servicios...</p> // Muestra el mensaje mientras se cargan los datos
+      ) : data.length > 0 ? (
+        <Slider {...settings}>
+          {data.map((service) => (
+            <div key={service.id}>
+              <img
+                src={
+                  service.image
+                    ? `data:image/jpeg;base64,${atob(service.image)}`
+                    : "https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg"
+                }
+                alt={service.name}
+                style={imageStyle}
+              />
+              <div style={textStyle}>{service.name}</div>
+            </div>
+          ))}
+        </Slider>
+      ) : (
+        <p>No se encontraron servicios.</p> // Mensaje en caso de que no haya datos
+      )}
     </div>
   );
 };

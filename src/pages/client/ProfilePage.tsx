@@ -2,22 +2,18 @@ import React, { useEffect } from 'react';
 import '../../css/App.css';
 import { useAuth0 } from '@auth0/auth0-react';
 import Avatar from '@mui/material/Avatar';
-import { Stack, useMediaQuery } from '@mui/material';
-import { useNavigate } from 'react-router-dom'; // Importar useNavigate
+import { Stack, Box, useMediaQuery } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
-// Agrega 'darkMode' como prop
 interface ServicesProps {
   darkMode: boolean;
 }
 
 const ProfilePage: React.FC<ServicesProps> = ({ darkMode }) => {
   const { user, isAuthenticated } = useAuth0();
-  const navigate = useNavigate(); // Hook para navegar entre rutas
-
-  // Verificar si la pantalla es pequeña
+  const navigate = useNavigate();
   const isSmallScreen = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 
-  // Enviar datos a la base de datos cuando el usuario esté autenticado
   useEffect(() => {
     if (isAuthenticated && user) {
       const sendUserData = async () => {
@@ -31,7 +27,7 @@ const ProfilePage: React.FC<ServicesProps> = ({ darkMode }) => {
               name: user.name,
               email: user.email,
               picture: user.picture,
-              sub: user.sub, // ID único del usuario proporcionado por Auth0
+              sub: user.sub,
             }),
           });
 
@@ -49,22 +45,27 @@ const ProfilePage: React.FC<ServicesProps> = ({ darkMode }) => {
     }
   }, [isAuthenticated, user]);
 
-  // Cambia `false` por `null`
   if (!isAuthenticated) {
-    return null; // O podrías redirigir a una página de inicio de sesión
+    return null;
   }
 
   return (
-    <div className="first-div">
-      <div className="second-div">
-        <div className={`box-div ${darkMode ? 'dark' : 'light'}`}>
-          <Stack direction={isSmallScreen ? "column" : "row"} spacing={2} alignItems="center">
-            <Avatar src={user?.picture} sx={{ width: 200, height: 200 }} />
-            <Stack direction="column" spacing={1} alignItems={isSmallScreen ? "center" : "flex-start"}>
-              <h2>{user?.name}</h2>
-              <p>{user?.email}</p>
-              <p>ID del Usuario: {user?.sub}</p> {/* Mostrar el ID del usuario */}
-            </Stack>
+    <div className="first-div" >
+      <div className="second-div-2">
+        <div className={`box-div ${darkMode ? 'dark' : 'light'}`} style={{ textAlign: 'center', padding: isSmallScreen ? '10px' : '20px', borderRadius: '20px' }}>
+          <Stack direction="column" spacing={2} alignItems="center">
+            <Avatar
+              src={user?.picture}
+              sx={{
+                width: isSmallScreen ? 100 : 200,
+                height: isSmallScreen ? 100 : 200,
+              }}
+            />
+            <Box>
+              <h2 style={{ fontSize: isSmallScreen ? '1.5rem' : '2rem' }}>{user?.name}</h2>
+              <p style={{ fontSize: isSmallScreen ? '1rem' : '1.25rem' }}>{user?.email}</p>
+              <p style={{ fontSize: isSmallScreen ? '0.9rem' : '1rem' }}>ID del Usuario: {user?.sub}</p>
+            </Box>
           </Stack>
         </div>
       </div>
