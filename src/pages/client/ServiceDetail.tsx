@@ -30,7 +30,7 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
   const navigate = useNavigate();
   const [service, setService] = useState<ServiceDetailProps | null>(null);
   const isSmallScreen = useMediaQuery('(max-width:600px)');
-  const isExtraSmallScreen = useMediaQuery('(max-width:375px)'); // Para pantallas pequeñas como iPhone SE
+  const isExtraSmallScreen = useMediaQuery('(max-width:375px)');
 
   useEffect(() => {
     let isMounted = true;
@@ -71,12 +71,12 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
             <Box position="relative" width="100%" height={isSmallScreen ? '200px' : '300px'}>
               <CardMedia
                 component="img"
-                height={isSmallScreen ? '200' : '300'}
+                height="300"
                 image={service.image ? `data:image/jpg;base64,${atob(service.image)}` : "https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg"}
                 alt={service.name}
-                className='image-service'
                 style={{ filter: 'brightness(0.7)' }}
               />
+
               <Typography
                 variant={isSmallScreen ? "h5" : "h1"}
                 style={{
@@ -124,7 +124,7 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                 <Button
                   variant="contained"
                   startIcon={<BackHandIcon />}
-                  onClick={() => navigate(`/propuestas`)}
+                  onClick={() => navigate(`/proposal/${id}`)}
 
                   style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}
                 >

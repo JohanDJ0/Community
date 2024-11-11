@@ -15,6 +15,7 @@ import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
 import { useAuth0 } from '@auth0/auth0-react'; // Importar useAuth0
 import AddIcon from '@mui/icons-material/Add';
+import { useMediaQuery } from '@mui/material';
 
 interface Review {
   name: string; // Nombre de la reseña
@@ -45,6 +46,7 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
   const [serviceName, setServiceName] = useState<string | null>(null); // Para almacenar el nombre del servicio
   const [fade, setFade] = useState(false); // Estado para manejar la transición
   const [openModal, setOpenModal] = useState(false);
+  const isSmallScreen = useMediaQuery('(max-width:600px)');
 
   const [newReview, setNewReview] = useState<Review>({
     name: '',
@@ -130,7 +132,7 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
         console.log('Datos de la API:', responseData);
         setService(prevService => ({
           ...prevService!,
-          reviews: responseData, 
+          reviews: responseData,
         }));
         setLoading(false);
       })
@@ -163,7 +165,7 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
           setService({
             id: Number(id),
             name: serviceName || 'Cargando nombre...', // Asignar un nombre temporal
-            image: null, // Imagen temporal
+            image: null, // o 'string' o false
             qualification: 0, // Calificación temporal
             reviews: responseData, // Asignar reseñas directamente
           });
@@ -191,20 +193,24 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
           console.log('Detalles del servicio:', responseData);
           if (responseData && responseData.length > 0) {
             const newServiceName = responseData[0].name; // Asignar el nombre del servicio
+            const newQualification = responseData[0].qualification || 0; // Asegurarte de que el valor de la calificación esté bien asignado
             setFade(true); // Activar la transición de desvanecimiento
+            const newImage = responseData[0].image; // La imagen codificada en Base64 de la API
             setService((prevService) => ({
-              id: prevService ? prevService.id : Number(id), // Asegúrate de asignar un id
-              name: newServiceName, // Actualiza el nombre del servicio
-              image: prevService ? prevService.image : null, // Mantén la imagen anterior o null
-              qualification: prevService ? prevService.qualification : 0, // Mantén la calificación anterior o 0
-              reviews: prevService ? prevService.reviews : [], // Mantén las reseñas anteriores o un array vacío
+              id: prevService ? prevService.id : Number(id),
+              name: newServiceName,
+              image: newImage || prevService?.image, // Actualiza si hay una nueva imagen
+              qualification: newQualification,
+              reviews: prevService ? prevService.reviews : [],
             }));
+
             setServiceName(newServiceName); // Actualiza el estado del nombre del servicio
           } else {
             console.error('Estructura de datos inesperada:', responseData);
           }
         }
       })
+
       .catch((error) => {
         console.error('Error al obtener los detalles del servicio:', error);
       });
@@ -254,8 +260,8 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
     <div className='first-div'>
       <div className='second-div'>
         <div className={`box-div ${darkMode ? 'dark' : 'light'}`} style={{ position: 'relative' }}>
-          <Card style={{ maxHeight: '500px', overflowY: 'auto' }}>
-            <Box position="relative" width="100%" height="300px">
+          <Card style={{ maxHeight: isSmallScreen ? '400px' : '500px', overflowY: 'auto' }}>
+            <Box position="relative" width="100%" height={isSmallScreen ? '200px' : '300px'}>
               <CardMedia
                 component="img"
                 height="300"
@@ -263,6 +269,8 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
                 alt={service.name}
                 style={{ filter: 'brightness(0.7)' }}
               />
+
+
               <Typography
                 variant="h1"
                 className={`fade ${fade ? 'fade-in' : ''}`}
@@ -278,36 +286,67 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
               >
                 {serviceName || 'Cargando nombre...'}
               </Typography>
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                style={{
+                  position: 'absolute',
+                  bottom: '10px',
+                  left: '10px',
+                  color: 'white',
+                  padding: '5px',
+                }}
+              >
+                <Rating name="read-only" value={service.qualification} readOnly />
+              </Typography>
             </Box>
 
             <CardContent>
               <Stack spacing={2} direction="row">
                 <Button variant="contained" startIcon={<GradeIcon />} onClick={handleNovedadesClick}>Novedades</Button>
-                <Button variant="contained" startIcon={<GradeIcon />}>Reseñas</Button>
-                <Button variant="contained" startIcon={<BackHandIcon />}>Propuestas</Button>
+                <Button variant="contained" startIcon={<GradeIcon />} onClick={() => navigate(`/services/${id}/reviews`)}
+                >Reseñas</Button>
+                <Button variant="contained" startIcon={<BackHandIcon />} onClick={() => navigate(`/proposal/${id}`)}
+                >Propuestas</Button>
                 <Button variant="outlined" startIcon={<ShareIcon />}>Compartir</Button>
                 <Button variant="contained" startIcon={<AddIcon />}>Seguir</Button>
               </Stack>
+              <CardContent>
+                <Typography variant="h5" align="left" paddingTop="10px">
+                  Reseñas de usuarios
+                </Typography>
 
-              <Typography variant="h5" align="left" paddingTop="10px">
-                Reseñas de usuarios
-              </Typography>
+                {service.reviews.length > 0 ? (
+                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                    {service.reviews.map((review, index) => (
+                      <Card key={index} sx={{ padding: 2, borderRadius: 2, boxShadow: 2, width: '100%' }}>
 
-              {service.reviews.length > 0 ? (
-                service.reviews.map((review, index) => (
-                  <Stack key={index} direction="row" alignItems="center" spacing={2}>
-                    <Typography variant="subtitle1" fontWeight="bold">
-                      {review.written_by}
-                    </Typography>
-                    <Typography variant="body2">
-                      {review.description}
-                    </Typography>
-                    <Rating value={review.rating} readOnly />
-                  </Stack>
-                ))
-              ) : (
-                <Typography variant="body2">No hay reseñas disponibles.</Typography>
-              )}
+                        <Typography variant="h6" fontWeight="bold" sx={{ marginBottom: 1, textAlign: 'left' }}>
+                          {review.written_by}
+                        </Typography>
+                        <Stack direction="row" alignItems="center" spacing={2} sx={{ marginBottom: 1 }}>
+                          <Rating value={review.rating} readOnly sx={{ textAlign: 'left' }} />
+                          <Typography variant="subtitle1" fontWeight="bold" sx={{ textAlign: 'left' }}>
+                            {review.name}
+                          </Typography>
+
+
+                        </Stack>
+
+                        <Typography variant="body2" sx={{ textAlign: 'left' }}>
+                          {review.description}
+                        </Typography>
+                      </Card>
+                    ))}
+                  </Box>
+                ) : (
+                  <Typography variant="body2" sx={{ textAlign: 'left' }}>No hay reseñas disponibles.</Typography>
+                )}
+              </CardContent>
+
+
+
+
             </CardContent>
           </Card>
 
@@ -348,7 +387,7 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
               <FormControl fullWidth margin="normal">
                 <TextField
                   label="Nombre de Usuario"
-          value={user?.name || "Nombre no disponible"} // Mostrar el nombre del usuario
+                  value={user?.name || "Nombre no disponible"} // Mostrar el nombre del usuario
                   disabled // Puedes deshabilitarlo si deseas que el usuario no pueda editarlo
                 />
               </FormControl>

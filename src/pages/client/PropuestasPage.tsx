@@ -1,62 +1,105 @@
-import React, { useState } from 'react';
-import { Card, CardMedia, CardContent, Typography, Box, Button, Stack, Rating, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Avatar, Chip, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Paper } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Card, CardMedia, CardContent, Typography, Box, Button, Stack, Rating, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Avatar, Chip } from '@mui/material';
 import GradeIcon from '@mui/icons-material/Grade';
 import ShareIcon from '@mui/icons-material/Share';
 import BackHandIcon from '@mui/icons-material/BackHand';
 import AddIcon from '@mui/icons-material/Add';
 import { useMediaQuery } from '@mui/material';
-import { Link } from 'react-router-dom';
 
-interface ProposalsProps {
+interface ServiceDetail {
+  id: number;
+  name: string;
+  image: string | null | false;
+  qualification: number;
+  description: string;
+}
+
+interface Proposal {
+  id: number;
+  create_date: string;
+  name: string;
+  written_by: string | false;
+  status: string;
+  description: string | false;
+  close_date: string | null;
+}
+
+interface ProposalDetailProps {
   darkMode: boolean;
 }
 
-const ProposalDetail: React.FC<ProposalsProps> = ({ darkMode }) => {
-  const isSmallScreen = useMediaQuery('(max-width:600px)');
+const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
+  const { id } = useParams<{ id: string }>();
+  const [service, setService] = useState<ServiceDetail | null>(null);
+  const [proposals, setProposals] = useState<Proposal[]>([]);
   const [open, setOpen] = useState(false);
   const [proposalName, setProposalName] = useState('');
   const [proposalDescription, setProposalDescription] = useState('');
+  const [debateEndDate, setDebateEndDate] = useState('');
+  const [deliberationEndDate, setDeliberationEndDate] = useState('');
+  const isSmallScreen = useMediaQuery('(max-width:600px)');
+  const navigate = useNavigate();
 
-  // Datos de ejemplo para la tabla
-  const data = [
-    {
-      id: 1,
-      title: "Propuesta servicios",
-      status: "In progress",
-      createdBy: "Juan",
-      reviewer: "Dueño",
-      lastUpdate: "03/02/2024, 1:49 pm",
-    },
-    {
-      id: 2,
-      title: "Estacionamiento",
-      status: "In progress",
-      createdBy: "Pedro",
-      reviewer: "Dueño",
-      lastUpdate: "03/02/2024, 1:49 pm",
-    },
-  ];
+  useEffect(() => {
+    let isMounted = true;
+    if (id) {
+      fetch(`http://18.117.103.214/services/${id}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (isMounted && data.length > 0) {
+            setService(data[0]);
+          }
+        })
+        .catch((error) => console.error('Error al obtener los detalles del servicio:', error.message));
 
-  // Funciones para abrir y cerrar el modal
-  const handleClickOpen = () => {
-    setOpen(true);
+      fetch(`http://18.117.103.214/proposals/${id}`)
+        .then((res) => res.json())
+        .then((data) => isMounted && setProposals(data))
+        .catch((error) => console.error('Error al obtener propuestas:', error.message));
+    }
+    return () => { isMounted = false; };
+  }, [id]);
+
+  if (!service) {
+    return <p>Cargando detalles del servicio...</p>;
+  }
+
+  const handleClickOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const handleSave = () => {
+    const newProposalData = {
+      name: proposalName,
+      description: proposalDescription,
+      debateEndDate,
+      deliberationEndDate,
+    };
+    console.log('Guardando propuesta:', newProposalData); // Log para ver los datos enviados
+
+    handleClose();
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleNovedadesClick = () => {
+    navigate(`/services/${id}`); // Cambia a una ruta relativa
   };
+
+
+  const handleRowClick = (proposalId: number) => {
+    navigate(`/ProposalDetail/${id}/${proposalId}`); // Incluye el serviceId y el proposalId en la URL
+  };
+
 
   return (
     <div className='first-div'>
       <div className='second-div'>
         <div className={`box-div ${darkMode ? 'dark' : 'light'}`}>
           <Card style={{ maxHeight: isSmallScreen ? '400px' : '500px', overflowY: 'auto' }}>
-            <Box position="relative" width="100%" height={isSmallScreen ? '200px' : '300px'}>
+            <Box position="relative" width="100%" height="300px">
               <CardMedia
                 component="img"
                 height={isSmallScreen ? '200' : '300'}
-                image="https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg"
-                alt="Nombre de la Propuesta"
+                image={service.image ? `data:image/jpg;base64,${atob(service.image)}` : "https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg"}
+                alt={service.name}
                 className='image-service'
                 style={{ filter: 'brightness(0.7)' }}
               />
@@ -70,7 +113,7 @@ const ProposalDetail: React.FC<ProposalsProps> = ({ darkMode }) => {
                   padding: '5px',
                 }}
               >
-                Nombre de la Propuesta
+                {service.name}
               </Typography>
               <Typography
                 variant="body2"
@@ -83,53 +126,27 @@ const ProposalDetail: React.FC<ProposalsProps> = ({ darkMode }) => {
                   padding: '5px',
                 }}
               >
-                <Rating name="read-only" value={4.5} readOnly />
+                <Rating name="read-only" value={service.qualification} readOnly />
               </Typography>
             </Box>
 
             <CardContent>
-              <Stack spacing={1} direction="row">
-                <Button
-                  variant="contained"
-                  startIcon={<GradeIcon />}
-                  style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}
-                >
-                  Novedades
-                </Button>
-                <Button
-                  variant="contained"
-                  startIcon={<BackHandIcon />}
-                  style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}
-                >
-                  Reseñas
-                </Button>
-                <Button
-                  variant="outlined"
-                  startIcon={<ShareIcon />}
-                  style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}
-                >
-                  Compartir
-                </Button>
-                <Button
-                  variant="contained"
-                  startIcon={<AddIcon />}
-                  style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}
-                >
-                  Seguir
-                </Button>
-              </Stack>
               <Typography variant="body2" color="text.secondary" align='left' paddingBottom={'5px'}>
-                Descripción: Descripción breve de la propuesta.
+                Descripción: {service.description || "Sin descripción disponible"}
               </Typography>
+            </CardContent>
 
-              {/* Botón para abrir el modal */}
-              <Box display="flex" justifyContent="flex-end" p={2}>
-                <Button variant="contained" color="primary" onClick={handleClickOpen}>
-                  Crear Propuesta
-                </Button>
-              </Box>
+            <CardContent>
+              <Stack spacing={1} direction="row">
+                <Button variant="contained" startIcon={<GradeIcon />} style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}  onClick={handleNovedadesClick}>Novedades</Button>
+                <Button variant="contained" startIcon={<GradeIcon />} style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 4px' : '6px 12px' }}onClick={() => navigate(`/services/${id}/reviews`)}>Reseñas</Button>
+                <Button variant="contained" startIcon={<BackHandIcon />} style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}>Propuestas</Button>
+                <Button variant="outlined" startIcon={<ShareIcon />} style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}>Compartir</Button>
+                <Button variant="contained" startIcon={<AddIcon />} style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}>Seguir</Button>
+              </Stack>
 
-              {/* Modal para crear una propuesta */}
+
+
               <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>Crear Nueva Propuesta</DialogTitle>
                 <DialogContent>
@@ -150,50 +167,75 @@ const ProposalDetail: React.FC<ProposalsProps> = ({ darkMode }) => {
                     value={proposalDescription}
                     onChange={(e) => setProposalDescription(e.target.value)}
                   />
+                  <TextField
+                    margin="dense"
+                    label="Fin Debate"
+                    type="datetime-local"  // Cambiado a "datetime-local"
+                    fullWidth
+                    InputLabelProps={{ shrink: true }}
+                    value={debateEndDate}
+                    onChange={(e) => setDebateEndDate(e.target.value)}
+                  />
+                  <TextField
+                    margin="dense"
+                    label="Fin Deliberación"
+                    type="datetime-local"  // Cambiado a "datetime-local"
+                    fullWidth
+                    InputLabelProps={{ shrink: true }}
+                    value={deliberationEndDate}
+                    onChange={(e) => setDeliberationEndDate(e.target.value)}
+                  />
                 </DialogContent>
                 <DialogActions>
                   <Button onClick={handleClose} color="primary">Cancelar</Button>
-                  <Button onClick={handleClose} color="primary">Guardar</Button>
+                  <Button onClick={handleSave} color="primary">Guardar</Button>
                 </DialogActions>
               </Dialog>
 
-              <TableContainer component={Paper}>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell><Typography variant="subtitle2">Título</Typography></TableCell>
-                      <TableCell><Typography variant="subtitle2">Estado</Typography></TableCell>
-                      <TableCell><Typography variant="subtitle2">Creado por</Typography></TableCell>
-                      <TableCell><Typography variant="subtitle2">Revisores</Typography></TableCell>
-                      <TableCell><Typography variant="subtitle2">Actualizado</Typography></TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {data.map((row) => (
-                      <TableRow key={row.id} component={Link} to={`/proposal/${row.id}`} style={{ textDecoration: 'none' }}>
-                        <TableCell>{row.title}</TableCell>
-                        <TableCell>
-                          <Chip label={row.status} style={{ backgroundColor: '#fdd835', color: '#000' }} />
-                        </TableCell>
-                        <TableCell>
-                          <Avatar style={{ width: 24, height: 24, marginRight: 8 }} />
-                          {row.createdBy}
-                        </TableCell>
-                        <TableCell>
-                          <Chip label={row.reviewer} variant="outlined" />
-                        </TableCell>
-                        <TableCell>{row.lastUpdate}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
             </CardContent>
+
+            <CardContent>
+              {proposals.length > 0 && proposals.some((proposal) => proposal.name) ? (
+                <TableContainer component={Paper}>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell><Typography variant="subtitle2">Título</Typography></TableCell>
+                        <TableCell><Typography variant="subtitle2">Estado</Typography></TableCell>
+                        <TableCell><Typography variant="subtitle2">Creado por</Typography></TableCell>
+                        <TableCell><Typography variant="subtitle2">Última actualización</Typography></TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {proposals.map((proposal) => (
+                        <TableRow key={proposal.id} onClick={() => handleRowClick(proposal.id)} style={{ cursor: 'pointer' }}>
+                          <TableCell>{proposal.name || "Sin título"}</TableCell>
+                          <TableCell><Chip label={proposal.status || "No disponible"} style={{ backgroundColor: '#fdd835', color: '#000' }} /></TableCell>
+                          <TableCell>
+                            <Avatar style={{ width: 24, height: 24, marginRight: 8 }} />
+                            {proposal.written_by || "Desconocido"}
+                          </TableCell>
+                          <TableCell>{proposal.create_date || "Sin fecha"}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              ) : (
+                <Typography variant="body1" color="text.secondary" align="center" style={{ padding: '20px' }}>
+                  No hay propuestas aún.
+                </Typography>
+              )}
+            </CardContent>
+
           </Card>
+          <Box display="flex" justifyContent="flex-end" alignItems="flex-end" p={0} style={{ overflow: 'hidden' }}>
+            <Button variant="contained" color="primary" onClick={handleClickOpen}>Crear Propuesta</Button>
+          </Box>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default ProposalDetail;

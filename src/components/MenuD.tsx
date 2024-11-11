@@ -39,7 +39,7 @@ const MenuD: React.FC<{ toggleDarkMode: () => void }> = ({ toggleDarkMode }) => 
   useEffect(() => {
     const role = localStorage.getItem('rol');
     const token = localStorage.getItem('token');
-    console.log("Token obtenido:", token); // Mostrar el token en la consola
+    console.log("Token obtenido desdde menu:", token); // Mostrar el token en la consola
 
     setUserRole(role);  // Guardar el rol del usuario
     setUserToken(token); // Guardar el token

@@ -15,52 +15,95 @@ interface Comment {
 }
 
 const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
-  const { id } = useParams<{ id: string }>();
+  const { serviceId, proposalId } = useParams<{ serviceId: string, proposalId: string }>();
   const { user } = useAuth0();
-
-  console.log("ID de la propuesta:", id);
-
-  const [inDeliberation, setInDeliberation] = useState(false);
+  const [proposal, setProposal] = useState<any>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
-  const [timeRemaining, setTimeRemaining] = useState(0);
+  const [inDeliberation, setInDeliberation] = useState(true); // Iniciar directamente en deliberación
+  const [timeRemaining, setTimeRemaining] = useState(0); // Tiempo restante basado en la fecha
   const [voted, setVoted] = useState(false);
   const [vote, setVote] = useState<string | null>(null);
-  const [deliberationEnded, setDeliberationEnded] = useState(false); // Nuevo estado
+  const [deliberationEnded, setDeliberationEnded] = useState(false);
 
   useEffect(() => {
-    let timer: NodeJS.Timeout | null = null;
+    console.log("Service ID:", serviceId);
+    console.log("Proposal ID:", proposalId);
+    const token = localStorage.getItem('token');
+    console.log("Token obtenido desde propuestas:", token);
+  
+    fetch(`http://18.117.103.214/proposalsDetail/${proposalId}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Error al obtener la propuesta');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log('Propuesta cargada:', data);
+        setProposal(data[0]);
+  
+        // Cargar comentarios si existen
+        const loadedComments = data[0].comments.map((comment: { written_by: string; message: string }) => ({
+          author: comment.written_by,
+          text: comment.message,
+        }));
+        setComments(loadedComments);
+        // Obtener la fecha de cierre del debate
+        const closeDateDebate = new Date(data[0].close_date_debate);
+        const now = new Date();
+        const timeDiff = closeDateDebate.getTime() - now.getTime();
+        setTimeRemaining(Math.floor(timeDiff / 1000)); // Guardamos el tiempo restante en segundos
+      })
+      
+      .catch((error) => {
+        console.error('Error al cargar la propuesta:', error);
+      });
+  
+    fetch(`http://18.117.103.214/services/${serviceId}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Error al obtener el servicio');
+        }
+        return response.json();
+      })
+      .then((serviceData) => {
+        console.log('Detalles del servicio:', serviceData);
+      })
+      .catch((error) => {
+        console.error('Error al cargar el servicio:', error);
+      });
+  }, [serviceId, proposalId]);
+  
+// Lógica del temporizador de deliberación
+useEffect(() => {
+  let timer: NodeJS.Timeout | null = null;
 
-    if (inDeliberation) {
-      setTimeRemaining(30);
-      timer = setInterval(() => {
-        setTimeRemaining((prevTime) => {
-          if (prevTime <= 1) {
-            clearInterval(timer!);
-            setInDeliberation(false); // Termina deliberación
-            setDeliberationEnded(true); // Marca que la deliberación ha terminado
-            return 0;
-          }
-          return prevTime - 1;
-        });
-      }, 1000);
-    } else {
-      if (timer) {
-        clearInterval(timer);
-      }
-      setTimeRemaining(0);
+  if (inDeliberation && timeRemaining > 0) {
+    timer = setInterval(() => {
+      setTimeRemaining((prevTime) => {
+        if (prevTime <= 1) {
+          clearInterval(timer!);
+          setInDeliberation(false); // Termina deliberación
+          setDeliberationEnded(true); // Marca que la deliberación ha terminado
+          return 0;
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
+  } else {
+    if (timer) {
+      clearInterval(timer);
     }
+    setTimeRemaining(0);
+  }
 
-    return () => {
-      if (timer) {
-        clearInterval(timer);
-      }
-    };
-  }, [inDeliberation]);
-
-  const handleDeliberationClick = () => {
-    setInDeliberation(true);
+  return () => {
+    if (timer) {
+      clearInterval(timer);
+    }
   };
+}, [inDeliberation, timeRemaining]);
 
   const handleCommentChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setNewComment(event.target.value);
@@ -68,9 +111,53 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
 
   const handleCommentSubmit = () => {
     if (newComment.trim()) {
-      const authorName = user?.name || "Nombre no disponible";
+      const authorName = user?.name || 'Nombre no disponible';
       setComments([...comments, { author: authorName, text: newComment.trim() }]);
       setNewComment('');
+
+      const token = localStorage.getItem('token');  // Obtener el token desde localStorage
+
+      if (token) { // Verifica si el token existe
+        const requestBody = {
+          params: {
+            token: token,  // Token del usuario
+            name: newComment.trim(),  // Comentario que se está enviando
+            serviceId: serviceId      // ID del servicio
+          }
+        };
+
+        fetch(`http://18.117.103.214/comment/${proposalId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestBody),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error('Error al enviar el comentario');
+            }
+            return response.json();
+          })
+          .then((data) => {
+            if (data.result && data.result.id !== null) {
+              // Agregar comentario solo si se recibe un ID válido
+              setComments([
+                ...comments,
+                { author: user?.name || 'Nombre no disponible', text: newComment.trim() }
+              ]);
+              setNewComment('');
+              console.log('Comentario enviado con éxito:', data);
+            } else {
+              console.error('Error: El comentario no tiene un ID válido');
+            }
+          })
+          .catch((error) => {
+            console.error('Error al enviar el comentario:', error);
+          });
+      } else {
+        console.error('Error: El token no está disponible');
+      }
     }
   };
 
@@ -78,30 +165,35 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
     setVote(option);
     setVoted(true);
   };
+  const formatTime = (seconds: number) => {
+    const days = Math.floor(seconds / (3600 * 24));
+    const hours = Math.floor((seconds % (3600 * 24)) / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+
+    return `${days}d ${hours}h ${minutes}m ${remainingSeconds}s`;
+  };
+  if (!proposal) {
+    return <Typography>Loading...</Typography>; // Mientras se carga la propuesta
+  }
 
   return (
-    <div className='first-div'>
-      <div className='second-div'>
+    <div className="first-div">
+      <div className="second-div">
         <div className={`box-div ${darkMode ? 'dark' : 'light'}`}>
           <Box display="flex">
             <Box flex={2} pr={4}>
               <Typography variant="h5" gutterBottom color={darkMode ? 'lightgray' : 'textPrimary'}>
-                Propuesta de ejemplo {id}
+                {proposal?.name} {/* Accede al nombre de la propuesta */}
               </Typography>
               <Typography variant="subtitle1" color={darkMode ? 'lightgray' : 'textSecondary'} gutterBottom>
                 Detalles de propuesta
               </Typography>
               <Divider />
               <Typography variant="body2" mt={2} color={darkMode ? 'lightgray' : 'textSecondary'}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque volutpat dui sed
-                est varius, in pellentesque mi scelerisque. Morbi at mauris scelerisque diam gravida
-                varius. Sed lacinia auctor eleifend. Pellentesque cursus felis vel dui facilisis, et
-                viverra turpis volutpat. Integer dolor massa, condimentum ut fringilla non, semper quis
-                sem. Vivamus vitae egestas purus. Donec quis tellus a dolor malesuada euismod. Nunc
-                aliquam finibus risus, vitae commodo tellus imperdiet eget.
+                {proposal?.description === false ? 'Descripción no disponible' : proposal?.description || 'No hay detalles disponibles.'}
               </Typography>
 
-              {/* Contenedor para los comentarios */}
               <Box mt={2} style={{ maxHeight: '200px', overflowY: 'auto' }}>
                 {comments.length > 0 && (
                   <Typography variant="body2" color={darkMode ? 'lightgray' : 'textSecondary'}>
@@ -110,7 +202,13 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                 )}
                 <Stack spacing={1} alignItems="flex-start">
                   {comments.map((comment, index) => (
-                    <Box key={index} p={1} borderRadius={1} bgcolor={darkMode ? '#424242' : '#f5f5f5'} border={`1px solid ${darkMode ? '#666' : '#e0e0e0'}`}>
+                    <Box
+                      key={index}
+                      p={1}
+                      borderRadius={1}
+                      bgcolor={darkMode ? '#424242' : '#f5f5f5'}
+                      border={`1px solid ${darkMode ? '#666' : '#e0e0e0'}`}
+                    >
                       <Typography variant="body2" color={darkMode ? 'lightgray' : 'textPrimary'}>
                         <strong>{comment.author}</strong>
                       </Typography>
@@ -122,7 +220,6 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                 </Stack>
               </Box>
 
-              {/* Área para agregar un nuevo comentario */}
               {inDeliberation && !voted && (
                 <Box mt={2}>
                   <Typography variant="body2" color={darkMode ? 'lightgray' : 'textSecondary'}>
@@ -141,57 +238,7 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
               )}
             </Box>
 
-            {/* Sección de estado de la propuesta */}
             <Box flex={1} pl={4} borderLeft={`1px solid ${darkMode ? '#666' : '#e0e0e0'}`}>
-              {/* Mostrar solo si la deliberación no ha terminado */}
-              {!deliberationEnded && !inDeliberation ? (
-                <>
-                  <Typography variant="subtitle1" gutterBottom color={darkMode ? 'lightgray' : 'textPrimary'}>
-                    Estado
-                  </Typography>
-
-                  <Box mb={2}>
-                    <Chip
-                      label="Borrador"
-                      style={{ backgroundColor: '#f48fb1', color: 'white' }}
-                      icon={<Avatar style={{ backgroundColor: '#f48fb1', width: 12, height: 12 }} />}
-                    />
-                  </Box>
-
-                  <Typography variant="body2" color={darkMode ? 'lightgray' : 'textSecondary'} gutterBottom>
-                    Revisores
-                  </Typography>
-                  <Chip label="Todos los miembros" variant="outlined" />
-
-                  <Box mt={2}>
-     
-                    <Button variant="contained" color="success">
-                      Establecer tiempo
-                    </Button>
-                  </Box>
-                  <Divider sx={{ my: 2 }} />
-
-                  <Stack spacing={1}>
-                    <Box display="flex" alignItems="center">
-                      <Avatar style={{ backgroundColor: '#cfd8dc', width: 12, height: 12 }} />
-                      <Typography variant="body2" ml={1} color={darkMode ? 'lightgray' : 'textSecondary'}>
-                        Debate
-                      </Typography>
-                    </Box>
-                    <Box display="flex" alignItems="center">
-                      <Avatar style={{ backgroundColor: '#cfd8dc', width: 12, height: 12 }} />
-                      <Typography variant="body2" ml={1} color={darkMode ? 'lightgray' : 'textSecondary'}>
-                        Deliberación
-                      </Typography>
-                    </Box>
-                    <Button variant="outlined" onClick={handleDeliberationClick}>
-                      Deliberación
-                    </Button>
-                  </Stack>
-                </>
-              ) : null}
-
-              {/* Sección de deliberación */}
               {inDeliberation && (
                 <Box>
                   <Typography variant="body2" color={darkMode ? 'lightgray' : 'textPrimary'}>
@@ -207,50 +254,57 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                     alignItems="center"
                     justifyContent="center"
                   >
-                    <Typography
-                      variant="h6"
-                      color={darkMode ? '#fff' : '#000'}
-                      fontWeight="bold"
-                      sx={{ textAlign: 'center' }}
-                    >
-                      Tiempo restante: {timeRemaining} seg.
+                    <Typography variant="h6" color={darkMode ? '#fff' : '#000'} fontWeight="bold" sx={{ textAlign: 'center' }}>
+                    Tiempo restante: {formatTime(timeRemaining)}
                     </Typography>
                   </Box>
                 </Box>
               )}
 
-               {/* // Dentro de la sección de votación*/}
-              {deliberationEnded && (
+              {deliberationEnded && !voted && (
                 <Box mt={2}>
                   <Typography variant="h6" color={darkMode ? 'lightgray' : 'textPrimary'} gutterBottom>
-                    ¿Se aprueba esta propuesta?
+                    El debate ha terminado. Vota ahora:
                   </Typography>
-                  <FormControl component="fieldset">
-                    <FormLabel component="legend">Elige una opción</FormLabel>
-                    <RadioGroup
-                      aria-label="voto"
-                      name="radio-buttons-group"
-                      onChange={(event) => handleVote(event.target.value)}
+                  <Stack spacing={1}>
+                    <Button
+                      variant="contained"
+                      color={vote === 'yes' ? 'success' : 'primary'}
+                      onClick={() => handleVote('yes')}
+                      style={{
+                        backgroundColor: vote === 'yes' ? '#388e3c' : '#1976d2',
+                        color: 'white',
+                      }}
                     >
-                      <FormControlLabel value="Sí" control={<Radio />} label="Sí" />
-                      <FormControlLabel value="No" control={<Radio />} label="No" />
-                      <FormControlLabel value="Me abstengo" control={<Radio />} label="Me abstengo" />
-                    </RadioGroup>
-                  </FormControl>
+                      Aprobar
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color={vote === 'no' ? 'error' : 'primary'}
+                      onClick={() => handleVote('no')}
+                      style={{
+                        backgroundColor: vote === 'no' ? '#d32f2f' : '#1976d2',
+                        color: 'white',
+                      }}
+                    >
+                      Rechazar
+                    </Button>
+                  </Stack>
+                </Box>
+              )}
 
-                  {/* Mostrar el resultado de la votación si ya se votó */}
-                  {voted && (
-                    <Typography variant="body2" color={darkMode ? 'lightgray' : 'textPrimary'} mt={2}>
-                      Has votado: {vote}
-                    </Typography>
-                  )}
+              {voted && (
+                <Box mt={2}>
+                  <Typography variant="body2" color={darkMode ? 'lightgray' : 'textPrimary'}>
+                    ¡Gracias por votar!
+                  </Typography>
                 </Box>
               )}
             </Box>
           </Box>
-        </div>
-      </div>
+          </div>
     </div>
+  </div>
   );
 };
 

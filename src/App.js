@@ -80,8 +80,8 @@ const App = () => {
             <Route path="/services/:id/reviews" element={<ServiceReviewsPage darkMode={darkMode} />} />
             <Route path='/Empleados' element={<EmpleadosPage darkMode={darkMode}/>}/>
             <Route path='/MyRewards' element={<MyRewardsPage darkMode={darkMode}/>}/>
-            <Route path='/propuestas' element={<PropuestasPage darkMode={darkMode} />} />
-            <Route path="/proposal/:id" element={<ProposalDetail darkMode={darkMode}/>} />
+            <Route path="/proposal/:id" element={<PropuestasPage darkMode={darkMode}/>} />
+            <Route path="/ProposalDetail/:serviceId/:proposalId" element={<ProposalDetail darkMode={darkMode} />} />
           </Routes>
         </Layout>
       </Router>

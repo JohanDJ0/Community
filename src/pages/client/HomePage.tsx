@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import HeaderP from '../../components/Menu';
 import Button from '@mui/material/Button';
 import '../../css/Home.css';
-import { Typography, Box, useMediaQuery } from '@mui/material';
+import { Typography, Box, useMediaQuery,keyframes  } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ImageCarousel from "../../components/ImageCarousel";
 import { Card, CardContent } from "@mui/material";
@@ -27,6 +27,8 @@ const HomePage: React.FC<ServicesProps> = ({ darkMode }) => {
     });
   };
 
+
+
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     window.scrollTo(0, 0);
@@ -41,6 +43,15 @@ const HomePage: React.FC<ServicesProps> = ({ darkMode }) => {
     }, 200);
   };
 
+    // Definir animación de rebote usando `keyframes` de MUI
+    const bounce = keyframes`
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
+  `;
   return (
 
     <div className={`home-container min-h-screen flex flex-col ${darkMode ? 'dark' : 'light'}`}>
@@ -57,11 +68,12 @@ const HomePage: React.FC<ServicesProps> = ({ darkMode }) => {
           endIcon={<KeyboardArrowDownIcon />}
           variant="contained"
           onClick={handleDiscover}
-          style={{
+          sx={{
             borderRadius: '50px',
-            backgroundColor: darkMode ? '#333' : '#000', // Cambiar color según el modo
+            backgroundColor: darkMode ? '#333' : '#000',
             color: '#fff',
-            padding: '8px 16px'
+            padding: '8px 16px',
+            animation: `${bounce} 1s infinite`,
           }}
         >
           Descubra la comunidad
