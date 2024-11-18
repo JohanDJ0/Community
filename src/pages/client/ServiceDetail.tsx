@@ -34,7 +34,7 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
 
   useEffect(() => {
     let isMounted = true;
-    fetch(`http://18.117.103.214/services/${id}`)
+    fetch(`/services/${id}`)
       .then((res) => {
         if (res.ok) {
           return res.json();

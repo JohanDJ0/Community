@@ -213,7 +213,7 @@ const HomePage: React.FC<ServicesProps> = ({ darkMode }) => {
 
             <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', marginBottom: '16px' }}>
               {[
-                { name: "Miguel Angel", role: "Desarrollador Full-Stack", avatar: "https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg" },
+                { name: "Ángel", role: "Desarrollador Full-Stack", avatar: "https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg" },
                 { name: "Martha", role: "UX Designer", avatar: "https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg" },
                 { name: "Johan De Jesus", role: "Desarrollador Full-Stack", avatar: "https://juegosmoda2049.neocities.org/IMG-20221103-WA0011.jpg" },
                 { name: "Marcos", role: "Desarrollador Front-end", avatar: "https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg" },

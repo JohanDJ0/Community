@@ -32,7 +32,7 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
     const token = localStorage.getItem('token');
     console.log("Token obtenido desde propuestas:", token);
   
-    fetch(`http://18.117.103.214/proposalsDetail/${proposalId}`)
+    fetch(`/proposalsDetail/${proposalId}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Error al obtener la propuesta');
@@ -60,7 +60,7 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
         console.error('Error al cargar la propuesta:', error);
       });
   
-    fetch(`http://18.117.103.214/services/${serviceId}`)
+    fetch(`/services/${serviceId}`)
       .then((response) => {
         if (!response.ok) {
           throw new Error('Error al obtener el servicio');
@@ -126,7 +126,7 @@ useEffect(() => {
           }
         };
 
-        fetch(`http://18.117.103.214/comment/${proposalId}`, {
+        fetch(`/comment/${proposalId}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

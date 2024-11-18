@@ -16,6 +16,14 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import HomeIcon from '@mui/icons-material/Home';
 import MenuIcon from '@mui/icons-material/Menu';
+import { useNavigate } from 'react-router-dom';
+
+interface Notis {
+  id: number;
+  message: string;
+  route: string;
+  number: string;
+}
 
 // Estilos para el componente Search
 const Search = styled('div')(({ theme }) => ({
@@ -64,32 +72,45 @@ const NotificationsWrapper = styled('div')(({ theme }) => ({
   overflowY: 'auto',
 }));
 
-const Notifications = () => (
-  <NotificationsWrapper>
-    <List>
-      <ListItem button>
-        <ListItemText primary="Flexible Identifiers Important Update: New Error Codes and Improved Signup Experience for Organization Invitations" />
-      </ListItem>
-      <ListItem button>
-        <ListItemText primary="A new profile for Access Tokens is now Generally Available" />
-      </ListItem>
-    </List>
-  </NotificationsWrapper>
-);
-
 const Header: React.FC<{ toggleDarkMode: () => void }> = ({ toggleDarkMode }) => {
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [notis, setNotis] = useState<Notis[]>([]);
 
+  const fetchNotifications = () => {
+    const dataN = {
+      params: { token: localStorage.getItem('token') }
+    };
+
+    fetch("/notifications", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(dataN)
+    })
+    .then((res) => res.json())
+    .then((result) => {
+      const finalRes = result['result'];
+      setNotis(finalRes);  // Guarda las notificaciones
+    })
+    .catch((error) => {
+      console.error('Error al obtener los datos:', error);
+    });
+  };
+
+
+  // useEffect para cargar las notificaciones al montar el componente y cada 5 segundos
   useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
+    // Cargar las notificaciones inmediatamente
+    fetchNotifications();
 
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
+    // Configurar el intervalo para actualizar las notificaciones cada 5 segundos
+    const intervalId = setInterval(fetchNotifications, 5000);
+
+    // Limpiar el intervalo cuando el componente se desmonte
+    return () => clearInterval(intervalId);
   }, []);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -99,6 +120,36 @@ const Header: React.FC<{ toggleDarkMode: () => void }> = ({ toggleDarkMode }) =>
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const clickNoti = (route: string, id: number) => {
+    fetch(`/notifications/read/${id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Notificación leida con éxito");
+      })
+      .catch((error) => {
+        console.error("Error al leer la notificacion:", error.message || "Error desconocido");
+      });
+      
+    handleClose();
+    navigate(route);
+  };
+
+  const Notifications = () => (
+    <NotificationsWrapper>
+      <List>
+        {notis.length === 0 ? (
+          <ListItemText>¡Bien hecho! No tienes notificaciones...</ListItemText>
+        ) : (
+          notis.map((item) => (
+            <ListItem button onClick={() => clickNoti(item.route, item.id)}>
+              <ListItemText primary={item.message} />
+            </ListItem>
+          ))
+        )}
+      </List>
+    </NotificationsWrapper>
+  );
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
@@ -133,7 +184,7 @@ const Header: React.FC<{ toggleDarkMode: () => void }> = ({ toggleDarkMode }) =>
               sx={{ color: (theme) => theme.palette.text.primary }} 
               onClick={handleClick}
             >
-              <Badge badgeContent={2} color="info">
+              <Badge badgeContent={notis.length} color="info">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
@@ -148,7 +199,7 @@ const Header: React.FC<{ toggleDarkMode: () => void }> = ({ toggleDarkMode }) =>
               sx={{ color: (theme) => theme.palette.text.primary }} 
               onClick={handleClick}
             >
-              <Badge badgeContent={2} color="info">
+              <Badge badgeContent={notis.length} color="info">
                 <NotificationsIcon />
               </Badge>
             </IconButton>

@@ -93,7 +93,7 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
       },
     };
 
-    fetch('http://18.117.103.214/reviews/create', {
+    fetch('/reviews/create', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -121,7 +121,7 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
 
   // Función para obtener reseñas
   const fetchReviews = () => {
-    fetch(`http://18.117.103.214/reviews/${id}`)
+    fetch(`/reviews/${id}`)
       .then((res) => {
         if (res.ok) {
           return res.json();
@@ -152,7 +152,7 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
     setLoading(true);
 
     // Obtener las reseñas
-    fetch(`http://18.117.103.214/reviews/${id}`)
+    fetch(`/reviews/${id}`)
       .then((res) => {
         if (res.ok) {
           return res.json();
@@ -181,7 +181,7 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
       });
 
     // Obtener los detalles del servicio para obtener el nombre
-    fetch(`http://18.117.103.214/services/${id}`)
+    fetch(`/services/${id}`)
       .then((res) => {
         if (res.ok) {
           return res.json();

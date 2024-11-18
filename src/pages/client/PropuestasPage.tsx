@@ -44,7 +44,7 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
   useEffect(() => {
     let isMounted = true;
     if (id) {
-      fetch(`http://18.117.103.214/services/${id}`)
+      fetch(`/services/${id}`)
         .then((res) => res.json())
         .then((data) => {
           if (isMounted && data.length > 0) {
@@ -53,7 +53,7 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
         })
         .catch((error) => console.error('Error al obtener los detalles del servicio:', error.message));
 
-      fetch(`http://18.117.103.214/proposals/${id}`)
+      fetch(`/proposals/${id}`)
         .then((res) => res.json())
         .then((data) => isMounted && setProposals(data))
         .catch((error) => console.error('Error al obtener propuestas:', error.message));
