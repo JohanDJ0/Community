@@ -12,7 +12,9 @@ body, html {
   background-size: 40%;
   background-attachment: fixed;
   overflow-x: hidden; /* Evita el scroll horizontal */
-
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
 /* Estilo para el menú */
 .menu {
@@ -32,6 +34,9 @@ body[data-theme='dark'] {
 body[data-theme='light'] {
   background-color: white; /* Fondo claro */
   color: black; /* Texto oscuro */
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
 
 /* Ajusta box-sizing para todos los elementos */
@@ -45,12 +50,13 @@ body[data-theme='light'] {
   position: relative; /* Necesario para posicionar elementos hijos */
   height: 100vh;
   width: 100%; /* Ajusta este valor según necesites (por ejemplo, 90% del ancho del contenedor padre) */
-
+  overflow: hidden; /* Desactiva scroll adicional */
   flex: 1; /* Esto hace que el div ocupe el espacio restante */
   padding: 0;
   margin: 0 auto; /* Centra horizontalmente */
-  overflow: hidden;
-  
+  flex-direction: column;
+  display: flex;
+
 }
 /* styles.css o en el archivo CSS de tu componente */
 .fade {

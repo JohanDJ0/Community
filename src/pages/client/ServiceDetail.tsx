@@ -150,20 +150,38 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                 Descripción: {service.description}
               </Typography>
 
-              <Typography align='left' paddingTop={'10px'}>
+              <Typography paddingTop="10px">
                 {service.novedades && service.novedades.length > 0 ? (
-                  service.novedades.map((novedad, index) => (
-                    <div key={index}>
-                      <Typography variant="subtitle1" fontWeight="bold">
-                        {novedad.name}
-                      </Typography>
-                      <Typography variant="body2">
-                        {novedad.description}
-                      </Typography>
-                    </div>
-                  ))
+                  <Stack spacing={2}>
+                    {service.novedades.map((novedad, index) => (
+                      <Card
+                        key={index}
+                        style={{
+                          marginBottom: '10px',
+                          padding: '10px',
+                          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+                        }}
+                      >
+                        <CardContent>
+                          <Stack direction="row" justifyContent="space-between" alignItems="center">
+                            <Box>
+                              <Typography variant="subtitle1" fontWeight="bold"style={{ textAlign: 'left' }}>
+                                {novedad.name}
+                              </Typography>
+                              <Typography variant="body2" style={{ textAlign: 'justify' }}>
+                                {novedad.description}
+                              </Typography>
+                            </Box>
+           
+                          </Stack>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </Stack>
                 ) : (
-                  <Typography variant="body2">No hay novedades disponibles.</Typography>
+                  <Typography variant="body2" style={{ textAlign: 'justify' }}>
+                    No hay novedades disponibles.
+                  </Typography>
                 )}
               </Typography>
             </CardContent>

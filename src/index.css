@@ -1,7 +1,9 @@
 body {
   transition: background-color 0.3s, color 0.3s; /* Añade una transición suave */
   overflow: hidden; /* Evita que aparezcan barras de desplazamiento */
-
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
 
 
@@ -66,12 +68,15 @@ body[data-theme='light'] {
   width: 80%;
   height: 80%;
   margin: 0 auto;
+  overflow-y: auto; /* Solo permite scroll vertical */
+
 }
 
 .second-div-2{
   width: 50%;
   height: 80%;
   margin: 0 auto;
+  overflow-y: auto; /* Solo permite scroll vertical */
 
 }
 .box-div {

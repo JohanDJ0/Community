@@ -31,7 +31,7 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
     console.log("Proposal ID:", proposalId);
     const token = localStorage.getItem('token');
     console.log("Token obtenido desde propuestas:", token);
-  
+
     fetch(`/proposalsDetail/${proposalId}`)
       .then((response) => {
         if (!response.ok) {
@@ -42,24 +42,28 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
       .then((data) => {
         console.log('Propuesta cargada:', data);
         setProposal(data[0]);
-  
+
         // Cargar comentarios si existen
         const loadedComments = data[0].comments.map((comment: { written_by: string; message: string }) => ({
-          author: comment.written_by,
+          author: comment.written_by, // Nombre o correo del autor
           text: comment.message,
         }));
         setComments(loadedComments);
+
         // Obtener la fecha de cierre del debate
         const closeDateDebate = new Date(data[0].close_date_debate);
         const now = new Date();
+        // Agregar console.log para verificar las fechas y la diferencia de tiempo
+        console.log('Fecha actual (now):', now);
+        console.log('Fecha de cierre del debate (closeDateDebate):', closeDateDebate);
         const timeDiff = closeDateDebate.getTime() - now.getTime();
         setTimeRemaining(Math.floor(timeDiff / 1000)); // Guardamos el tiempo restante en segundos
       })
-      
+
       .catch((error) => {
         console.error('Error al cargar la propuesta:', error);
       });
-  
+
     fetch(`/services/${serviceId}`)
       .then((response) => {
         if (!response.ok) {
@@ -74,36 +78,37 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
         console.error('Error al cargar el servicio:', error);
       });
   }, [serviceId, proposalId]);
-  
-// Lógica del temporizador de deliberación
-useEffect(() => {
-  let timer: NodeJS.Timeout | null = null;
 
-  if (inDeliberation && timeRemaining > 0) {
-    timer = setInterval(() => {
-      setTimeRemaining((prevTime) => {
-        if (prevTime <= 1) {
-          clearInterval(timer!);
-          setInDeliberation(false); // Termina deliberación
-          setDeliberationEnded(true); // Marca que la deliberación ha terminado
-          return 0;
-        }
-        return prevTime - 1;
-      });
-    }, 1000);
-  } else {
-    if (timer) {
-      clearInterval(timer);
-    }
-    setTimeRemaining(0);
-  }
+  // Lógica del temporizador de deliberación
+  useEffect(() => {
+    let timer: NodeJS.Timeout | null = null;
 
-  return () => {
-    if (timer) {
-      clearInterval(timer);
+    if (inDeliberation && timeRemaining > 0) {
+      timer = setInterval(() => {
+        setTimeRemaining((prevTime) => {
+          if (prevTime <= 1) {
+            clearInterval(timer!);
+            setInDeliberation(false); // Termina deliberación
+            setDeliberationEnded(true); // Marca que la deliberación ha terminado
+            return 0;
+          }
+          return prevTime - 1;
+        });
+      }, 1000);
     }
-  };
-}, [inDeliberation, timeRemaining]);
+    else {
+      if (timer) {
+        clearInterval(timer);
+      }
+      setTimeRemaining(0);
+    }
+
+    return () => {
+      if (timer) {
+        clearInterval(timer);
+      }
+    };
+  }, [inDeliberation, timeRemaining]);
 
   const handleCommentChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setNewComment(event.target.value);
@@ -200,24 +205,47 @@ useEffect(() => {
                     Comentarios existentes:
                   </Typography>
                 )}
-                <Stack spacing={1} alignItems="flex-start">
-                  {comments.map((comment, index) => (
-                    <Box
-                      key={index}
-                      p={1}
-                      borderRadius={1}
-                      bgcolor={darkMode ? '#424242' : '#f5f5f5'}
-                      border={`1px solid ${darkMode ? '#666' : '#e0e0e0'}`}
-                    >
-                      <Typography variant="body2" color={darkMode ? 'lightgray' : 'textPrimary'}>
-                        <strong>{comment.author}</strong>
-                      </Typography>
-                      <Typography variant="body2" color={darkMode ? 'lightgray' : 'textPrimary'}>
-                        {comment.text}
-                      </Typography>
-                    </Box>
-                  ))}
+                <Stack spacing={1}>
+                  {comments.map((comment, index) => {
+                    // Normalizar y comparar los nombres
+                    const normalizedCommentAuthor = comment.author?.trim().toLowerCase();
+                    const normalizedUserName = user?.name?.trim().toLowerCase();
+
+                    const isCurrentUser = normalizedCommentAuthor === normalizedUserName;
+
+                    return (
+                      <Box
+                        key={index}
+                        p={1}
+                        borderRadius={1}
+                        bgcolor={darkMode ? '#424242' : '#f5f5f5'}
+                        border={`1px solid ${darkMode ? '#666' : '#e0e0e0'}`}
+                        style={{
+                          alignSelf: isCurrentUser ? 'flex-end' : 'flex-start',
+                          textAlign: isCurrentUser ? 'right' : 'left',
+                          maxWidth: '60%', // Mantiene un tamaño razonable
+                        }}
+                      >
+                        <Typography
+                          variant="body2"
+                          color={darkMode ? 'lightgray' : 'textPrimary'}
+                          style={{ fontWeight: 'bold', textAlign: isCurrentUser ? 'right' : 'left' }}
+                        >
+                          {comment.author}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          color={darkMode ? 'lightgray' : 'textPrimary'}
+                          style={{ textAlign: isCurrentUser ? 'right' : 'left' }}
+                        >
+                          {comment.text}
+                        </Typography>
+                      </Box>
+                    );
+                  })}
+
                 </Stack>
+
               </Box>
 
               {inDeliberation && !voted && (
@@ -255,7 +283,7 @@ useEffect(() => {
                     justifyContent="center"
                   >
                     <Typography variant="h6" color={darkMode ? '#fff' : '#000'} fontWeight="bold" sx={{ textAlign: 'center' }}>
-                    Tiempo restante: {formatTime(timeRemaining)}
+                      Tiempo restante: {formatTime(timeRemaining)}
                     </Typography>
                   </Box>
                 </Box>
@@ -302,9 +330,9 @@ useEffect(() => {
               )}
             </Box>
           </Box>
-          </div>
+        </div>
+      </div>
     </div>
-  </div>
   );
 };
 

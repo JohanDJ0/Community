@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardMedia, Typography, Button } from '@mui/material';
-import { useMediaQuery } from '@mui/material'; // Importar el hook useMediaQuery
-import '../../css/App.css'; // Asegúrate de que este archivo tenga los estilos que necesitas.
+import { useMediaQuery } from '@mui/material';
+import '../../css/App.css';
+import logo from '../../assets/Logo.png';
 
 interface Reward {
   id: number;
   name: string;
   businessName: string;
   requiredPoints: number;
-  userPoints: number; // Puntos que tiene el usuario
-  imageUrl: string; // URL de la imagen de la recompensa
+  userPoints: number;
+  imageUrl: string;
 }
 
 interface ServicesProps {
@@ -18,60 +19,99 @@ interface ServicesProps {
 
 const Rewards: React.FC<ServicesProps> = ({ darkMode }) => {
   const [rewards, setRewards] = useState<Reward[]>([]);
-  const isSmallScreen = useMediaQuery('(max-width:600px)'); // Verificar si la pantalla es menor a 600px
-
+  const isSmallScreen = useMediaQuery('(max-width:600px)');
+  const [availablePoints, setAvailablePoints] = useState(0);
+  const token = localStorage.getItem('token');
   useEffect(() => {
-    // Datos de recompensas de ejemplo
-    const defaultRewards: Reward[] = [
-      {
-        id: 1,
-        name: 'Descuento del 20%',
-        businessName: 'Negocio 1',
-        requiredPoints: 100,
-        userPoints: 120, // Cambia esto para probar diferentes estados
-        imageUrl: 'https://juegosmoda2049.neocities.org/images.jpg', // URL de la imagen
-      },
-      {
-        id: 2,
-        name: 'Cupón de regalo',
-        businessName: 'Negocio 2',
-        requiredPoints: 200,
-        userPoints: 80, // Cambia esto para probar diferentes estados
-        imageUrl: 'https://juegosmoda2049.neocities.org/images.jpg', // URL de la imagen
-      },
-      {
-        id: 3,
-        name: 'Producto gratis',
-        businessName: 'Negocio 3',
-        requiredPoints: 150,
-        userPoints: 150, // Cambia esto para probar diferentes estados
-        imageUrl: 'https://juegosmoda2049.neocities.org/images.jpg', // URL de la imagen
-      },
-      {
-        id: 4,
-        name: 'Acceso VIP',
-        businessName: 'Negocio 4',
-        requiredPoints: 300,
-        userPoints: 250, // Cambia esto para probar diferentes estados
-        imageUrl: 'https://juegosmoda2049.neocities.org/images.jpg', // URL de la imagen
-      },
-    ];
-
-    setRewards(defaultRewards);
-  }, []);
-
+    const fetchRewards = async () => {
+      try {
+        const response = await fetch('/myRewards', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            params: {
+              token,
+            },
+          }),
+        });
+    
+        if (!response.ok) {
+          throw new Error(`Error en la solicitud: ${response.status}`);
+        }
+    
+        const data = await response.json();
+        console.log('Datos recibidos:', data); // Verifica la respuesta del servidor
+    
+        if (data.result && Array.isArray(data.result.data)) {
+          const mappedRewards = data.result.data.map((reward: any) => ({
+            id: reward.id,
+            name: reward.name,
+            businessName: reward.description || 'Negocio desconocido',
+            requiredPoints: reward.points_required,
+            userPoints: availablePoints, // Sustituir con los puntos reales del usuario
+            imageUrl: 'https://juegosmoda2049.neocities.org/images.jpg', // URL genérica
+          }));
+    
+          setRewards(mappedRewards);
+          setAvailablePoints(data.result.community_points); // Asignar puntos disponibles
+        } else {
+          console.error('La estructura de los datos no es la esperada:', data.result);
+        }
+      } catch (error) {
+        console.error('Error al obtener recompensas:', error);
+      }
+    };
+    
+  
+    fetchRewards();
+  }, [token, availablePoints]);
+  
   return (
     <div className={`first-div ${darkMode ? 'dark' : 'light'}`}>
-      <div className='second-div'>
+      <div className="second-div">
         <div className={`box-div ${darkMode ? 'dark' : 'light'}`}>
-          <div style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'space-around',
-            margin: '10px 0',
-            maxHeight: isSmallScreen ? '400px' : '500px', // Ajusta maxHeight según el tamaño de la pantalla
-            overflowY: 'auto' // Asegúrate de permitir el desplazamiento si el contenido excede el maxHeight
-          }}>
+          <div
+            style={{
+              marginBottom: '20px',
+              display: 'flex',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              overflowY: 'auto', // Solo scroll vertical
+
+              gap: '10px',
+            }}
+          >
+            <Typography variant="h5" color="textPrimary">
+              CommunityPoints
+            </Typography>
+            <img
+              src={logo}
+              alt="logo"
+              style={{
+                width: '30px',
+                height: '30px',
+              }}
+            />
+            <Typography variant="h6" color="textSecondary">
+              {availablePoints}
+            </Typography>
+          </div>
+
+          <div
+         style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'space-around',
+          gap: '10px',
+          maxHeight: isSmallScreen ? '400px' : '500px', /* Control de altura */
+          overflowY: 'auto', /* Scroll vertical */
+          overflowX: 'hidden', /* Evitar scroll horizontal */
+          padding: '10px',
+          boxSizing: 'border-box',
+        }}
+          >
             {rewards.length === 0 ? (
               <p>Cargando recompensas...</p>
             ) : (
@@ -79,15 +119,15 @@ const Rewards: React.FC<ServicesProps> = ({ darkMode }) => {
                 <Card
                   key={reward.id}
                   style={{
-                    margin: '10px',
-                    width: '250px', // Reducido el ancho
+                    margin: '5px',
+                    width: '250px',
                     borderRadius: '12px',
                     overflow: 'hidden',
                   }}
                 >
                   <CardMedia
                     component="img"
-                    height="150" // Reducido el alto de la imagen
+                    height="150"
                     image={reward.imageUrl}
                     alt={reward.name}
                   />
@@ -107,7 +147,9 @@ const Rewards: React.FC<ServicesProps> = ({ darkMode }) => {
                       color={reward.userPoints >= reward.requiredPoints ? 'primary' : 'secondary'}
                       style={{ marginTop: '10px' }}
                     >
-                      {reward.userPoints >= reward.requiredPoints ? 'Canjear' : 'Puntos insuficientes'}
+                      {reward.userPoints >= reward.requiredPoints
+                        ? 'Canjear'
+                        : 'Puntos insuficientes'}
                     </Button>
                   </CardContent>
                 </Card>
