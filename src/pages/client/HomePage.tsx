@@ -213,11 +213,11 @@ const HomePage: React.FC<ServicesProps> = ({ darkMode }) => {
 
             <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', marginBottom: '16px' }}>
               {[
-                { name: "Ángel", role: "Desarrollador Full-Stack", avatar: "https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg" },
-                { name: "Martha", role: "UX Designer", avatar: "https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg" },
+                { name: "Ángel", role: "Desarrollador Full-Stack", avatar: "https://juegosmoda2049.neocities.org/Captura%20de%20pantalla%202024-11-21%20124205.png" },
+                { name: "Martha", role: "UX Designer", avatar: "https://juegosmoda2049.neocities.org/Captura%20de%20pantalla%202024-11-21%20124137.png" },
                 { name: "Johan De Jesus", role: "Desarrollador Full-Stack", avatar: "https://juegosmoda2049.neocities.org/IMG-20221103-WA0011.jpg" },
-                { name: "Marcos", role: "Desarrollador Front-end", avatar: "https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg" },
-                { name: "Sandra", role: "Desarrollador Movil", avatar: "https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg" },
+                { name: "Marcos", role: "Desarrollador Front-end", avatar: "https://juegosmoda2049.neocities.org/width_133.jpg" },
+                { name: "Sandra", role: "Desarrollador Movil", avatar: "https://juegosmoda2049.neocities.org/width_133.png" },
               ].map((dev) => (
                 <div key={dev.name} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                   <img
