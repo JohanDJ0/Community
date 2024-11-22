@@ -25,46 +25,7 @@ interface Notis {
   number: string;
 }
 
-// Estilos para el componente Search
-const Search = styled('div')(({ theme }) => ({
-  position: 'absolute',
-  left: '50%',
-  transform: 'translateX(-50%)',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: theme.palette.background.default,
-  '&:hover': {
-    backgroundColor: theme.palette.background.default,
-  },
-  marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(1),
-    width: 'auto',
-  },
-}));
 
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
-    },
-  },
-}));
 
 const NotificationsWrapper = styled('div')(({ theme }) => ({
   width: '300px',
@@ -167,12 +128,7 @@ const Header: React.FC<{ toggleDarkMode: () => void }> = ({ toggleDarkMode }) =>
             Community
           </Typography>
 
-          <Search sx={{ color: (theme) => theme.palette.text.primary, display: { xs: 'none', sm: 'block' } }}>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase placeholder="Escribe aquí..." inputProps={{ 'aria-label': 'search' }} />
-          </Search>
+ 
 
           <Box sx={{ flexGrow: 1 }} />
 

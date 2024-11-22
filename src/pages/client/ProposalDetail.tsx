@@ -250,9 +250,7 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
 
               {inDeliberation && !voted && (
                 <Box mt={2}>
-                  <Typography variant="body2" color={darkMode ? 'lightgray' : 'textSecondary'}>
-                    Agregar comentario:
-                  </Typography>
+          
                   <textarea
                     style={{ width: '100%', height: '60px' }}
                     value={newComment}

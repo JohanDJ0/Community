@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardMedia, CardContent, Typography } from '@mui/material';
-import { Rating } from '@mui/material'; 
+import { Card, CardMedia, CardContent, Typography, TextField } from '@mui/material';
+import { Rating } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { useMediaQuery } from '@mui/material'; // Importar el hook useMediaQuery
+import { useMediaQuery } from '@mui/material'; 
 import '../../css/App.css';
 
 interface Service {
@@ -13,15 +13,16 @@ interface Service {
   description: string | boolean;
 }
 
-// Agrega 'darkMode' como prop
 interface ServicesProps {
   darkMode: boolean;
 }
 
 const Services: React.FC<ServicesProps> = ({ darkMode }) => {
   const [data, setData] = useState<Service[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredData, setFilteredData] = useState<Service[]>([]);
   const navigate = useNavigate();
-  const isSmallScreen = useMediaQuery('(max-width:600px)'); // Verificar si la pantalla es menor a 600px
+  const isSmallScreen = useMediaQuery('(max-width:600px)');
 
   useEffect(() => {
     fetch("/services")
@@ -32,12 +33,20 @@ const Services: React.FC<ServicesProps> = ({ darkMode }) => {
         } else {
           console.error("Formato de datos inesperado:", result);
         }
-        console.log(result);
       })
       .catch((error) => {
         console.error('Error al obtener los datos:', error);
       });
   }, []);
+
+  useEffect(() => {
+    if (searchTerm) {
+      setFilteredData(data.filter(service => service.name.toLowerCase().includes(searchTerm.toLowerCase())));
+    } else {
+      setFilteredData(data); 
+    }
+  }, [searchTerm, data]);
+
 
   const handleServiceClick = (id: number) => {
     navigate(`/services/${id}`);
@@ -46,22 +55,30 @@ const Services: React.FC<ServicesProps> = ({ darkMode }) => {
   return (
     <div className='first-div'>
       <div className='second-div'>
-        <div className={`box-div ${darkMode ? 'dark' : 'light'}`}> 
-          {data.length === 0 ? (
-            <p>Cargando...</p>
+        <div className={`box-div ${darkMode ? 'dark' : 'light'}`}>
+          <TextField
+            label="Buscar servicio"
+            variant="outlined"
+            fullWidth
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{ marginBottom: '20px' }}
+          />
+          {filteredData.length === 0 ? (
+            <p>No se encontraron servicios</p>
           ) : (
             <div style={{ maxHeight: isSmallScreen ? '400px' : '500px', overflowY: 'auto' }}>
-              {data.map((item) => (
+              {filteredData.map((item) => (
                 <Card key={item.id} style={{ marginBottom: '20px', cursor: 'pointer' }} onClick={() => handleServiceClick(item.id)}>
                   <div style={{ display: isSmallScreen ? 'block' : 'flex', alignItems: isSmallScreen ? 'center' : 'flex-start' }}>
                     <CardMedia
                       component="img"
                       style={{
-                        width: isSmallScreen ? '100%' : '180px', // 100% en pantallas pequeñas, 180px en pantallas grandes
-                        height: isSmallScreen ? 'auto' : '180px', // auto en pantallas pequeñas, 180px en pantallas grandes
-                        objectFit: 'cover', // Mantiene la proporción y cubre el área
-                        margin: isSmallScreen ? '0 auto' : '0' // Centrar imagen si es pantalla pequeña
-                      }} 
+                        width: isSmallScreen ? '100%' : '180px',
+                        height: isSmallScreen ? 'auto' : '180px',
+                        objectFit: 'cover',
+                        margin: isSmallScreen ? '0 auto' : '0'
+                      }}
                       image={item.image ? `data:image/jpeg;base64,${atob(item.image)}` : "https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg"}
                       alt={item.name}
                     />
@@ -70,10 +87,10 @@ const Services: React.FC<ServicesProps> = ({ darkMode }) => {
                         {item.name}
                       </Typography>
                       <Rating
-                        name={`rating-${item.id}`} 
-                        value={item.qualification} 
-                        precision={0.5} 
-                        readOnly 
+                        name={`rating-${item.id}`}
+                        value={item.qualification}
+                        precision={0.5}
+                        readOnly
                       />
                       <Typography variant="body2" color="text.secondary">
                         Descripción: {typeof item.description === "string" ? item.description : "No disponible"}
