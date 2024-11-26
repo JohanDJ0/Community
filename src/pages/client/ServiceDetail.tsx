@@ -6,6 +6,8 @@ import ShareIcon from '@mui/icons-material/Share';
 import BackHandIcon from '@mui/icons-material/BackHand';
 import AddIcon from '@mui/icons-material/Add';
 import { useMediaQuery } from '@mui/material';
+import AutoModeSharpIcon from '@mui/icons-material/AutoModeSharp';
+import ShareModal from '../../components/ShareModal'; // modal
 
 interface Novedad {
   name: string;
@@ -30,7 +32,7 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
   const navigate = useNavigate();
   const [service, setService] = useState<ServiceDetailProps | null>(null);
   const isSmallScreen = useMediaQuery('(max-width:600px)');
-  const isExtraSmallScreen = useMediaQuery('(max-width:375px)');
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false); // modal
 
   useEffect(() => {
     let isMounted = true;
@@ -64,21 +66,24 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
   }
 
   return (
-    <div className='first-div'>
-      <div className='second-div'>
+    <div className="first-div">
+      <div className="second-div">
         <div className={`box-div ${darkMode ? 'dark' : 'light'}`}>
           <Card style={{ maxHeight: isSmallScreen ? '400px' : '500px', overflowY: 'auto' }}>
             <Box position="relative" width="100%" height={isSmallScreen ? '200px' : '300px'}>
               <CardMedia
                 component="img"
                 height="300"
-                image={service.image ? `data:image/jpg;base64,${atob(service.image)}` : "https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg"}
+                image={
+                  service.image
+                    ? `data:image/jpg;base64,${atob(service.image)}`
+                    : 'https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg'
+                }
                 alt={service.name}
                 style={{ filter: 'brightness(0.7)' }}
               />
-
               <Typography
-                variant={isSmallScreen ? "h5" : "h1"}
+                variant={isSmallScreen ? 'h5' : 'h1'}
                 style={{
                   position: 'absolute',
                   bottom: '30px',
@@ -89,26 +94,37 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
               >
                 {service.name}
               </Typography>
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                style={{
-                  position: 'absolute',
-                  bottom: '10px',
-                  left: '10px',
-                  color: 'white',
-                  padding: '5px',
-                }}
-              >
-                <Rating name="read-only" value={service.qualification} readOnly />
-              </Typography>
+              <div
+                  style={{
+                    position: 'absolute',
+                    bottom: '10px',
+                    left: '10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    color: 'white', // Asegura que el texto y estrellas sean visibles
+                    padding: '5px',
+                  }}
+                >
+                  <Rating
+                    name="read-only"
+                    value={service.qualification || 0}
+                    precision={0.5}
+                    readOnly
+                  />
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    style={{ marginLeft: '10px' ,}}
+                  >
+                    {service.qualification ? service.qualification.toFixed(1) : '0.0'}
+                  </Typography>
+                </div>
             </Box>
-
             <CardContent>
               <Stack spacing={1} direction="row">
                 <Button
                   variant="contained"
-                  startIcon={<GradeIcon />}
+                  startIcon={<AutoModeSharpIcon />}
                   style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}
                 >
                   Novedades
@@ -125,17 +141,11 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                   variant="contained"
                   startIcon={<BackHandIcon />}
                   onClick={() => navigate(`/proposal/${id}`)}
-
                   style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}
                 >
                   Propuestas
                 </Button>
-
-                <Button
-                  variant="outlined"
-                  startIcon={<ShareIcon />}
-                  style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}
-                >
+                <Button variant="outlined" startIcon={<ShareIcon />} onClick={() => setIsShareModalOpen(true)}>
                   Compartir
                 </Button>
                 <Button
@@ -146,10 +156,15 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                   Seguir
                 </Button>
               </Stack>
-              <Typography variant="body2" color="text.secondary" align='left' paddingBottom={'5px'}>
-                Descripción: {service.description}
+              <Typography
+                variant="body2"
+                color="text.secondary"
+                align="left"
+                paddingBottom={'5px'}
+                style={{ paddingTop: '15px', paddingBottom: '15px' }}
+              >
+                {service.description}
               </Typography>
-
               <Typography paddingTop="10px">
                 {service.novedades && service.novedades.length > 0 ? (
                   <Stack spacing={2}>
@@ -165,31 +180,37 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                         <CardContent>
                           <Stack direction="row" justifyContent="space-between" alignItems="center">
                             <Box>
-                              <Typography variant="subtitle1" fontWeight="bold"style={{ textAlign: 'left' }}>
+                              <Typography variant="subtitle1" fontWeight="bold" style={{ textAlign: 'left' }}>
                                 {novedad.name}
                               </Typography>
                               <Typography variant="body2" style={{ textAlign: 'justify' }}>
                                 {novedad.description}
                               </Typography>
                             </Box>
-           
                           </Stack>
                         </CardContent>
                       </Card>
                     ))}
                   </Stack>
                 ) : (
-                  <Typography variant="body2" style={{ textAlign: 'justify' }}>
-                    No hay novedades disponibles.
+                  <Typography
+                    variant="h6"
+                    color="text.secondary"
+                    align="center"
+                    style={{ marginTop: '20px' }}
+                  >
+                    No hay novedades disponibles en este momento.
                   </Typography>
                 )}
               </Typography>
             </CardContent>
           </Card>
+          <ShareModal open={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} />
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default ServiceDetail;
+

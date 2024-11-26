@@ -16,6 +16,7 @@ import FormControl from '@mui/material/FormControl';
 import { useAuth0 } from '@auth0/auth0-react'; // Importar useAuth0
 import AddIcon from '@mui/icons-material/Add';
 import { useMediaQuery } from '@mui/material';
+import AutoModeSharpIcon from '@mui/icons-material/AutoModeSharp'; // Importa el ícono
 
 interface Review {
   name: string; // Nombre de la reseña
@@ -286,24 +287,36 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
               >
                 {serviceName || 'Cargando nombre...'}
               </Typography>
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                style={{
-                  position: 'absolute',
-                  bottom: '10px',
-                  left: '10px',
-                  color: 'white',
-                  padding: '5px',
-                }}
-              >
-                <Rating name="read-only" value={service.qualification} readOnly />
-              </Typography>
+              <div
+                  style={{
+                    position: 'absolute',
+                    bottom: '10px',
+                    left: '10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    color: 'white', // Asegura que el texto y estrellas sean visibles
+                    padding: '5px',
+                  }}
+                >
+                  <Rating
+                    name="read-only"
+                    value={service.qualification || 0}
+                    precision={0.5}
+                    readOnly
+                  />
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    style={{ marginLeft: '10px' ,}}
+                  >
+                    {service.qualification ? service.qualification.toFixed(1) : '0.0'}
+                  </Typography>
+                </div>
             </Box>
 
             <CardContent>
               <Stack spacing={2} direction="row">
-                <Button variant="contained" startIcon={<GradeIcon />} onClick={handleNovedadesClick}>Novedades</Button>
+                <Button variant="contained" startIcon={<AutoModeSharpIcon />} onClick={handleNovedadesClick}>Novedades</Button>
                 <Button variant="contained" startIcon={<GradeIcon />} onClick={() => navigate(`/services/${id}/reviews`)}
                 >Reseñas</Button>
                 <Button variant="contained" startIcon={<BackHandIcon />} onClick={() => navigate(`/proposal/${id}`)}
@@ -315,6 +328,7 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
                 <Typography variant="h5" align="left" paddingTop="10px">
                   Reseñas de usuarios
                 </Typography>
+               
 
                 {service.reviews.length > 0 ? (
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
@@ -375,14 +389,23 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
               </FormControl>
 
               <FormControl fullWidth margin="normal">
-                <TextField
-                  label="Descripción"
-                  multiline
-                  rows={4}
-                  value={newReview.description}
-                  onChange={(e) => setNewReview({ ...newReview, description: e.target.value })}
-                />
-              </FormControl>
+                  <TextField
+                    label="Descripción"
+                    multiline
+                    rows={4}
+                    value={newReview.description}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value.length <= 100) {
+                        setNewReview({ ...newReview, description: value });
+                      }
+                    }}
+                    helperText={`${newReview.description.length}/100 caracteres | ${newReview.description.trim().split(/\s+/).filter(Boolean).length} palabras`}
+                    inputProps={{ maxLength: 100 }}
+                  />
+                  
+                </FormControl>
+
 
               <FormControl fullWidth margin="normal">
                 <TextField

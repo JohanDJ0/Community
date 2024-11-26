@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import '../../css/App.css';
-import ShareModal from '../../components/ShareModal';
+import ShareModal from '../../components/ShareModal';//compartir 
 import { useParams, useNavigate } from 'react-router-dom';
-import {
-  Card, CardMedia, CardContent, Typography, Box, Button, Stack, Rating,
-  useMediaQuery, Dialog, DialogActions, DialogContent, DialogTitle, TextField,IconButton
+import { Card, CardMedia, CardContent, Typography, Box, Button, Stack, Rating, useMediaQuery, Dialog, DialogActions, DialogContent, DialogTitle, TextField,IconButton
 } from '@mui/material';
 import { Grade as GradeIcon, Share as ShareIcon, BackHand as BackHandIcon, Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { useAuth0 } from '@auth0/auth0-react';
+
+
 
 interface Novedad {
   id:number,
@@ -44,7 +44,7 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);// modal
   const [openModal, setOpenModal] = useState(false);
   const [newnovelty, setNewNovelty] = useState({
     name: '',
@@ -237,34 +237,40 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
               >
                 {service?.name || 'Nombre del servicio no disponible'}
               </Typography>
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                style={{
-                  position: 'absolute',
-                  bottom: '10px',
-                  left: '10px',
-                  color: 'white',
-                  padding: '5px',
-                }}
-              >
-                <Rating name="read-only" value={service?.qualification || 0} readOnly size={isSmallScreen ? 'small' : 'large'} />
-              </Typography>
+              <div
+                  style={{
+                    position: 'absolute',
+                    bottom: '10px',
+                    left: '10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    color: 'white', // Asegura que el texto y estrellas sean visibles
+                    padding: '5px',
+                  }}
+                >
+                  <Rating
+                    name="read-only"
+                    value={service.qualification || 0}
+                    precision={0.5}
+                    readOnly
+                  />
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    style={{ marginLeft: '10px' ,}}
+                  >
+                    {service.qualification ? service.qualification.toFixed(1) : '0.0'}
+                  </Typography>
+                </div>
             </Box>
 
             <CardContent>
               <Stack spacing={1} direction="row" justifyContent="space-between" alignItems="center">
                 <Box>
                   <Stack spacing={2} direction="row" justifyContent="flex-start" alignItems="center">
-                    <Button variant="contained" startIcon={<GradeIcon />} onClick={() => navigate(`/services/${id}/reviews`)}>
-                      Reseñas
-                    </Button>
-                    <Button variant="contained" startIcon={<BackHandIcon />} onClick={() => navigate(`/propuestas`)}>
-                      Propuestas
-                    </Button>
-                    <Button variant="outlined" startIcon={<ShareIcon />} onClick={() => setIsShareModalOpen(true)}>
-                      Compartir
-                    </Button>
+                  <Button variant="contained" startIcon={<GradeIcon />} onClick={() => navigate(`/services/${id}/reviews`)}>Reseñas</Button>
+                  <Button variant="contained" startIcon={<BackHandIcon />} onClick={() => navigate(`/propuestas`)}>Propuestas</Button>
+                  <Button variant="outlined" startIcon={<ShareIcon />} onClick={() => setIsShareModalOpen(true)}>Compartir</Button>
                   </Stack>
                 </Box>
 
@@ -347,7 +353,7 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
             value={newnovelty.name}
             onChange={(e) => setNewNovelty({ ...newnovelty, name: e.target.value })}
           />
-          <TextField
+        <TextField
             margin="dense"
             id="description"
             label="Descripción de la novedad"
@@ -356,8 +362,16 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
             multiline
             rows={4}
             value={newnovelty.description}
-            onChange={(e) => setNewNovelty({ ...newnovelty, description: e.target.value })}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (value.length <= 100) {
+                setNewNovelty({ ...newnovelty, description: value });
+              }
+            }}
+            helperText={`${newnovelty.description.length}/100 caracteres`}
+            inputProps={{ maxLength: 100 }}
           />
+
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenModal(false)} color="primary">

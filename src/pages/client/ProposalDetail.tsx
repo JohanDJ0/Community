@@ -202,7 +202,7 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
               <Box mt={2} style={{ maxHeight: '200px', overflowY: 'auto' }}>
                 {comments.length > 0 && (
                   <Typography variant="body2" color={darkMode ? 'lightgray' : 'textSecondary'}>
-                    Comentarios existentes:
+                    Comentarios:
                   </Typography>
                 )}
                 <Stack spacing={1}>

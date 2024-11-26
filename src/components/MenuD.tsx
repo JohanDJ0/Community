@@ -199,6 +199,15 @@ const MenuD: React.FC<{ toggleDarkMode: () => void }> = ({ toggleDarkMode }) => 
             <ListItemText primary={t("itemListRewards")} />
           </ListItemButton>
         </ListItem>
+
+        <ListItem key='Seguidos' disablePadding>
+          <ListItemButton component={Link} to="/seguidos">
+            <ListItemIcon>
+              <PersonSharpIcon />
+            </ListItemIcon>
+            <ListItemText primary={t("itemListFollowing")} />
+          </ListItemButton>
+        </ListItem>
         <ListItem key='Lenguaje' disablePadding>
           <ListItemButton>
             <ListItemIcon>

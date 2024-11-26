@@ -5,6 +5,9 @@ import GradeIcon from '@mui/icons-material/Grade';
 import ShareIcon from '@mui/icons-material/Share';
 import BackHandIcon from '@mui/icons-material/BackHand';
 import AddIcon from '@mui/icons-material/Add';
+import AutoModeSharpIcon from '@mui/icons-material/AutoModeSharp'; // Importa el ícono
+import ShareModal from '../../components/ShareModal';// modal de compartir 
+
 import { useMediaQuery } from '@mui/material';
 
 interface ServiceDetail {
@@ -40,6 +43,7 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
   const [deliberationEndDate, setDeliberationEndDate] = useState('');
   const isSmallScreen = useMediaQuery('(max-width:600px)');
   const navigate = useNavigate();
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);//Modal
 
   useEffect(() => {
     let isMounted = true;
@@ -115,33 +119,46 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
               >
                 {service.name}
               </Typography>
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                style={{
-                  position: 'absolute',
-                  bottom: '10px',
-                  left: '10px',
-                  color: 'white',
-                  padding: '5px',
-                }}
-              >
-                <Rating name="read-only" value={service.qualification} readOnly />
-              </Typography>
+              <div
+                  style={{
+                    position: 'absolute',
+                    bottom: '10px',
+                    left: '10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    color: 'white', // Asegura que el texto y estrellas sean visibles
+                    padding: '5px',
+                  }}
+                >
+                  <Rating
+                    name="read-only"
+                    value={service.qualification || 0}
+                    precision={0.5}
+                    readOnly
+                  />
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    style={{ marginLeft: '10px' ,}}
+                  >
+                    {service.qualification ? service.qualification.toFixed(1) : '0.0'}
+                  </Typography>
+                </div>
+
             </Box>
 
             <CardContent>
-              <Typography variant="body2" color="text.secondary" align='left' paddingBottom={'5px'}>
-                Descripción: {service.description || "Sin descripción disponible"}
+              <Typography variant="body2" color="text.secondary" align='left' paddingBottom={'5px'} style={{ paddingTop: '15px', paddingBottom: '15px' }}>
+                {service.description || "Sin descripción disponible"}
               </Typography>
             </CardContent>
 
             <CardContent>
               <Stack spacing={1} direction="row">
-                <Button variant="contained" startIcon={<GradeIcon />} style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}  onClick={handleNovedadesClick}>Novedades</Button>
+                <Button variant="contained" startIcon={<AutoModeSharpIcon/>} style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}  onClick={handleNovedadesClick}>Novedades</Button>
                 <Button variant="contained" startIcon={<GradeIcon />} style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 4px' : '6px 12px' }}onClick={() => navigate(`/services/${id}/reviews`)}>Reseñas</Button>
                 <Button variant="contained" startIcon={<BackHandIcon />} style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}>Propuestas</Button>
-                <Button variant="outlined" startIcon={<ShareIcon />} style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}>Compartir</Button>
+                <Button variant="outlined" startIcon={<ShareIcon />} onClick={() => setIsShareModalOpen(true)}> Compartir</Button>
                 <Button variant="contained" startIcon={<AddIcon />} style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}>Seguir</Button>
               </Stack>
 
@@ -207,18 +224,30 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {proposals.map((proposal) => (
-                        <TableRow key={proposal.id} onClick={() => handleRowClick(proposal.id)} style={{ cursor: 'pointer' }}>
-                          <TableCell>{proposal.name || "Sin título"}</TableCell>
-                          <TableCell><Chip label={proposal.status || "No disponible"} style={{ backgroundColor: '#fdd835', color: '#000' }} /></TableCell>
-                          <TableCell>
-                            <Avatar style={{ width: 24, height: 24, marginRight: 8 }} />
-                            {proposal.written_by || "Desconocido"}
-                          </TableCell>
-                          <TableCell>{proposal.create_date || "Sin fecha"}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
+                {proposals.map((proposal) => (
+                  <TableRow
+                    key={proposal.id}
+                    onClick={() => handleRowClick(proposal.id)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <TableCell>{proposal.name || "Sin título"}</TableCell>
+                    <TableCell>
+                      <Chip
+                        label={proposal.status || "No disponible"}
+                        style={{ backgroundColor: '#fdd835', color: '#000' }}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <Avatar style={{ width: 24, height: 24, marginRight: 8 }} />
+                        <span>{proposal.written_by || "Desconocido"}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>{proposal.create_date || "Sin fecha"}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+
                   </Table>
                 </TableContainer>
               ) : (
@@ -232,6 +261,8 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
           <Box display="flex" justifyContent="flex-end" alignItems="flex-end" p={0} style={{ overflow: 'hidden' }}>
             <Button variant="contained" color="primary" onClick={handleClickOpen}>Crear Propuesta</Button>
           </Box>
+
+          <ShareModal open={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} />
         </div>
       </div>
     </div>

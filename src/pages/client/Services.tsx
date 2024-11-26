@@ -47,7 +47,6 @@ const Services: React.FC<ServicesProps> = ({ darkMode }) => {
     }
   }, [searchTerm, data]);
 
-
   const handleServiceClick = (id: number) => {
     navigate(`/services/${id}`);
   };
@@ -86,14 +85,19 @@ const Services: React.FC<ServicesProps> = ({ darkMode }) => {
                       <Typography variant="h5" component="div">
                         {item.name}
                       </Typography>
-                      <Rating
-                        name={`rating-${item.id}`}
-                        value={item.qualification}
-                        precision={0.5}
-                        readOnly
-                      />
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <Rating
+                          name={`rating-${item.id}`}
+                          value={item.qualification}
+                          precision={0.5}
+                          readOnly
+                        />
+                        <Typography variant="body2" color="text.secondary" style={{ marginLeft: '10px' }}>
+                          {item.qualification.toFixed(1)} {/* Mostrar calificación numérica */}
+                        </Typography>
+                      </div>
                       <Typography variant="body2" color="text.secondary">
-                        Descripción: {typeof item.description === "string" ? item.description : "No disponible"}
+                        {typeof item.description === "string" ? item.description : "No disponible"}
                       </Typography>
                     </CardContent>
                   </div>
