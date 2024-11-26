@@ -17,6 +17,7 @@ import { useAuth0 } from '@auth0/auth0-react'; // Importar useAuth0
 import AddIcon from '@mui/icons-material/Add';
 import { useMediaQuery } from '@mui/material';
 import AutoModeSharpIcon from '@mui/icons-material/AutoModeSharp'; // Importa el ícono
+import noImage from '../../assets/NoImagen.png';
 
 interface Review {
   name: string; // Nombre de la reseña
@@ -266,7 +267,7 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
               <CardMedia
                 component="img"
                 height="300"
-                image={service.image ? `data:image/jpg;base64,${atob(service.image)}` : "https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg"}
+                image={service.image ? `data:image/jpg;base64,${atob(service.image)}` :  noImage}
                 alt={service.name}
                 style={{ filter: 'brightness(0.7)' }}
               />

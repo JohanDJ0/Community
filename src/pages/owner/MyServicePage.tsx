@@ -6,6 +6,7 @@ import { Card, CardMedia, CardContent, Typography, Box, Button, Stack, Rating, u
 } from '@mui/material';
 import { Grade as GradeIcon, Share as ShareIcon, BackHand as BackHandIcon, Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { useAuth0 } from '@auth0/auth0-react';
+import noImage from '../../assets/NoImagen.png';
 
 
 
@@ -219,7 +220,7 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
                 image={
                   service?.image
                     ? `data:image/jpg;base64,${atob(service.image)}`
-                    : "https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg"
+                    : noImage
                 }
                 alt={service?.name || 'Servicio'}
                 className="image-service"

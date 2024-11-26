@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardMedia, CardContent, Typography, TextField } from '@mui/material';
+import { Card, CardMedia, CardContent, Typography, TextField, Box } from '@mui/material';
 import { Rating } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useMediaQuery } from '@mui/material'; 
 import '../../css/App.css';
-
+import noImage from '../../assets/NoImagen.png';
 interface Service {
   id: number;
   name: string;
@@ -52,59 +52,79 @@ const Services: React.FC<ServicesProps> = ({ darkMode }) => {
   };
 
   return (
-    <div className='first-div'>
-      <div className='second-div'>
-        <div className={`box-div ${darkMode ? 'dark' : 'light'}`}>
-          <TextField
-            label="Buscar servicio"
-            variant="outlined"
-            fullWidth
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            style={{ marginBottom: '20px' }}
-          />
-          {filteredData.length === 0 ? (
-            <p>No se encontraron servicios</p>
-          ) : (
-            <div style={{ maxHeight: isSmallScreen ? '400px' : '500px', overflowY: 'auto' }}>
-              {filteredData.map((item) => (
-                <Card key={item.id} style={{ marginBottom: '20px', cursor: 'pointer' }} onClick={() => handleServiceClick(item.id)}>
-                  <div style={{ display: isSmallScreen ? 'block' : 'flex', alignItems: isSmallScreen ? 'center' : 'flex-start' }}>
-                    <CardMedia
-                      component="img"
-                      style={{
-                        width: isSmallScreen ? '100%' : '180px',
-                        height: isSmallScreen ? 'auto' : '180px',
-                        objectFit: 'cover',
-                        margin: isSmallScreen ? '0 auto' : '0'
-                      }}
-                      image={item.image ? `data:image/jpeg;base64,${atob(item.image)}` : "https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg"}
-                      alt={item.name}
-                    />
-                    <CardContent style={{ textAlign: 'left' }}>
-                      <Typography variant="h5" component="div">
-                        {item.name}
-                      </Typography>
-                      <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <Rating
-                          name={`rating-${item.id}`}
-                          value={item.qualification}
-                          precision={0.5}
-                          readOnly
-                        />
-                        <Typography variant="body2" color="text.secondary" style={{ marginLeft: '10px' }}>
-                          {item.qualification.toFixed(1)} {/* Mostrar calificación numérica */}
+    <div>
+      <Box 
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginBottom: '20px',
+          marginTop: '-30px', // Mueve el buscador más arriba
+
+        }}
+      >
+        <TextField
+          label="Buscar servicio"
+          variant="outlined"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          sx={{
+            width: isSmallScreen ? '90%' : '50%',
+            
+          }}
+        />
+      </Box>
+
+      <div className='first-div'>
+        <div className='second-div'>
+          <div className={`box-div ${darkMode ? 'dark' : 'light'}`}>
+            {filteredData.length === 0 ? (
+              <p>No se encontraron servicios</p>
+            ) : (
+              <div style={{ maxHeight: isSmallScreen ? '400px' : '500px', overflowY: 'auto' }}>
+                {filteredData.map((item) => (
+                  <Card 
+                    key={item.id} 
+                    style={{ marginBottom: '20px', cursor: 'pointer' }} 
+                    onClick={() => handleServiceClick(item.id)}
+                  >
+                    <div style={{ display: isSmallScreen ? 'block' : 'flex', alignItems: isSmallScreen ? 'center' : 'flex-start' }}>
+                      <CardMedia
+                        component="img"
+                        style={{
+                          width: isSmallScreen ? '100%' : '180px',
+                          height: isSmallScreen ? 'auto' : '180px',
+                          objectFit: 'cover',
+                          margin: isSmallScreen ? '0 auto' : '0'
+                        }}
+                        image={item.image ? `data:image/jpeg;base64,${atob(item.image)}` : noImage}
+                        alt={item.name}
+                      />
+                      <CardContent style={{ textAlign: 'left' }}>
+                        <Typography variant="h5" component="div">
+                          {item.name}
                         </Typography>
-                      </div>
-                      <Typography variant="body2" color="text.secondary">
-                        {typeof item.description === "string" ? item.description : "No disponible"}
-                      </Typography>
-                    </CardContent>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          )}
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          <Rating
+                            name={`rating-${item.id}`}
+                            value={item.qualification}
+                            precision={0.5}
+                            readOnly
+                          />
+                          <Typography variant="body2" color="text.secondary" style={{ marginLeft: '10px' }}>
+                            {item.qualification.toFixed(1)}
+                          </Typography>
+                        </div>
+                        <Typography variant="body2" color="text.secondary">
+                          {typeof item.description === "string" ? item.description : "No disponible"}
+                        </Typography>
+                      </CardContent>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

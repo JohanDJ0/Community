@@ -4,6 +4,7 @@ import { Rating } from '@mui/material';
 import { useMediaQuery } from '@mui/material';
 import '../../css/App.css';
 import { useNavigate } from 'react-router-dom';
+import noImage from '../../assets/NoImagen.png';
 
 interface Followed {
   id: number,
@@ -102,7 +103,7 @@ const Seguidos: React.FC<ServicesProps> = ({ darkMode }) => {
                       objectFit: 'cover',
                       marginBottom: isSmallScreen ? '10px' : '0'
                     }} 
-                    image={servicio.image ? `data:image/jpeg;base64,${atob(servicio.image)}` : "https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg"}
+                    image={servicio.image ? `data:image/jpeg;base64,${atob(servicio.image)}` : noImage}
                     alt={servicio.name}
                   />
                   <CardContent style={{ flex: 1, position: 'relative', paddingBottom: '20px' }}>

@@ -8,6 +8,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { useMediaQuery } from '@mui/material';
 import AutoModeSharpIcon from '@mui/icons-material/AutoModeSharp';
 import ShareModal from '../../components/ShareModal'; // modal
+import noImage from '../../assets/NoImagen.png';
 
 interface Novedad {
   name: string;
@@ -77,7 +78,7 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                 image={
                   service.image
                     ? `data:image/jpg;base64,${atob(service.image)}`
-                    : 'https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg'
+                    :  noImage
                 }
                 alt={service.name}
                 style={{ filter: 'brightness(0.7)' }}

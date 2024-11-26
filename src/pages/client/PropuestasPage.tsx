@@ -7,7 +7,7 @@ import BackHandIcon from '@mui/icons-material/BackHand';
 import AddIcon from '@mui/icons-material/Add';
 import AutoModeSharpIcon from '@mui/icons-material/AutoModeSharp'; // Importa el ícono
 import ShareModal from '../../components/ShareModal';// modal de compartir 
-
+import noImage from '../../assets/NoImagen.png';
 import { useMediaQuery } from '@mui/material';
 
 interface ServiceDetail {
@@ -102,7 +102,7 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
               <CardMedia
                 component="img"
                 height={isSmallScreen ? '200' : '300'}
-                image={service.image ? `data:image/jpg;base64,${atob(service.image)}` : "https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg"}
+                image={service.image ? `data:image/jpg;base64,${atob(service.image)}` :noImage}
                 alt={service.name}
                 className='image-service'
                 style={{ filter: 'brightness(0.7)' }}
