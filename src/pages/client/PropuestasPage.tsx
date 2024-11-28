@@ -44,44 +44,116 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
   const isSmallScreen = useMediaQuery('(max-width:600px)');
   const navigate = useNavigate();
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);//Modal
+  const token = localStorage.getItem('token');
 
+
+  // Llamar a la API cada 5 segundos
   useEffect(() => {
-    let isMounted = true;
-    if (id) {
-      fetch(`/services/${id}`)
-        .then((res) => res.json())
-        .then((data) => {
-          if (isMounted && data.length > 0) {
-            setService(data[0]);
+    const fetchServiceAndProposals = async () => {
+      try {
+        if (id) {
+          const serviceResponse = await fetch(`/services/${id}`);
+          const serviceData = await serviceResponse.json();
+          if (serviceData.length > 0) {
+            setService(serviceData[0]);
           }
-        })
-        .catch((error) => console.error('Error al obtener los detalles del servicio:', error.message));
+        }
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error('Error al obtener los detalles del servicio:', error.message);
+        } else {
+          console.error('Error desconocido al obtener los detalles del servicio:', error);
+        }
+      }
 
-      fetch(`/proposals/${id}`)
-        .then((res) => res.json())
-        .then((data) => isMounted && setProposals(data))
-        .catch((error) => console.error('Error al obtener propuestas:', error.message));
-    }
-    return () => { isMounted = false; };
+      try {
+        if (id) {
+          const proposalsResponse = await fetch(`/proposals/${id}`);
+          const proposalsData = await proposalsResponse.json();
+          setProposals(proposalsData);
+        }
+      } catch (error) {
+        if (error instanceof Error) {
+          console.error('Error al obtener propuestas:', error.message);
+        } else {
+          console.error('Error desconocido al obtener propuestas:', error);
+        }
+      }
+    };
+
+    fetchServiceAndProposals(); // Llamada inicial
+    const intervalId = setInterval(fetchServiceAndProposals, 5000); // Llamada cada 5 segundos
+
+    // Limpiar el intervalo al desmontarse
+    return () => clearInterval(intervalId);
   }, [id]);
 
   if (!service) {
     return <p>Cargando detalles del servicio...</p>;
   }
 
-  const handleClickOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  const handleSave = () => {
-    const newProposalData = {
-      name: proposalName,
-      description: proposalDescription,
-      debateEndDate,
-      deliberationEndDate,
-    };
-    console.log('Guardando propuesta:', newProposalData); // Log para ver los datos enviados
 
-    handleClose();
+
+  const handleClickOpen = () => setOpen(true);
+  const handleClose = () => {
+    setOpen(false);
   };
+    
+  const handleSave = async () => {
+    // Verifica que los campos obligatorios no estén vacíos
+    if (!proposalName || !proposalDescription || !debateEndDate || !deliberationEndDate) {
+      alert('Todos los campos son obligatorios. Por favor, completa toda la información.');
+      return; // Detiene el envío de la propuesta si los campos están vacíos
+    }
+  
+    const serviceId = id ? parseInt(id) : null; // Obtén el service_id desde la URL
+  
+    if (!serviceId) {
+      console.error("ID del servicio no encontrado.");
+      return;
+    }
+  
+    const newProposalData = {
+      params: {
+        name: proposalName,
+        token: token || "", // Token obtenido del localStorage
+        description: proposalDescription,
+        service_id: serviceId,
+        debateEndDate,
+        deliberationEndDate,
+      },
+    };
+  
+    try {
+      const response = await fetch("http://34.51.20.243:8069/proposals/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newProposalData),
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Propuesta creada exitosamente:", data);
+        // Aquí puedes actualizar la lista de propuestas o mostrar un mensaje de éxito
+      } else {
+        console.error("Error al crear la propuesta:", response.status, response.statusText);
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error("Error al realizar la solicitud:", error.message);
+      } else {
+        console.error("Error al realizar la solicitud:", error);
+      }
+  
+    } finally {
+      handleClose(); // Siempre cierra el modal
+    }
+  };
+  
+
+  
 
   const handleNovedadesClick = () => {
     navigate(`/services/${id}`); // Cambia a una ruta relativa
