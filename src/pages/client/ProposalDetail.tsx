@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import '../../css/App.css';
 import { Box, Typography, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from '@mui/material';
-
+import { Snackbar, Alert  } from '@mui/material';
 interface ServicesProps {
   darkMode: boolean;
 }
@@ -20,64 +20,66 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
   const [proposal, setProposal] = useState<any>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
-  const [inDeliberation, setInDeliberation] = useState(true); // Iniciar directamente en deliberación
-  const [timeRemaining, setTimeRemaining] = useState(0); // Tiempo restante basado en la fecha
+  const [inDeliberation, setInDeliberation] = useState(true); 
+  const [timeRemaining, setTimeRemaining] = useState(0);
   const [voted, setVoted] = useState(false);
   const [vote, setVote] = useState<string | null>(null);
   const [deliberationEnded, setDeliberationEnded] = useState(false);
+  const [alertMessage, setAlertMessage] = useState<string | null>(null); // Mensaje de alerta
+const [showAlert, setShowAlert] = useState(false); // Visibilidad de la alerta
+
 
   useEffect(() => {
-    console.log("Service ID:", serviceId);
-    console.log("Proposal ID:", proposalId);
-    const token = localStorage.getItem('token');
-    console.log("Token obtenido desde propuestas:", token);
+    const fetchProposalDetails = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        console.log('Token obtenido desde propuestas:', token);
 
-    fetch(`/proposalsDetail/${proposalId}`)
-      .then((response) => {
+        const response = await fetch(`/proposalsDetail/${proposalId}`);
         if (!response.ok) {
           throw new Error('Error al obtener la propuesta');
         }
-        return response.json();
-      })
-      .then((data) => {
+
+        const data = await response.json();
         console.log('Propuesta cargada:', data);
-        setProposal(data[0]);
 
-        // Cargar comentarios si existen
-        const loadedComments = data[0].comments.map((comment: { written_by: string; message: string }) => ({
-          author: comment.written_by, // Nombre o correo del autor
-          text: comment.message,
-        }));
-        setComments(loadedComments);
+        if (data && Array.isArray(data) && data.length > 0) {
+          const proposalData = data[0]; // Extraemos el primer elemento
 
-        // Obtener la fecha de cierre del debate
-        const closeDateDebate = new Date(data[0].close_date_debate);
-        const now = new Date();
-        // Agregar console.log para verificar las fechas y la diferencia de tiempo
-        console.log('Fecha actual (now):', now);
-        console.log('Fecha de cierre del debate (closeDateDebate):', closeDateDebate);
-        const timeDiff = closeDateDebate.getTime() - now.getTime();
-        setTimeRemaining(Math.floor(timeDiff / 1000)); // Guardamos el tiempo restante en segundos
-      })
+          setProposal(proposalData); // Guardamos directamente el objeto
 
-      .catch((error) => {
-        console.error('Error al cargar la propuesta:', error);
-      });
+          // Cargar comentarios si existen
+          const loadedComments = proposalData.comments.map((comment: { written_by: string; message: string }) => ({
+            author: comment.written_by, // Nombre o correo del autor
+            text: comment.message,
+          }));
+          setComments(loadedComments);
 
-    fetch(`/services/${serviceId}`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Error al obtener el servicio');
+          // Obtener la fecha de cierre del debate
+          const closeDateDebate = new Date(proposalData.close_date_debate);
+          const now = new Date();
+          console.log('Fecha actual (now):', now);
+          console.log('Fecha de cierre del debate (closeDateDebate):', closeDateDebate);
+          console.log("id de la propuesta",proposalId);
+
+          const timeDiff = closeDateDebate.getTime() - now.getTime();
+          setTimeRemaining(Math.floor(timeDiff / 1000)); // Guardamos el tiempo restante en segundos
+        } else {
+          console.error('La respuesta no contiene datos válidos.');
         }
-        return response.json();
-      })
-      .then((serviceData) => {
-        console.log('Detalles del servicio:', serviceData);
-      })
-      .catch((error) => {
-        console.error('Error al cargar el servicio:', error);
-      });
-  }, [serviceId, proposalId]);
+      } catch (error) {
+        console.error('Error al cargar la propuesta:', error);
+      }
+    };
+
+    fetchProposalDetails();
+  }, [proposalId]);
+
+  useEffect(() => {
+    if (timeRemaining <= 0 && proposal?.status === 'Debate') {
+      setProposal((prev: any) => ({ ...prev, status: 'Deliberación' }));
+    }
+  }, [timeRemaining, proposal?.status]);
 
   // Lógica del temporizador de deliberación
   useEffect(() => {
@@ -166,10 +168,56 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
     }
   };
 
-  const handleVote = (option: string) => {
-    setVote(option);
-    setVoted(true);
+  const handleVote = async (option: string) => {
+    try {
+      const token = localStorage.getItem('token'); // Obtener el token desde localStorage
+      if (!token) {
+        console.error('Error: Token no disponible');
+        return;
+      }
+  
+      const requestBody = {
+        params: {
+          token: token,
+          name: option,
+        },
+      };
+  
+      const response = await fetch(`http://34.51.20.243:8069/vote/${proposalId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Error al enviar el voto');
+      }
+  
+      const data = await response.json();
+      console.log('Voto enviado con éxito:', data);
+  
+      if (data.result && data.result.validacion === false) {
+        setAlertMessage(data.result.message || 'Ya has votado en esta propuesta.');
+        setShowAlert(true);
+        return;
+      }
+  
+      setVote(option);
+      setVoted(true); // Marcar como votado
+    } catch (error) {
+      console.error('Error al enviar el voto:', error);
+      setAlertMessage('Ocurrió un error al enviar el voto.');
+      setShowAlert(true);
+    }
   };
+  
+  
+  
+  
+  
+  
   const formatTime = (seconds: number) => {
     const days = Math.floor(seconds / (3600 * 24));
     const hours = Math.floor((seconds % (3600 * 24)) / 3600);
@@ -191,6 +239,7 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
               <Typography variant="h5" gutterBottom color={darkMode ? 'lightgray' : 'textPrimary'}>
                 {proposal?.name} {/* Accede al nombre de la propuesta */}
               </Typography>
+
               <Typography variant="subtitle1" color={darkMode ? 'lightgray' : 'textSecondary'} gutterBottom>
                 Detalles de propuesta
               </Typography>
@@ -248,9 +297,8 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
 
               </Box>
 
-              {inDeliberation && !voted && (
+              {proposal?.status !== 'Deliberación' && (
                 <Box mt={2}>
-          
                   <textarea
                     style={{ width: '100%', height: '60px' }}
                     value={newComment}
@@ -262,11 +310,46 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                   </Button>
                 </Box>
               )}
+
             </Box>
 
             <Box flex={1} pl={4} borderLeft={`1px solid ${darkMode ? '#666' : '#e0e0e0'}`}>
-              {inDeliberation && (
+              {proposal?.status === 'Debate' && (
                 <Box>
+             <Box
+  sx={{
+    display: 'flex',
+    flexDirection: 'column', // Organiza "Estado de la propuesta" y el valor en columnas
+    alignItems: 'center', // Centra horizontalmente
+    padding: 2,
+    textAlign: 'center', // Centra el texto dentro del contenedor
+    boxShadow: darkMode ? '0 4px 8px rgba(0, 0, 0, 0.3)' : '0 4px 8px rgba(0, 0, 0, 0.1)', // Sombra suave
+    maxWidth: '300px', // Limitar el ancho para que no sea demasiado grande
+    margin: '16px auto', // Espaciado vertical y centrado horizontal
+  }}
+>
+  <Typography variant="body2" color={darkMode ? 'lightgray' : 'textPrimary'}>
+    Estado de la propuesta:
+  </Typography>
+  
+  <Typography
+    variant="h6"
+    sx={{
+      marginTop: 1,
+      padding: '6px 12px', // Un poco más de relleno
+      backgroundColor: darkMode ? '#616161' : '#b2ebf2', // Fondo del estado
+      color: darkMode ? '#fff' : '#004d40', // Color del texto
+      borderRadius: '12px', // Bordes más redondeados
+      fontWeight: 'bold',
+      width: 'fit-content', // Ajusta el ancho al contenido
+      margin: '10px auto', // Centra la etiqueta en el contenedor
+    }}
+  >
+    {proposal?.status || 'Estado no disponible'}
+  </Typography>
+</Box>
+
+
                   <Typography variant="body2" color={darkMode ? 'lightgray' : 'textPrimary'}>
                     Toma de decisiones/comentarios
                   </Typography>
@@ -287,49 +370,116 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                 </Box>
               )}
 
-              {deliberationEnded && !voted && (
+              {proposal?.status === 'Deliberación' && (
                 <Box mt={2}>
-                  <Typography variant="h6" color={darkMode ? 'lightgray' : 'textPrimary'} gutterBottom>
-                    El debate ha terminado. Vota ahora:
-                  </Typography>
-                  <Stack spacing={1}>
-                    <Button
-                      variant="contained"
-                      color={vote === 'yes' ? 'success' : 'primary'}
-                      onClick={() => handleVote('yes')}
-                      style={{
-                        backgroundColor: vote === 'yes' ? '#388e3c' : '#1976d2',
-                        color: 'white',
-                      }}
-                    >
-                      Aprobar
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color={vote === 'no' ? 'error' : 'primary'}
-                      onClick={() => handleVote('no')}
-                      style={{
-                        backgroundColor: vote === 'no' ? '#d32f2f' : '#1976d2',
-                        color: 'white',
-                      }}
-                    >
-                      Rechazar
-                    </Button>
-                  </Stack>
-                </Box>
-              )}
+                  {!voted ? (
+                    <>
+ <Box
+  sx={{
+    display: 'flex',
+    flexDirection: 'column', // Organiza "Estado de la propuesta" y el valor en columnas
+    alignItems: 'center', // Centra horizontalmente
+    padding: 2,
+    textAlign: 'center', // Centra el texto dentro del contenedor
+    boxShadow: darkMode ? '0 4px 8px rgba(0, 0, 0, 0.3)' : '0 4px 8px rgba(0, 0, 0, 0.1)', // Sombra suave
+    maxWidth: '300px', // Limitar el ancho para que no sea demasiado grande
+    margin: '16px auto', // Espaciado vertical y centrado horizontal
+  }}
+>
+  <Typography variant="body2" color={darkMode ? 'lightgray' : 'textPrimary'}>
+    Estado de la propuesta:
+  </Typography>
+  
+  <Typography
+    variant="h6"
+    sx={{
+      marginTop: 1,
+      padding: '6px 12px', // Un poco más de relleno
+      backgroundColor: darkMode ? '#616161' : '#b2ebf2', // Fondo del estado
+      color: darkMode ? '#fff' : '#004d40', // Color del texto
+      borderRadius: '12px', // Bordes más redondeados
+      fontWeight: 'bold',
+      width: 'fit-content', // Ajusta el ancho al contenido
+      margin: '10px auto', // Centra la etiqueta en el contenedor
+    }}
+  >
+    {proposal?.status || 'Estado no disponible'}
+  </Typography>
+</Box>
 
-              {voted && (
-                <Box mt={2}>
-                  <Typography variant="body2" color={darkMode ? 'lightgray' : 'textPrimary'}>
-                    ¡Gracias por votar!
-                  </Typography>
+
+                      <Typography variant="h6" color={darkMode ? 'lightgray' : 'textPrimary'} gutterBottom>
+                        Vota ahora:
+                      </Typography>
+                      <Stack spacing={1}>
+                        <Button
+                          variant="contained"
+                          color={vote === 'yes' ? 'success' : 'primary'}
+                          onClick={() => handleVote('yes')}
+                          style={{
+                            backgroundColor: vote === 'yes' ? '#388e3c' : '#1976d2',
+                            color: 'white',
+                          }}
+                        >
+                          Aprobar
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color={vote === 'no' ? 'error' : 'primary'}
+                          onClick={() => handleVote('no')}
+                          style={{
+                            backgroundColor: vote === 'no' ? '#d32f2f' : '#1976d2',
+                            color: 'white',
+                          }}
+                        >
+                          Rechazar
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color={vote === 'meh' ? 'error' : 'primary'}
+                          onClick={() => handleVote('meh')}
+                          style={{
+                            backgroundColor: vote === 'meh' ? '#d32f2f' : '#1976d2',
+                            color: 'white',
+                          }}
+                        >
+                          Me abstengo
+                        </Button>
+                      </Stack>
+                    </>
+                  ) : (
+                    <Typography variant="body2" color={darkMode ? 'lightgray' : 'textPrimary'}>
+                      ¡Gracias por votar!
+                    </Typography>
+                  )}
                 </Box>
               )}
             </Box>
+
           </Box>
         </div>
       </div>
+      <Snackbar
+  open={showAlert}
+  autoHideDuration={6000} // Tiempo en milisegundos (6 segundos)
+  onClose={() => setShowAlert(false)} // Cerrar al terminar el tiempo o manualmente
+  anchorOrigin={{ vertical: 'top', horizontal: 'center' }} // Posición de la alerta
+>
+  <Alert
+    onClose={() => setShowAlert(false)}
+    severity="error" // Cambiar según el tipo de alerta ('error', 'warning', 'info', 'success')
+    sx={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      textAlign: 'center', // Centra el texto
+      width: '100%', // Asegura que el contenido ocupe todo el ancho disponible
+    }}
+  >
+    {alertMessage}
+  </Alert>
+</Snackbar>
+
     </div>
   );
 };
