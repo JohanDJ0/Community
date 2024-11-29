@@ -116,7 +116,7 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
     const newProposalData = {
       params: {
         name: proposalName,
-        token: token || "", // Token obtenido del localStorage
+        written_by: token || "", // Token obtenido del localStorage
         description: proposalDescription,
         service_id: serviceId,
         debateEndDate,
@@ -125,7 +125,8 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
     };
   
     try {
-      const response = await fetch("http://34.51.20.243:8069/proposals/create", {
+
+      const response = await fetch("/proposals/create", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -292,7 +293,7 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
                         <TableCell><Typography variant="subtitle2">Título</Typography></TableCell>
                         <TableCell><Typography variant="subtitle2">Estado</Typography></TableCell>
                         <TableCell><Typography variant="subtitle2">Creado por</Typography></TableCell>
-                        <TableCell><Typography variant="subtitle2">Última actualización</Typography></TableCell>
+                        <TableCell><Typography variant="subtitle2">Fecha de cierre</Typography></TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -315,7 +316,8 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
                         <span>{proposal.written_by || "Desconocido"}</span>
                       </div>
                     </TableCell>
-                    <TableCell>{proposal.create_date || "Sin fecha"}</TableCell>
+
+                    <TableCell>{proposal.close_date || "Sin fecha"}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
