@@ -100,7 +100,7 @@ const Header: React.FC<{ toggleDarkMode: () => void }> = ({ toggleDarkMode }) =>
     <NotificationsWrapper>
       <List>
         {notis.length === 0 ? (
-          <ListItemText>¡Bien hecho! No tienes notificaciones...</ListItemText>
+          <ListItemText sx={{ padding: '16px' }}>¡Bien hecho! No tienes notificaciones...</ListItemText>
         ) : (
           notis.map((item) => (
             <ListItem button onClick={() => clickNoti(item.route, item.id)}>

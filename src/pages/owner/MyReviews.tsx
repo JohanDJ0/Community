@@ -19,7 +19,7 @@ import { useMediaQuery } from '@mui/material';
 import AutoModeSharpIcon from '@mui/icons-material/AutoModeSharp'; // Importa el ícono
 import noImage from '../../assets/NoImagen.png';
 import { followService } from 'components/followService';
-import HomeIcon from '@mui/icons-material/Home';
+import StoreIcon from '@mui/icons-material/Store';
 
 interface Review {
   name: string; // Nombre de la reseña
@@ -54,72 +54,6 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
   const [openModal, setOpenModal] = useState(false);
   const isSmallScreen = useMediaQuery('(max-width:600px)');
   const [isFollowing, setIsFollowing] = useState(false); // Hook para el follow del servicio
-
-  const [newReview, setNewReview] = useState<Review>({
-    name: '',
-    description: '',
-    rating: 0,
-    written_by: (isAuthenticated && user && user.name) || '',
-  });
-
-
-
-  const handleCloseModal = () => {
-    setOpenModal(false);
-    setNewReview({ name: '', description: '', rating: 0, written_by: (isAuthenticated && user && user.name) || '' }); // Resetea el formulario
-  };
-  const handleOpenModal = () => {
-    setNewReview({
-      name: '',
-      description: '',
-      rating: 0,
-      written_by: token || '', // Asigna el token del usuario autenticado o una cadena vacía
-    });
-    setOpenModal(true);
-  };
-  const handleSubmitReview = () => {
-    if (!newReview.name || !newReview.description || !newReview.rating) {
-      console.error('Todos los campos son obligatorios');
-      return;
-    }
-
-    const token = localStorage.getItem("token");
-    if (!token) {
-      console.error('Token no encontrado');
-      return;
-    }
-
-    const reviewData = {
-      params: {
-        name: newReview.name,
-        description: newReview.description,
-        rating: newReview.rating,
-        written_by: token,
-        service_id: Number(id),
-      },
-    };
-
-    fetch('/reviews/create', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-      },
-      body: JSON.stringify(reviewData), // Cambia esto para reflejar la estructura correcta
-    })
-      .then(response => response.json())
-      .then((data) => {
-        if (data.result && data.result.success) {
-          console.log("Reseña creada con éxito:", data.result.Message); // Mensaje de éxito
-          handleCloseModal(); // Cerrar el modal al crear la reseña con éxito
-        } else {
-          console.error("Error al crear la reseña:", data.result?.Message || "Error desconocido");
-        }
-      })
-      .catch((error) => {
-        console.error("Error al crear la reseña:", error.message || "Error desconocido");
-      });
-  };
 
   // Función para obtener reseñas
   const fetchReviews = () => {
@@ -228,8 +162,6 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
       fetchReviews();
     }, 5000);
 
-    /* clearInterval(intervalId); */
-
     return () => {
       isMounted = false;
       clearInterval(intervalId); // Limpia el intervalo
@@ -237,13 +169,8 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
   }, [id]);
 
   const handleNovedadesClick = () => {
-    navigate(`/services/${id}`); // Cambia a una ruta relativa
+    navigate(`/MyService`); // Cambia a una ruta relativa
   };
-
-  const handleCreateReviewClick = () => {
-    navigate(`/reviews/create`); // Redirige a la URL para crear una reseña
-  };
-
   // Manejar la transición de desvanecimiento al cargar el nombre
   useEffect(() => {
     if (serviceName) {
@@ -280,14 +207,16 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
     <div className='first-div'>
       <div className='second-div'>
         <div className={`box-div ${darkMode ? 'dark' : 'light'}`} style={{ position: 'relative' }}>
-          <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
-            <HomeIcon style={{ marginRight: '4px' }} />
-            <a onClick={() => navigate("/Services")} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>Inicio</a>
-            <span style={{ margin: '0 8px' }}>/</span>
-            <a onClick={() => navigate(`/services/${service.id}`)} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>{service.name}</a>
-            <span style={{ margin: '0 8px' }}>/</span>
-            <span style={{ fontWeight: 'bold' }}>Reseñas</span>
-          </div>
+            <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
+                <StoreIcon style={{ marginRight: '4px' }} />
+                <span onClick={() => navigate(`/MyService`)} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>Mi negocio</span>
+                <span style={{ margin: '0 8px' }}>/</span>
+                <span style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>{service.name}</span>
+                <span style={{ margin: '0 8px' }}>/</span>
+                <span style={{ fontWeight: 'bold' }}>Reseñas</span>
+                {/* <span style={{ margin: '0 8px' }}>/</span>
+                <span>Subsección</span> */}
+            </div>
           <Card style={{ maxHeight: isSmallScreen ? '400px' : '500px', overflowY: 'auto' }}>
             <Box position="relative" width="100%" height={isSmallScreen ? '200px' : '300px'}>
               <CardMedia
@@ -345,12 +274,8 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
               <Stack spacing={2} direction="row">
                 <Button variant="contained" startIcon={<AutoModeSharpIcon />} onClick={handleNovedadesClick}>Novedades</Button>
                 {/* <Button variant="contained" startIcon={<GradeIcon />} onClick={() => navigate(`/services/${id}/reviews`)}>Reseñas</Button> */}
-                <Button variant="contained" startIcon={<BackHandIcon />} onClick={() => navigate(`/proposal/${id}`)}
-                >Propuestas</Button>
+                <Button variant="contained" startIcon={<BackHandIcon />} onClick={() => navigate(`/MyProposals/${id}`)}>Propuestas</Button>
                 <Button variant="outlined" startIcon={<ShareIcon />}>Compartir</Button>
-                {!service.is_following && ( // Renderiza el botón solo si is_followed es false
-                  <Button onClick={() => handleFollow()} variant="contained" startIcon={<AddIcon />} style={{fontSize: isSmallScreen ? '0.7rem' : '0.9rem',padding: isSmallScreen ? '4px 8px' : '6px 12px',}}>Seguir</Button>
-                )}
               </Stack>
               <CardContent>
                 <Typography variant="h5" align="left" paddingTop="10px">
@@ -385,79 +310,8 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
                   <Typography variant="body2" sx={{ textAlign: 'left' }}>No hay reseñas disponibles.</Typography>
                 )}
               </CardContent>
-
-
-
-
             </CardContent>
           </Card>
-
-          {/* Botón Crear Reseña */}
-          <Button
-            variant="contained"
-            onClick={handleOpenModal}
-            style={{
-              position: 'absolute',
-              bottom: '20px',
-              right: '20px',
-              zIndex: 1,
-            }}
-          >
-            Crear reseña
-          </Button>
-          <Dialog open={openModal} onClose={handleCloseModal}>
-            <DialogTitle>Crear Reseña</DialogTitle>
-            <DialogContent>
-              <FormControl fullWidth margin="normal">
-                <TextField
-                  label="Nombre de la reseña"
-                  value={newReview.name}
-                  onChange={(e) => setNewReview({ ...newReview, name: e.target.value })}
-                />
-              </FormControl>
-
-              <FormControl fullWidth margin="normal">
-                  <TextField
-                    label="Descripción"
-                    multiline
-                    rows={4}
-                    value={newReview.description}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      if (value.length <= 100) {
-                        setNewReview({ ...newReview, description: value });
-                      }
-                    }}
-                    helperText={`${newReview.description.length}/100 caracteres | ${newReview.description.trim().split(/\s+/).filter(Boolean).length} palabras`}
-                    inputProps={{ maxLength: 100 }}
-                  />
-                  
-                </FormControl>
-
-
-              {/* <FormControl fullWidth margin="normal">
-                <TextField
-                  label="Nombre de Usuario"
-                  value={user?.name || "Nombre no disponible"} // Mostrar el nombre del usuario
-                  disabled // Puedes deshabilitarlo si deseas que el usuario no pueda editarlo
-                />
-              </FormControl> */}
-
-              <FormControl fullWidth margin="normal" sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Rating
-                  name="simple-controlled"
-                  value={newReview.rating}
-                  onChange={(event, newValue) => {
-                    setNewReview({ ...newReview, rating: newValue ?? 0 });
-                  }}
-                />
-              </FormControl>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleCloseModal}>Cancelar</Button>
-              <Button onClick={handleSubmitReview}>Crear Reseña</Button>
-            </DialogActions>
-          </Dialog>
 
         </div>
       </div>

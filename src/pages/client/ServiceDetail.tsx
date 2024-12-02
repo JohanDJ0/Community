@@ -9,6 +9,8 @@ import { useMediaQuery } from '@mui/material';
 import AutoModeSharpIcon from '@mui/icons-material/AutoModeSharp';
 import ShareModal from '../../components/ShareModal'; // modal
 import noImage from '../../assets/NoImagen.png';
+import { followService } from 'components/followService'; // componente que se encarga de seguir a un servicio
+import HomeIcon from '@mui/icons-material/Home';
 
 interface Novedad {
   name: string;
@@ -22,6 +24,7 @@ interface ServiceDetailProps {
   qualification: number;
   description: string;
   novedades: Novedad[];
+  is_following: boolean;
 }
 
 interface ServicesProps {
@@ -29,33 +32,43 @@ interface ServicesProps {
 }
 
 const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
+  const token = localStorage.getItem('token');
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [service, setService] = useState<ServiceDetailProps | null>(null);
   const isSmallScreen = useMediaQuery('(max-width:600px)');
   const [isShareModalOpen, setIsShareModalOpen] = useState(false); // modal
+  const [isFollowing, setIsFollowing] = useState(false); // Hook para el follow del servicio
 
   useEffect(() => {
+    const dataToken = {
+      params: {
+        token: token
+      }
+    }
+
     let isMounted = true;
-    fetch(`/services/${id}`)
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
+    fetch(`/services/${id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(dataToken),
+    })
+    .then(response => response.json())
+    .then((responseData) => {
+      if (isMounted) {
+        if (responseData.result) {
+          console.log(responseData.result)
+          setService(responseData.result);
+        } else {
+          console.error('Estructura de datos inesperada:', responseData);
         }
-        throw new Error('Error en la respuesta del servidor');
-      })
-      .then((responseData) => {
-        if (isMounted) {
-          if (responseData && responseData.length > 0) {
-            setService(responseData[0]);
-          } else {
-            console.error('Estructura de datos inesperada:', responseData);
-          }
-        }
-      })
-      .catch((error) => {
-        console.error('Error al obtener los detalles del servicio:', error);
-      });
+      }
+    })
+    .catch((error) => {
+      console.error('Error al obtener los detalles del servicio:', error);
+    });
 
     return () => {
       isMounted = false;
@@ -66,10 +79,27 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
     return <p>Cargando detalles del servicio...</p>;
   }
 
+  const handleFollow = async () => {
+    if (!service) return; // Evita errores si service no está cargado
+    // Se creó un nuevo componente que recibe dos parametros, el id y el token
+    const success = await followService(service.id, token || '');
+    if (success) {
+      setIsFollowing(true);
+    }
+  };
+
   return (
     <div className="first-div">
       <div className="second-div">
         <div className={`box-div ${darkMode ? 'dark' : 'light'}`}>
+          <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
+            <HomeIcon style={{ marginRight: '4px' }} />
+            <a onClick={() => navigate("/Services")} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>Inicio</a>
+            <span style={{ margin: '0 8px' }}>/</span>
+            <span style={{ fontWeight: 'bold' }}>{service.name}</span>
+            {/* <span style={{ margin: '0 8px' }}>/</span>
+            <span>Subsección</span> */}
+          </div>
           <Card style={{ maxHeight: isSmallScreen ? '400px' : '500px', overflowY: 'auto' }}>
             <Box position="relative" width="100%" height={isSmallScreen ? '200px' : '300px'}>
               <CardMedia
@@ -123,13 +153,13 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
             </Box>
             <CardContent>
               <Stack spacing={1} direction="row">
-                <Button
+                {/* <Button
                   variant="contained"
                   startIcon={<AutoModeSharpIcon />}
                   style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}
                 >
                   Novedades
-                </Button>
+                </Button> */}
                 <Button
                   variant="contained"
                   startIcon={<GradeIcon />}
@@ -149,13 +179,26 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                 <Button variant="outlined" startIcon={<ShareIcon />} onClick={() => setIsShareModalOpen(true)}>
                   Compartir
                 </Button>
-                <Button
+                {!service.is_following && ( // Renderiza el botón solo si is_followed es false
+                  <Button
+                    onClick={() => handleFollow()}
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    style={{
+                      fontSize: isSmallScreen ? '0.7rem' : '0.9rem',
+                      padding: isSmallScreen ? '4px 8px' : '6px 12px',
+                    }}
+                  >
+                    Seguir
+                  </Button>
+                )}
+                {/* <Button
                   variant="contained"
                   startIcon={<AddIcon />}
                   style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}
                 >
                   Seguir
-                </Button>
+                </Button> */}
               </Stack>
               <Typography
                 variant="body2"
@@ -173,8 +216,7 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                       <Card
                         key={index}
                         style={{
-                          marginBottom: '10px',
-                          padding: '10px',
+                          padding: '8px',
                           boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
                         }}
                       >
@@ -214,4 +256,3 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
 };
 
 export default ServiceDetail;
-

@@ -5,6 +5,7 @@ import { useMediaQuery } from '@mui/material';
 import '../../css/App.css';
 import { useNavigate } from 'react-router-dom';
 import noImage from '../../assets/NoImagen.png';
+import PersonIcon from '@mui/icons-material/Person';
 
 interface Followed {
   id: number,
@@ -73,7 +74,7 @@ const Seguidos: React.FC<ServicesProps> = ({ darkMode }) => {
     .then((res) => res.json())
     .then((response) => {
       console.log("Se dejo de seguir al negocio")
-      window.location.reload();
+      setData((prev) => prev.filter((servicio) => servicio.id !== id));
     })
     .catch((error) => {
       console.error('Error al obtener los datos:', error);
@@ -84,6 +85,14 @@ const Seguidos: React.FC<ServicesProps> = ({ darkMode }) => {
     <div className='first-div'>
       <div className='second-div'>
         <div className={`box-div ${darkMode ? 'dark' : 'light'}`}>
+          <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
+            <PersonIcon style={{ marginRight: '4px' }} />
+            <span style={{ fontWeight: 'bold' }}>Seguidos</span>
+            {/* <span style={{ margin: '0 8px' }}>/</span>
+            <span>Sección</span>
+            <span style={{ margin: '0 8px' }}>/</span>
+            <span>Subsección</span> */}
+          </div>
           <div style={{ maxHeight: isSmallScreen ? '400px' : '500px', overflowY: 'auto' }}>
             {data.length > 0 ? (
               data.map((servicio) => (

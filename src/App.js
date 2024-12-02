@@ -14,10 +14,13 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import MyServicePage from 'pages/owner/MyServicePage';
 import ServiceReviewsPage from 'pages/owner/ServiceReviewsPage';
+import MyReviews from 'pages/owner/MyReviews';
 import EmpleadosPage from 'pages/owner/EmpleadosPage';
 import MyRewardsPage from 'pages/owner/MyRewardsPage';
 import PropuestasPage from 'pages/client/PropuestasPage';
 import ProposalDetail from 'pages/client/ProposalDetail';
+import MyProposals from 'pages/owner/MyProposals';
+
 const Layout = ({ children, toggleDarkMode }) => {
   const location = useLocation();
 
@@ -78,10 +81,14 @@ const App = () => {
             <Route path="/VistaRol" element={<VistaRol darkMode={darkMode} />} />
             <Route path="/MyService" element={<MyServicePage darkMode={darkMode}/>}/>
             <Route path="/services/:id/reviews" element={<ServiceReviewsPage darkMode={darkMode} />} />
+
+            <Route path="/MyService/:id/reviews" element={<MyReviews darkMode={darkMode} />} />
+            <Route path="/MyProposals/:id" element={<MyProposals darkMode={darkMode} />} />
+
             <Route path='/Empleados' element={<EmpleadosPage darkMode={darkMode}/>}/>
             <Route path='/MyRewards' element={<MyRewardsPage darkMode={darkMode}/>}/>
             <Route path="/proposal/:id" element={<PropuestasPage darkMode={darkMode}/>} />
-            <Route path="/ProposalDetail/:serviceId/:proposalId" element={<ProposalDetail darkMode={darkMode} />} />
+            <Route path="/ProposalDetail/:serviceId/:proposalId/:serviceName" element={<ProposalDetail darkMode={darkMode} />} />
           </Routes>
         </Layout>
       </Router>

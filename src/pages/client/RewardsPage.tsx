@@ -3,10 +3,13 @@ import { Card, CardContent, CardMedia, Typography, Button } from '@mui/material'
 import { useMediaQuery } from '@mui/material';
 import '../../css/App.css';
 import logo from '../../assets/Logo.png';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import noImage from '../../assets/NoImagen.png';
 
 interface Reward {
   id: number;
   name: string;
+  description: string;
   businessName: string;
   requiredPoints: number;
   userPoints: number;
@@ -22,6 +25,7 @@ const Rewards: React.FC<ServicesProps> = ({ darkMode }) => {
   const isSmallScreen = useMediaQuery('(max-width:600px)');
   const [availablePoints, setAvailablePoints] = useState(0);
   const token = localStorage.getItem('token');
+
   useEffect(() => {
     const fetchRewards = async () => {
       try {
@@ -48,10 +52,11 @@ const Rewards: React.FC<ServicesProps> = ({ darkMode }) => {
           const mappedRewards = data.result.data.map((reward: any) => ({
             id: reward.id,
             name: reward.name,
-            businessName: reward.description || 'Negocio desconocido',
+            description: reward.description || 'Negocio desconocido',
+            businessName: reward.service,
             requiredPoints: reward.points_required,
             userPoints: availablePoints, // Sustituir con los puntos reales del usuario
-            imageUrl: 'https://juegosmoda2049.neocities.org/images.jpg', // URL genérica
+            imageUrl: reward.image, // URL genérica
           }));
     
           setRewards(mappedRewards);
@@ -72,32 +77,39 @@ const Rewards: React.FC<ServicesProps> = ({ darkMode }) => {
     <div className={`first-div ${darkMode ? 'dark' : 'light'}`}>
       <div className="second-div">
         <div className={`box-div ${darkMode ? 'dark' : 'light'}`}>
-          <div
-            style={{
-              marginBottom: '20px',
-              display: 'flex',
-              justifyContent: 'flex-end',
-              alignItems: 'center',
-              overflowY: 'auto', // Solo scroll vertical
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+  {/* Primer div con el ícono y el texto */}
+  <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
+    <EmojiEventsIcon style={{ marginRight: '4px' }} />
+    <span style={{ fontWeight: 'bold' }}>Recompensas</span>
+  </div>
 
-              gap: '10px',
-            }}
-          >
-            <Typography variant="h5" color="textPrimary">
-              CommunityPoints
-            </Typography>
-            <img
-              src={logo}
-              alt="logo"
-              style={{
-                width: '30px',
-                height: '30px',
-              }}
-            />
-            <Typography variant="h6" color="textSecondary">
-              {availablePoints}
-            </Typography>
-          </div>
+  {/* Segundo div con el logo y puntos */}
+  <div
+    style={{
+      display: 'flex',
+      alignItems: 'center',
+      gap: '10px',
+      overflowY: 'auto', // Solo scroll vertical
+    }}
+  >
+    <Typography variant="h6" color="textPrimary">
+      Tus Puntos Community
+    </Typography>
+    <img
+      src={logo}
+      alt="logo"
+      style={{
+        width: '30px',
+        height: '30px',
+      }}
+    />
+    <Typography variant="h6" color="textSecondary">
+      {availablePoints}
+    </Typography>
+  </div>
+</div>
+
 
           <div
          style={{
@@ -128,19 +140,26 @@ const Rewards: React.FC<ServicesProps> = ({ darkMode }) => {
                   <CardMedia
                     component="img"
                     height="150"
-                    image={reward.imageUrl}
+                    image={reward.imageUrl ? `data:image/jpeg;base64,${atob(reward.imageUrl)}`: noImage}
                     alt={reward.name}
                   />
+                  
                   <CardContent>
                     <Typography variant="h6">{reward.name}</Typography>
                     <Typography variant="body2" color="text.secondary">
-                      Negocio: {reward.businessName}
+                      {reward.description}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
+                      De: {reward.businessName}
+                    </Typography>
+                    {/* <Typography variant="body2" color="text.secondary">
                       Puntos requeridos: {reward.requiredPoints}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
                       Tus puntos: {reward.userPoints}
+                    </Typography> */}
+                    <Typography variant="body2" color="text.secondary">
+                      {reward.userPoints} / {reward.requiredPoints}
                     </Typography>
                     <Button
                       variant="contained"

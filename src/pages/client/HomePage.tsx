@@ -9,7 +9,7 @@ import { Card, CardContent } from "@mui/material";
 import Footer from 'components/Footer';
 import Equipo from 'assets/Equipo.jpeg';
 import { useAuth0 } from '@auth0/auth0-react';
-
+import MAHL from '../../img/mahl.jpg'
 
 interface ServicesProps {
   darkMode: boolean;
@@ -213,7 +213,7 @@ const HomePage: React.FC<ServicesProps> = ({ darkMode }) => {
 
             <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', marginBottom: '16px' }}>
               {[
-                { name: "Ángel", role: "Desarrollador Full-Stack", avatar: "https://juegosmoda2049.neocities.org/Captura%20de%20pantalla%202024-11-21%20124205.png" },
+                { name: "Ángel", role: "Desarrollador Full-Stack", avatar: MAHL },
                 { name: "Martha", role: "UX Designer", avatar: "https://juegosmoda2049.neocities.org/Captura%20de%20pantalla%202024-11-21%20124137.png" },
                 { name: "Johan De Jesus", role: "Desarrollador Full-Stack", avatar: "https://juegosmoda2049.neocities.org/IMG-20221103-WA0011.jpg" },
                 { name: "Marcos", role: "Desarrollador Front-end", avatar: "https://juegosmoda2049.neocities.org/width_133.jpg" },

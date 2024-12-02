@@ -7,8 +7,7 @@ import { Card, CardMedia, CardContent, Typography, Box, Button, Stack, Rating, u
 import { Grade as GradeIcon, Share as ShareIcon, BackHand as BackHandIcon, Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { useAuth0 } from '@auth0/auth0-react';
 import noImage from '../../assets/NoImagen.png';
-
-
+import StoreIcon from '@mui/icons-material/Store';
 
 interface Novedad {
   id:number,
@@ -52,6 +51,7 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
     description: '',
   });
   const isSmallScreen = useMediaQuery('(max-width:600px)');
+  const [novelties, setNovelties] = useState<Novedad[]>([]);
 
   useEffect(() => {
     const idservice = localStorage.getItem('service');
@@ -153,59 +153,44 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
         setError('Error al crear la novedad');
       });
   };
+
   const handleDeleteNovelty = async (id: number) => {
-    console.log("Novedad ID a eliminar:", id);
-  
-    if (!id) {
-      console.error("El ID no es válido.");
-      return;
-    }
-  
-    try {
-      setLoading(true);
-      setError(null);
-  
-      const response = await fetch(`http://34.51.20.243:8069/news/delete/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          // Si necesitas algún encabezado de autenticación, agrega aquí
-          // 'Authorization': `Bearer ${token}`
-        },
+    setLoading(true); // Muestra un indicador de carga si es necesario
+    fetch(`/news/delete/${id}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json', }
+    })
+      .then((res) => {
+        if (res.ok) {
+          // Actualiza las novedades dentro del estado del servicio
+          setService((prevService) => ({
+            ...prevService,
+            novedades: prevService.novedades.filter((novelty) => novelty.id !== id),
+          }));
+        } else {
+          console.error("Error al eliminar la novedad");
+        }
+      })
+      .catch((error) => {
+        console.error("Error al realizar la eliminación:", error);
+      })
+      .finally(() => {
+        setLoading(false); // Detén el indicador de carga
       });
-  
-      if (!response.ok) {
-        throw new Error('Error al eliminar la novedad');
-      }
-  
-      const data = await response.json();
-      const result = JSON.parse(data.result);
-  
-      if (result.success) {
-        console.log('Novedad eliminada con éxito');
-      } else {
-        console.error('Error al eliminar la novedad');
-      }
-    } catch (err) {
-      console.error('Error de red o al eliminar:', err);
-      setError('Hubo un error al eliminar la novedad');
-    } finally {
-      setLoading(false);
-    }
   };
   
-  
-  
-  
-  
-  
-  
-  
-
   return (
     <div className="first-div">
       <div className="second-div">
         <div className={`box-div ${darkMode ? 'dark' : 'light'}`}>
+          <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
+            <StoreIcon style={{ marginRight: '4px' }} />
+            <span style={{ fontWeight: 'bold' }}>Mi negocio</span>
+            {/* <span style={{ margin: '0 8px' }}>/</span>
+            <span>Sección</span>
+            <span style={{ margin: '0 8px' }}>/</span>
+            <span>Subsección</span> */}
+          </div>
           <Card
             style={{
               maxHeight: isSmallScreen ? '400px' : '500px',
@@ -269,8 +254,8 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
               <Stack spacing={1} direction="row" justifyContent="space-between" alignItems="center">
                 <Box>
                   <Stack spacing={2} direction="row" justifyContent="flex-start" alignItems="center">
-                  <Button variant="contained" startIcon={<GradeIcon />} onClick={() => navigate(`/services/${id}/reviews`)}>Reseñas</Button>
-                  <Button variant="contained" startIcon={<BackHandIcon />} onClick={() => navigate(`/propuestas`)}>Propuestas</Button>
+                  <Button variant="contained" startIcon={<GradeIcon />} onClick={() => navigate(`/MyService/${service.id}/reviews`)}>Reseñas</Button>
+                  <Button variant="contained" startIcon={<BackHandIcon />} onClick={() => navigate(`/MyProposals/${service.id}`)}>Propuestas</Button>
                   <Button variant="outlined" startIcon={<ShareIcon />} onClick={() => setIsShareModalOpen(true)}>Compartir</Button>
                   </Stack>
                 </Box>
@@ -295,13 +280,12 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
               </Stack>
 
               {service?.novedades && Array.isArray(service.novedades) && service.novedades.length > 0 ? (
-  <Stack spacing={2} style={{ marginTop: '20px' }}>
-    <Typography variant="h6">Novedades</Typography>
+  <Stack spacing={2} style={{ marginTop: '10px' }}>
+    {/* <Typography variant="h6">Novedades</Typography> */}
 
     {service.novedades.map((novedad, index) => {
-      console.log("Novedad ID:", novedad.id);  // Aquí es donde logueas la ID de cada novedad
       return (
-        <Card key={novedad.id} style={{ marginBottom: '10px', padding: '10px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' }}>
+        <Card key={novedad.id} style={{ padding: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' }}>
           <CardContent>
             <Stack direction="row" justifyContent="space-between" alignItems="center">
               <Box>

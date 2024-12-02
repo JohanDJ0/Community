@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardMedia, CardContent, Typography } from '@mui/material';
+import { Card, CardMedia, CardContent, Typography, Button } from '@mui/material';
+import PersonIcon from '@mui/icons-material/Person';
 
 interface Employee {
   id: number;
@@ -16,10 +17,24 @@ interface ServicesProps {
 const EmpleadosPage: React.FC<ServicesProps> = ({ darkMode }) => {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const isSmallScreen = window.innerWidth < 600; // Ajusta el tamaño de la pantalla según necesites
+  const serviceId = localStorage.getItem('service');
 
   useEffect(() => {
+    fetch(`/employees/${serviceId}`)
+    .then((res) => res.json())
+    .then((result: Employee[]) => {
+      if (Array.isArray(result)) {
+        setEmployees(result);
+        console.log(result)
+      } else {
+        console.error("Formato de datos inesperado:", result);
+      }
+    })
+    .catch((error) => {
+      console.error('Error al obtener los datos:', error);
+    });
     // Datos de empleados de ejemplo
-    const defaultEmployees: Employee[] = [
+    /* const defaultEmployees: Employee[] = [
       {
         id: 1,
         name: 'Juan Pérez',
@@ -50,7 +65,7 @@ const EmpleadosPage: React.FC<ServicesProps> = ({ darkMode }) => {
       },
     ];
 
-    setEmployees(defaultEmployees);
+    setEmployees(defaultEmployees); */
   }, []);
 
   return (
@@ -61,6 +76,14 @@ const EmpleadosPage: React.FC<ServicesProps> = ({ darkMode }) => {
             maxHeight: isSmallScreen ? '400px' : '500px',
             overflowY: 'auto',
           }}>
+            <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
+              <PersonIcon style={{ marginRight: '4px' }} />
+              <span style={{ fontWeight: 'bold' }}>Empleados</span>
+              {/* <span style={{ margin: '0 8px' }}>/</span>
+              <span>Sección</span>
+              <span style={{ margin: '0 8px' }}>/</span>
+              <span>Subsección</span> */}
+            </div>
             <div style={{
               display: 'flex',
               flexWrap: 'wrap',
@@ -90,12 +113,19 @@ const EmpleadosPage: React.FC<ServicesProps> = ({ darkMode }) => {
                     />
                     <CardContent>
                       <Typography variant="h6">{employee.name}</Typography>
-                      <Typography variant="body2" color="text.secondary">
+                      {/* <Typography variant="body2" color="text.secondary">
                         Edad: {employee.age}
-                      </Typography>
+                      </Typography> */}
                       <Typography variant="body2" color="text.secondary">
-                        Correo: {employee.email}
+                        {employee.email}
                       </Typography>
+                      <Button
+                        color="error"
+                        variant="contained"
+                        style={{ marginTop: '10px' }}
+                      >
+                        Dar de baja
+                    </Button>
                     </CardContent>
                   </Card>
                 ))

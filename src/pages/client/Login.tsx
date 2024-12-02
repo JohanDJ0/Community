@@ -63,7 +63,7 @@ const Login: React.FC = () => {
 
   return (
     <div style={loaderStyle}>
-      <h1>Cargando...</h1>
+      <h1 style={{ color: 'black' }}>Cargando...</h1>
     </div>
   );
 }

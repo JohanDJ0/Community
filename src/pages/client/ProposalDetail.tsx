@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Chip, Button, Avatar, Divider, Stack } from '@mui/material';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import '../../css/App.css';
 import { Box, Typography, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from '@mui/material';
 import { Snackbar, Alert  } from '@mui/material';
+import HomeIcon from '@mui/icons-material/Home';
+
 interface ServicesProps {
   darkMode: boolean;
 }
@@ -15,8 +17,9 @@ interface Comment {
 }
 
 const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
-  const { serviceId, proposalId } = useParams<{ serviceId: string, proposalId: string }>();
+  const { serviceId, proposalId, serviceName } = useParams<{ serviceId: string, proposalId: string, serviceName: string }>();
   const { user } = useAuth0();
+  const navigate = useNavigate();
   const [proposal, setProposal] = useState<any>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
@@ -183,7 +186,7 @@ const [showAlert, setShowAlert] = useState(false); // Visibilidad de la alerta
         },
       };
   
-      const response = await fetch(`http://34.51.20.243:8069/vote/${proposalId}`, {
+      const response = await fetch(`/vote/${proposalId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -213,11 +216,6 @@ const [showAlert, setShowAlert] = useState(false); // Visibilidad de la alerta
     }
   };
   
-  
-  
-  
-  
-  
   const formatTime = (seconds: number) => {
     const days = Math.floor(seconds / (3600 * 24));
     const hours = Math.floor((seconds % (3600 * 24)) / 3600);
@@ -234,6 +232,16 @@ const [showAlert, setShowAlert] = useState(false); // Visibilidad de la alerta
     <div className="first-div">
       <div className="second-div">
         <div className={`box-div ${darkMode ? 'dark' : 'light'}`}>
+          <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
+            <HomeIcon style={{ marginRight: '4px' }} />
+            <a onClick={() => navigate("/Services")} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>Inicio</a>
+            <span style={{ margin: '0 8px' }}>/</span>
+            <a onClick={() => navigate(`/services/${serviceId}`)} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>{serviceName}</a>
+            <span style={{ margin: '0 8px' }}>/</span>
+            <a onClick={() => navigate(`/proposal/${serviceId}`)} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>Propuestas</a>
+            <span style={{ margin: '0 8px' }}>/</span>
+            <span style={{ fontWeight: 'bold' }}>{proposal.name}</span>
+          </div>
           <Box display="flex">
             <Box flex={2} pr={4}>
               <Typography variant="h5" gutterBottom color={darkMode ? 'lightgray' : 'textPrimary'}>

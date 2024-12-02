@@ -116,7 +116,7 @@ const MenuD: React.FC<{ toggleDarkMode: () => void }> = ({ toggleDarkMode }) => 
             <ListItemIcon>
               <PersonIcon /> 
             </ListItemIcon>
-            <ListItemText primary="Empleados" /> 
+            <ListItemText primary={t("itemListEmployees")} /> 
           </ListItemButton>
         </ListItem>
         <ListItem key='Mis recompensas' disablePadding>

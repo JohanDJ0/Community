@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardMedia, CardContent, Typography, Button, Modal, Box, TextField } from '@mui/material';
 import '../../css/App.css'; // Asegúrate de que este archivo tenga los estilos que necesitas.
+import noImage from '../../assets/NoImagen.png';
 
 interface Reward {
   id: number;
@@ -17,6 +18,7 @@ interface ServicesProps {
 
 const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
   const [rewards, setRewards] = useState<Reward[]>([]);
+  const id_service = localStorage.getItem('service');
   const [open, setOpen] = useState<boolean>(false); // Controla si el modal está abierto o cerrado
   const [newReward, setNewReward] = useState({
     name: '',
@@ -28,22 +30,27 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
   const isSmallScreen = window.innerWidth < 600; // Ajusta el tamaño de la pantalla según necesites
 
   useEffect(() => {
-    // Obtener el id del servicio de localStorage dentro del useEffect
-    const idservice = localStorage.getItem('service');
-    console.log('ID del servicio:', idservice); // Verifica que el id del servicio se está obteniendo correctamente
+    fetch(`/rewards/get/${id_service}`)
+    .then((res) => res.json())
+    .then((result) => {
+      if (Array.isArray(result)) {
+        setRewards(result.map((reward: any) => ({
+          id: reward.id,
+          name: reward.name,
+          businessName: reward.service, // Puedes ajustar este valor según tu lógica
+          requiredPoints: reward.points_required,
+          isActive: reward.is_active,
+          imageUrl: reward.image,
+        })));
+      } else {
+        console.error("Formato de datos inesperado:", result);
+      }
+    })
+    .catch((error) => {
+      console.error("Error al obtener los datos:", error);
+    });
 
-    // Actualiza el estado de newReward con el idservice una vez que esté disponible
-    if (idservice) {
-      setNewReward((prev) => ({
-        ...prev,
-        service_id: idservice, // Aquí estamos enviando directamente el service_id
-      }));
-
-      // Llamar a la función para obtener las recompensas
-      fetchRewards(idservice);
-    }
-
-  }, []); // Dependencias vacías, solo se ejecuta una vez cuando el componente se monta
+  }, []);
 
   // Función para obtener las recompensas del negocio
   const fetchRewards = async (idservice: string) => {
@@ -178,7 +185,7 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
                     <CardMedia
                       component="img"
                       height="120"
-                      image={reward.imageUrl}
+                      image={reward.imageUrl ? `data:image/jpeg;base64,${atob(reward.imageUrl)}` : noImage}
                       alt={reward.name}
                     />
                     <CardContent>

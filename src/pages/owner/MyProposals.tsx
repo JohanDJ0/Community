@@ -10,7 +10,7 @@ import ShareModal from '../../components/ShareModal';// modal de compartir
 import noImage from '../../assets/NoImagen.png';
 import { useMediaQuery } from '@mui/material';
 import { followService } from 'components/followService';
-import HomeIcon from '@mui/icons-material/Home';
+import StoreIcon from '@mui/icons-material/Store';
 
 interface ServiceDetail {
   id: number;
@@ -166,7 +166,7 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
   };
   
   const handleNovedadesClick = () => {
-    navigate(`/services/${id}`); // Cambia a una ruta relativa
+    navigate(`/MyService`); // Cambia a una ruta relativa
   };
 
 
@@ -187,14 +187,16 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
     <div className='first-div'>
       <div className='second-div'>
         <div className={`box-div ${darkMode ? 'dark' : 'light'}`}>
-          <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
-            <HomeIcon style={{ marginRight: '4px' }} />
-            <a onClick={() => navigate("/Services")} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>Inicio</a>
-            <span style={{ margin: '0 8px' }}>/</span>
-            <a onClick={() => navigate(`/services/${service.id}`)} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>{service.name}</a>
-            <span style={{ margin: '0 8px' }}>/</span>
-            <span style={{ fontWeight: 'bold' }}>Propuestas</span>
-          </div>
+        <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
+                <StoreIcon style={{ marginRight: '4px' }} />
+                <span onClick={() => navigate(`/MyService`)} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>Mi negocio</span>
+                <span style={{ margin: '0 8px' }}>/</span>
+                <span style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>{service.name}</span>
+                <span style={{ margin: '0 8px' }}>/</span>
+                <span style={{ fontWeight: 'bold' }}>Propuestas</span>
+                {/* <span style={{ margin: '0 8px' }}>/</span>
+                <span>Subsección</span> */}
+            </div>
           <Card style={{ maxHeight: isSmallScreen ? '400px' : '500px', overflowY: 'auto' }}>
             <Box position="relative" width="100%" height="300px">
               <CardMedia
@@ -253,8 +255,8 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
 
             <CardContent>
               <Stack spacing={1} direction="row">
-                <Button variant="contained" startIcon={<AutoModeSharpIcon/>} style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}  onClick={handleNovedadesClick}>Novedades</Button>
-                <Button variant="contained" startIcon={<GradeIcon />} style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 4px' : '6px 12px' }}onClick={() => navigate(`/services/${id}/reviews`)}>Reseñas</Button>
+                <Button variant="contained" startIcon={<AutoModeSharpIcon />} onClick={handleNovedadesClick}>Novedades</Button>
+                <Button variant="contained" startIcon={<GradeIcon />} onClick={() => navigate(`/MyService/${service.id}/reviews`)}>Reseñas</Button>
                 {/* <Button variant="contained" startIcon={<BackHandIcon />} style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}>Propuestas</Button> */}
                 <Button variant="outlined" startIcon={<ShareIcon />} onClick={() => setIsShareModalOpen(true)}> Compartir</Button>
                 {!service.is_following && ( // Renderiza el botón solo si is_followed es false
