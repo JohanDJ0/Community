@@ -26,6 +26,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import StoreIcon from '@mui/icons-material/Store';
 import FiberSmartRecordIcon from '@mui/icons-material/FiberSmartRecord';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 const MenuD: React.FC<{ toggleDarkMode: () => void }> = ({ toggleDarkMode }) => {
   const { logout } = useAuth0();
@@ -219,6 +220,14 @@ const MenuD: React.FC<{ toggleDarkMode: () => void }> = ({ toggleDarkMode }) => 
                 <MenuItem value="en">{t('EnglishLn')}</MenuItem>
               </Select>
             </FormControl>
+          </ListItemButton>
+        </ListItem>
+        <ListItem key='Unirse' disablePadding>
+          <ListItemButton component={Link} to="/JoinBusiness">
+            <ListItemIcon>
+              <ExitToAppIcon />
+            </ListItemIcon>
+            <ListItemText primary={t("itemListJoin")} />
           </ListItemButton>
         </ListItem>
       </List>

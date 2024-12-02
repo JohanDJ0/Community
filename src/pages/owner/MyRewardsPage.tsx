@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardMedia, CardContent, Typography, Button, Modal, Box, TextField } from '@mui/material';
 import '../../css/App.css'; // Asegúrate de que este archivo tenga los estilos que necesitas.
 import noImage from '../../assets/NoImagen.png';
+import FiberSmartRecordIcon from '@mui/icons-material/FiberSmartRecord';
 
 interface Reward {
   id: number;
@@ -155,6 +156,14 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
           className={`box-div ${darkMode ? 'dark' : 'light'}`}
           style={{ position: 'relative', paddingBottom: '60px', overflow: 'hidden' }}
         >
+          <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
+            <FiberSmartRecordIcon style={{ marginRight: '4px' }} />
+            <span style={{ fontWeight: 'bold' }}>Mis recompensas</span>
+            {/* <span style={{ margin: '0 8px' }}>/</span>
+            <span>Sección</span>
+            <span style={{ margin: '0 8px' }}>/</span>
+            <span>Subsección</span> */}
+          </div>
           <div
             style={{
               maxHeight: isSmallScreen ? '400px' : '500px',
@@ -202,6 +211,13 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
                         style={{ marginTop: '10px' }}
                       >
                         {reward.isActive ? 'Activo' : 'No Activo'}
+                      </Button>
+                      <Button
+                        variant="contained"
+                        color={'error'}
+                        style={{ marginTop: '10px' }}
+                      >
+                        Eliminar
                       </Button>
                     </CardContent>
                   </Card>

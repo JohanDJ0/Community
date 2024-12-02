@@ -91,7 +91,7 @@ const EmpleadosPage: React.FC<ServicesProps> = ({ darkMode }) => {
               margin: '10px 0',
             }}>
               {employees.length === 0 ? (
-                <p>Cargando empleados...</p>
+                <p>Parece que no tienes empleados...</p>
               ) : (
                 employees.map((employee) => (
                   <Card

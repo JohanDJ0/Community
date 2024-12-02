@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from 'components/bdd';
 
 const Login: React.FC = () => {
   const { user, isAuthenticated } = useAuth0();
@@ -9,7 +10,7 @@ const Login: React.FC = () => {
 
   useEffect(() => {
     if (isAuthenticated && user) {
-      fetch('/login', {
+      fetch(`${API_BASE_URL}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
