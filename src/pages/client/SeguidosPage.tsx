@@ -102,6 +102,7 @@ const Seguidos: React.FC<ServicesProps> = ({ darkMode }) => {
                     marginBottom: '20px', 
                     display: 'flex', 
                     flexDirection: isSmallScreen ? 'column' : 'row',
+                    cursor: 'pointer'
                   }}
                 >
                   <CardMedia
@@ -114,10 +115,11 @@ const Seguidos: React.FC<ServicesProps> = ({ darkMode }) => {
                     }} 
                     image={servicio.image ? `data:image/jpeg;base64,${atob(servicio.image)}` : noImage}
                     alt={servicio.name}
+                    onClick={() => navigate(`/services/${servicio.id}`)}
                   />
                   <CardContent style={{ flex: 1, position: 'relative', paddingBottom: '20px' }}>
                     <div style={{ textAlign: 'left' }}>
-                      <Typography variant="h5" component="div">
+                      <Typography variant="h5" component="div" onClick={() => navigate(`/services/${servicio.id}`)}>
                         {servicio.name} | {servicio.direction}
                       </Typography>
                       <Button 
@@ -140,7 +142,7 @@ const Seguidos: React.FC<ServicesProps> = ({ darkMode }) => {
                         precision={0.5}
                         readOnly
                       />
-                      <Typography variant="body2" color="text.secondary">
+                      <Typography variant="body2" color="text.secondary" onClick={() => navigate(`/services/${servicio.id}`)}>
                         {servicio.description}
                       </Typography>
                     </div>

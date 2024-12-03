@@ -11,6 +11,7 @@ import ShareModal from '../../components/ShareModal'; // modal
 import noImage from '../../assets/NoImagen.png';
 import { followService } from 'components/followService'; // componente que se encarga de seguir a un servicio
 import HomeIcon from '@mui/icons-material/Home';
+import CheckIcon from '@mui/icons-material/Check';
 
 interface Novedad {
   name: string;
@@ -61,6 +62,7 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
         if (responseData.result) {
           console.log(responseData.result)
           setService(responseData.result);
+          setIsFollowing(responseData.result.is_following);
         } else {
           console.error('Estructura de datos inesperada:', responseData);
         }
@@ -126,30 +128,30 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                 {service.name}
               </Typography>
               <div
-                  style={{
-                    position: 'absolute',
-                    bottom: '10px',
-                    left: '10px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    color: 'white', // Asegura que el texto y estrellas sean visibles
-                    padding: '5px',
-                  }}
+                style={{
+                  position: 'absolute',
+                  bottom: '10px',
+                  left: '10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  color: 'white', // Asegura que el texto y estrellas sean visibles
+                  padding: '5px',
+                }}
+              >
+                <Rating
+                  name="read-only"
+                  value={service.qualification || 0}
+                  precision={0.5}
+                  readOnly
+                />
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  style={{ marginLeft: '10px' ,fontWeight: 'bold', color: 'white'}}
                 >
-                  <Rating
-                    name="read-only"
-                    value={service.qualification || 0}
-                    precision={0.5}
-                    readOnly
-                  />
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    style={{ marginLeft: '10px' ,}}
-                  >
-                    {service.qualification ? service.qualification.toFixed(1) : '0.0'}
-                  </Typography>
-                </div>
+                  {service.qualification ? service.qualification.toFixed(1) : '0.0'}
+                </Typography>
+              </div>
             </Box>
             <CardContent>
               <Stack spacing={1} direction="row">
@@ -179,7 +181,7 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                 <Button variant="outlined" startIcon={<ShareIcon />} onClick={() => setIsShareModalOpen(true)}>
                   Compartir
                 </Button>
-                {!service.is_following && ( // Renderiza el botón solo si is_followed es false
+                {!isFollowing && ( // Renderiza el botón solo si is_followed es false
                   <Button
                     onClick={() => handleFollow()}
                     variant="contained"
@@ -191,6 +193,22 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                   >
                     Seguir
                   </Button>
+                )}
+                {isFollowing && (
+                  <Typography
+                    variant="body1"
+                    color="primary" // Puedes usar 'primary' para un color más destacado
+                    sx={{
+                      display: 'flex', 
+                      alignItems: 'center', // Para alinear el icono y el texto
+                      fontWeight: 600, // Hace el texto más destacado
+                      fontSize: '1rem', // Ajusta el tamaño de la fuente
+                      marginTop: '8px', // Añade algo de espacio arriba
+                    }}
+                  >
+                  <CheckIcon sx={{ marginRight: '8px', fontSize: '1.2rem' }} /> {/* Icono de check */}
+                  Siguiendo
+                </Typography>
                 )}
                 {/* <Button
                   variant="contained"

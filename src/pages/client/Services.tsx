@@ -90,7 +90,7 @@ const Services: React.FC<ServicesProps> = ({ darkMode }) => {
       </Box>
 
       <div className='first-div'>
-        <div className='second-div'>
+        <div className='second-div3'>
           <div className={`box-div ${darkMode ? 'dark' : 'light'}`}>
             {filteredData.length === 0 ? (
               <p>No se encontraron servicios</p>

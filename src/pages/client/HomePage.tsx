@@ -10,6 +10,7 @@ import Footer from 'components/Footer';
 import Equipo from 'assets/Equipo.jpeg';
 import { useAuth0 } from '@auth0/auth0-react';
 import MAHL from '../../img/mahl.jpg'
+import { Padding } from '@mui/icons-material';
 
 interface ServicesProps {
   darkMode: boolean;
@@ -58,7 +59,7 @@ const HomePage: React.FC<ServicesProps> = ({ darkMode }) => {
 
       <HeaderP />
       {/* Sección Hero */}
-      <div className={`hero-section flex flex-col items-center justify-center p-6 ${darkMode ? 'text-white' : 'text-black'} relative`}>
+      <div style={{ marginTop: '30px' }} className={`hero-section flex flex-col items-center justify-center p-6 ${darkMode ? 'text-white' : 'text-black'} relative`}>
         <h1 className={`text-4xl md:text-5xl font-bold text-center mb-6 relative z-10 drop-shadow-lg ${darkMode ? 'text-white' : 'text-black'}`}>
           Community: Donde cada <br /> interacción cuenta
         </h1>

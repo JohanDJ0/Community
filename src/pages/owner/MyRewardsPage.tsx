@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Card, CardMedia, CardContent, Typography, Button, Modal, Box, TextField } from '@mui/material';
+import { Card, CardMedia, CardContent, Typography, Button, Modal, Box, TextField, Switch, FormControlLabel } from '@mui/material';
 import '../../css/App.css'; // Asegúrate de que este archivo tenga los estilos que necesitas.
 import noImage from '../../assets/NoImagen.png';
 import FiberSmartRecordIcon from '@mui/icons-material/FiberSmartRecord';
@@ -9,7 +9,6 @@ interface Reward {
   name: string;
   businessName: string;
   requiredPoints: number;
-  isActive: boolean;
   imageUrl: string;
 }
 
@@ -25,7 +24,7 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
     name: '',
     description: '',
     points_required: 0,
-    service_id: '', // Inicializa service_id como cadena vacía
+    service_id: '' // Inicializa service_id como cadena vacía
   });
 
   const isSmallScreen = window.innerWidth < 600; // Ajusta el tamaño de la pantalla según necesites
@@ -35,14 +34,18 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
     .then((res) => res.json())
     .then((result) => {
       if (Array.isArray(result)) {
-        setRewards(result.map((reward: any) => ({
-          id: reward.id,
-          name: reward.name,
-          businessName: reward.service, // Puedes ajustar este valor según tu lógica
-          requiredPoints: reward.points_required,
-          isActive: reward.is_active,
-          imageUrl: reward.image,
-        })));
+        if (result[0].message) {
+          console.log("No debería aparecer nada")
+        } else {
+          console.log("Res: ",result[0].message);
+          setRewards(result.map((reward: any) => ({
+            id: reward.id,
+            name: reward.name,
+            businessName: reward.service, // Puedes ajustar este valor según tu lógica
+            requiredPoints: reward.points_required,
+            imageUrl: reward.image,
+          })));
+        }
       } else {
         console.error("Formato de datos inesperado:", result);
       }
@@ -149,6 +152,29 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
     }
   };
 
+  const handleDelete = (id: number) => {
+    console.log(`Eliminando recompensa con ID: ${id}`);
+    fetch(`/rewards/delete/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
+      .then(response => response.json())
+      .then((data) => {
+        console.log(data)
+        if (data.success == true) {
+          console.log("Se eliminó la recompensa con éxito"); // Mensaje de éxito
+          setRewards((prev) => prev.filter((reward) => reward.id !== id));
+        } else {
+          console.error("Error al eliminar la recompensa");
+        }
+      })
+      .catch((error) => {
+        console.error("Error al eliminar la recompensa:", error.message || "Error desconocido");
+      });
+  };
+
   return (
     <div className={`first-div ${darkMode ? 'dark' : 'light'}`}>
       <div className="second-div">
@@ -172,7 +198,7 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
             }}
           >
             {rewards.length === 0 ? (
-              <p>Cargando recompensas...</p>
+              <p>No tienes recompensas, ¡empieza creando una!</p>
             ) : (
               <div
                 style={{
@@ -206,15 +232,9 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
                         Puntos necesarios: {reward.requiredPoints}
                       </Typography>
                       <Button
+                        onClick={() => handleDelete(reward.id)} // Reemplaza `reward.id` con el valor que necesitas pasar
                         variant="contained"
-                        color={reward.isActive ? 'primary' : 'secondary'}
-                        style={{ marginTop: '10px' }}
-                      >
-                        {reward.isActive ? 'Activo' : 'No Activo'}
-                      </Button>
-                      <Button
-                        variant="contained"
-                        color={'error'}
+                        color="error"
                         style={{ marginTop: '10px' }}
                       >
                         Eliminar
@@ -283,9 +303,28 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
             type="number"
             fullWidth
             value={newReward.points_required}
-            onChange={handleChange}
+            onChange={(e) => {
+              const value = Math.max(0, parseInt(e.target.value) || 0); // Asegura que sea al menos 0
+              setNewReward({ ...newReward, points_required: value });
+            }}
             margin="normal"
           />
+          <div style={{ marginBottom: '10px' }}>
+            <input
+              type="file"
+              accept="image/*"
+              style={{ display: 'block', margin: '10px 0' }}
+            />
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center', // Centra horizontalmente
+              alignItems: 'center', // Centra verticalmente dentro del contenedor
+              margin: '20px 0', // Espaciado alrededor del Switch
+            }}
+          >
+          </div>
           <Button
             variant="contained"
             color="primary"
@@ -297,6 +336,7 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
           </Button>
         </Box>
       </Modal>
+
     </div>
   );
 };

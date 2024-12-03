@@ -9,7 +9,6 @@ import AutoModeSharpIcon from '@mui/icons-material/AutoModeSharp'; // Importa el
 import ShareModal from '../../components/ShareModal';// modal de compartir 
 import noImage from '../../assets/NoImagen.png';
 import { useMediaQuery } from '@mui/material';
-import { followService } from 'components/followService';
 import StoreIcon from '@mui/icons-material/Store';
 
 interface ServiceDetail {
@@ -173,16 +172,6 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
   const handleRowClick = (proposalId: number) => {
     navigate(`/ProposalDetail/${id}/${proposalId}/${service.name}`); // Incluye el serviceId y el proposalId en la URL
   };
-
-  const handleFollow = async () => {
-    if (!service) return; // Evita errores si service no está cargado
-    // Se creó un nuevo componente que recibe dos parametros, el id y el token
-    const success = await followService(service.id, token || '');
-    if (success) {
-      setIsFollowing(true);
-    }
-  };
-
   return (
     <div className='first-div'>
       <div className='second-div'>
@@ -220,30 +209,30 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
                 {service.name}
               </Typography>
               <div
-                  style={{
-                    position: 'absolute',
-                    bottom: '10px',
-                    left: '10px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    color: 'white', // Asegura que el texto y estrellas sean visibles
-                    padding: '5px',
-                  }}
+                style={{
+                  position: 'absolute',
+                  bottom: '10px',
+                  left: '10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  color: 'white', // Asegura que el texto y estrellas sean visibles
+                  padding: '5px',
+                }}
+              >
+                <Rating
+                  name="read-only"
+                  value={service.qualification || 0}
+                  precision={0.5}
+                  readOnly
+                />
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  style={{ marginLeft: '10px' ,fontWeight: 'bold', color: 'white'}}
                 >
-                  <Rating
-                    name="read-only"
-                    value={service.qualification || 0}
-                    precision={0.5}
-                    readOnly
-                  />
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    style={{ marginLeft: '10px' ,}}
-                  >
-                    {service.qualification ? service.qualification.toFixed(1) : '0.0'}
-                  </Typography>
-                </div>
+                  {service.qualification ? service.qualification.toFixed(1) : '0.0'}
+                </Typography>
+              </div>
 
             </Box>
 
@@ -259,19 +248,6 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
                 <Button variant="contained" startIcon={<GradeIcon />} onClick={() => navigate(`/MyService/${service.id}/reviews`)}>Reseñas</Button>
                 {/* <Button variant="contained" startIcon={<BackHandIcon />} style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}>Propuestas</Button> */}
                 <Button variant="outlined" startIcon={<ShareIcon />} onClick={() => setIsShareModalOpen(true)}> Compartir</Button>
-                {!service.is_following && ( // Renderiza el botón solo si is_followed es false
-                  <Button
-                    onClick={() => handleFollow()}
-                    variant="contained"
-                    startIcon={<AddIcon />}
-                    style={{
-                      fontSize: isSmallScreen ? '0.7rem' : '0.9rem',
-                      padding: isSmallScreen ? '4px 8px' : '6px 12px',
-                    }}
-                  >
-                    Seguir
-                  </Button>
-                )}
               </Stack>
 
 

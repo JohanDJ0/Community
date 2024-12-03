@@ -28,6 +28,7 @@ interface Review {
   written_by: string; // Usuario
 }
 
+
 interface ServiceReviewProps {
   id: number;
   name: string; // Nombre del servicio
@@ -37,9 +38,11 @@ interface ServiceReviewProps {
   is_following: boolean;
 }
 
+
 interface ServicesProps {
   darkMode: boolean;
 }
+
 
 const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
   const token = localStorage.getItem("token");
@@ -54,6 +57,14 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
   const [openModal, setOpenModal] = useState(false);
   const isSmallScreen = useMediaQuery('(max-width:600px)');
   const [isFollowing, setIsFollowing] = useState(false); // Hook para el follow del servicio
+
+
+  const [newReview, setNewReview] = useState<Review>({
+    name: '',
+    description: '',
+    rating: 0,
+    written_by: (isAuthenticated && user && user.name) || '',
+  });
 
   // Función para obtener reseñas
   const fetchReviews = () => {
@@ -79,98 +90,72 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
       });
   };
 
+
   // Llama a esta función en el evento correspondiente, por ejemplo, al hacer clic en un botón
   useEffect(() => {
     let isMounted = true;
     setLoading(true);
-
-    // Obtener las reseñas
-    fetch(`/reviews/${id}`)
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-        throw new Error('Error en la respuesta del servidor');
-      })
-      .then((responseData) => {
+ 
+    const fetchServiceData = async () => {
+      try {
+        const reviewsResponse = await fetch(`/reviews/${id}`);
+        const reviewsData = await reviewsResponse.json();
+ 
+        const serviceResponse = await fetch(`/services/${id}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ params: { token } }),
+        });
+        const serviceData = await serviceResponse.json();
+ 
         if (isMounted) {
-          console.log('Datos de la API:', responseData);
           setService({
             id: Number(id),
-            name: serviceName || 'Cargando nombre...', // Asignar un nombre temporal
-            image: null, // o 'string' o false
-            qualification: 0, // Calificación temporal
-            reviews: responseData, // Asignar reseñas directamente
-            is_following: false
+            name: serviceData.result?.name || 'Nombre no disponible',
+            image: serviceData.result?.image || null,
+            qualification: serviceData.result?.qualification || 0,
+            reviews: reviewsData || [],
+            is_following: serviceData.result?.is_following || false,
           });
+          setServiceName(serviceData.result?.name || 'Nombre no disponible');
           setLoading(false);
         }
-      })
-      .catch((error) => {
+      } catch (error) {
         if (isMounted) {
-          console.error('Error al obtener las reseñas del servicio:', error);
+          console.error('Error al obtener los datos:', error);
           setError('No se pudo cargar la información del servicio.');
           setLoading(false);
         }
-      });
-
-    const dataToken = {
-        params: {
-          token: token
-        }
-    }
-
-    // Obtener los detalles del servicio para obtener el nombre
-    fetch(`/services/${id}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(dataToken),
-    })
-    .then(response => response.json())
-    .then((responseData) => {
-        if (isMounted) {
-          console.log('Detalles del servicio:', responseData);
-          if (responseData.result) {
-            const newServiceName = responseData.result.name; // Asignar el nombre del servicio
-            const newQualification = responseData.result.qualification || 0; // Asegurarte de que el valor de la calificación esté bien asignado
-            setFade(true); // Activar la transición de desvanecimiento
-            const newImage = responseData.result.image; // La imagen codificada en Base64 de la API
-            setService((prevService) => ({
-              id: prevService ? prevService.id : Number(id),
-              name: newServiceName,
-              image: newImage || prevService?.image, // Actualiza si hay una nueva imagen
-              qualification: newQualification,
-              reviews: prevService ? prevService.reviews : [],
-              is_following: responseData.result.is_following
-            }));
-
-            setServiceName(newServiceName); // Actualiza el estado del nombre del servicio
-          } else {
-            console.error('Estructura de datos inesperada:', responseData);
-          }
-        }
-      })
-
-      .catch((error) => {
-        console.error('Error al obtener los detalles del servicio:', error);
-      });
-
-    // Llamar a fetchReviews cada 5 segundos
+      }
+    };
+ 
+    fetchServiceData();
+ 
+    // Establece un intervalo para actualizar las reseñas
     const intervalId = setInterval(() => {
-      fetchReviews();
+      if (isMounted) {
+        fetchReviews();
+      }
     }, 5000);
-
+ 
     return () => {
       isMounted = false;
-      clearInterval(intervalId); // Limpia el intervalo
+      clearInterval(intervalId); // Limpia el intervalo al desmontar el componente
     };
-  }, [id]);
+  }, [id, token]);
 
   const handleNovedadesClick = () => {
-    navigate(`/MyService`); // Cambia a una ruta relativa
+    navigate(`/services/${id}`); // Cambia a una ruta relativa
   };
+
+
+  const handleCreateReviewClick = () => {
+    navigate(`/reviews/create`); // Redirige a la URL para crear una reseña
+  };
+
+
   // Manejar la transición de desvanecimiento al cargar el nombre
   useEffect(() => {
     if (serviceName) {
@@ -178,9 +163,11 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
         setFade(true); // Cambiar a verdadero cuando hay un nuevo nombre
       }, 0); // Iniciar la transición inmediatamente
 
+
       return () => clearTimeout(timer);
     }
   }, [serviceName]);
+
 
   const handleFollow = async () => {
     if (!service) return; // Evita errores si service no está cargado
@@ -191,32 +178,33 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
     }
   };
 
-  if (loading) {
-    return <p>Cargando reseñas del servicio...</p>;
-  }
 
+  if (loading) {
+    return <p>Cargando datos del servicio...</p>;
+  }
   if (error) {
     return <p>{error}</p>;
   }
-
   if (!service) {
     return <p>No se encontró el servicio.</p>;
   }
+ 
+
 
   return (
     <div className='first-div'>
       <div className='second-div'>
         <div className={`box-div ${darkMode ? 'dark' : 'light'}`} style={{ position: 'relative' }}>
-            <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
-                <StoreIcon style={{ marginRight: '4px' }} />
-                <span onClick={() => navigate(`/MyService`)} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>Mi negocio</span>
-                <span style={{ margin: '0 8px' }}>/</span>
-                <span style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>{service.name}</span>
-                <span style={{ margin: '0 8px' }}>/</span>
-                <span style={{ fontWeight: 'bold' }}>Reseñas</span>
-                {/* <span style={{ margin: '0 8px' }}>/</span>
-                <span>Subsección</span> */}
-            </div>
+          <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
+              <StoreIcon style={{ marginRight: '4px' }} />
+              <span onClick={() => navigate(`/MyService`)} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>Mi negocio</span>
+              <span style={{ margin: '0 8px' }}>/</span>
+              <span style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>{service.name}</span>
+              <span style={{ margin: '0 8px' }}>/</span>
+              <span style={{ fontWeight: 'bold' }}>Reseñas</span>
+              {/* <span style={{ margin: '0 8px' }}>/</span>
+              <span>Subsección</span> */}
+          </div>
           <Card style={{ maxHeight: isSmallScreen ? '400px' : '500px', overflowY: 'auto' }}>
             <Box position="relative" width="100%" height={isSmallScreen ? '200px' : '300px'}>
               <CardMedia
@@ -226,7 +214,6 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
                 alt={service.name}
                 style={{ filter: 'brightness(0.7)' }}
               />
-
 
               <Typography
                 variant="h1"
@@ -270,6 +257,7 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
                 </div>
             </Box>
 
+
             <CardContent>
               <Stack spacing={2} direction="row">
                 <Button variant="contained" startIcon={<AutoModeSharpIcon />} onClick={handleNovedadesClick}>Novedades</Button>
@@ -283,10 +271,12 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
                 </Typography>
                
 
+
                 {service.reviews.length > 0 ? (
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                     {service.reviews.map((review, index) => (
                       <Card key={index} sx={{ padding: 2, borderRadius: 2, boxShadow: 2, width: '100%' }}>
+
 
                         <Typography variant="h6" fontWeight="bold" sx={{ marginBottom: 1, textAlign: 'left' }}>
                           {review.written_by}
@@ -298,7 +288,10 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
                           </Typography>
 
 
+
+
                         </Stack>
+
 
                         <Typography variant="body2" sx={{ textAlign: 'left' }}>
                           {review.description}
@@ -312,11 +305,11 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
               </CardContent>
             </CardContent>
           </Card>
-
         </div>
       </div>
     </div>
   );
 };
+
 
 export default ServiceReviewsPage;

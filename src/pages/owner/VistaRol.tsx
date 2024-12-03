@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { RadioGroup, FormControlLabel, Radio, Button, Typography, TextField, Fade } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
+import PayPalButtonsComponent from '../../components/paypal';
 
 // Define the props interface including darkMode
 interface ServicesProps {
@@ -201,6 +202,26 @@ const VistaRol: React.FC<ServicesProps> = ({ darkMode }) => {
 
               <div style={{ marginBottom: '10px' }}>
                 <input type="file" accept="image/*" onChange={(e) => setBusinessImage(e.target.files?.[0] || null)} style={{ display: 'block', margin: '10px 0' }} />
+              </div>
+
+              {/* Botón de PayPal */}
+              <div>
+                <p style={{ textAlign: 'left', marginLeft: '10px', fontSize: '18px' }}>
+                  Forma de Pago
+                </p>
+                
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    width: '100%', 
+                  }}
+                >
+                  <div style={{ width: '300px', height: 'auto' }}>
+                    {<PayPalButtonsComponent />}
+                  </div>
+                </div>
               </div>
 
               <Button variant="contained" color="primary" onClick={handleSubmit}>

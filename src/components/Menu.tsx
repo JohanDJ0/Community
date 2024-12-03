@@ -28,7 +28,7 @@ const MenuP: React.FC = () => {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" sx={{ backgroundColor: 'white' }}>
+      <AppBar sx={{ backgroundColor: 'white' }}>
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <img src={logo} alt="Logo" style={{ marginRight: '10px', height: '40px' }} />

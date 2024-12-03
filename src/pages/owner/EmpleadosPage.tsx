@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardMedia, CardContent, Typography, Button } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 
 interface Employee {
   id: number;
@@ -18,6 +23,7 @@ const EmpleadosPage: React.FC<ServicesProps> = ({ darkMode }) => {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const isSmallScreen = window.innerWidth < 600; // Ajusta el tamaño de la pantalla según necesites
   const serviceId = localStorage.getItem('service');
+  const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     fetch(`/employees/${serviceId}`)
@@ -67,6 +73,39 @@ const EmpleadosPage: React.FC<ServicesProps> = ({ darkMode }) => {
 
     setEmployees(defaultEmployees); */
   }, []);
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  const handleDelete = (id: number) => {
+    console.log(`Eliminando usuario con ID: ${id}`);
+
+    fetch(`/employees/unlink/${serviceId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ params: { id_employee: id } }),
+    })
+      .then(response => response.json())
+      .then((data) => {
+        if (data.result && data.result.success) {
+          console.log("Se eliminó al usuario con éxito:", data.result.Message); // Mensaje de éxito
+          setEmployees((prev) => prev.filter((employee) => employee.id !== id));
+          handleCloseModal(); // Cerrar el modal al crear la reseña con éxito
+        } else {
+          console.error("Error al eliminar el usuario:", data.result?.Message || "Error desconocido");
+        }
+      })
+      .catch((error) => {
+        console.error("Error al eliminar el usuario:", error.message || "Error desconocido");
+      });
+  };
 
   return (
     <div className={`first-div ${darkMode ? 'dark' : 'light'}`}>
@@ -120,6 +159,7 @@ const EmpleadosPage: React.FC<ServicesProps> = ({ darkMode }) => {
                         {employee.email}
                       </Typography>
                       <Button
+                        onClick={handleOpenModal}
                         color="error"
                         variant="contained"
                         style={{ marginTop: '10px' }}
@@ -127,7 +167,35 @@ const EmpleadosPage: React.FC<ServicesProps> = ({ darkMode }) => {
                         Dar de baja
                     </Button>
                     </CardContent>
-                  </Card>
+
+                    <Dialog open={openModal} onClose={handleCloseModal}>
+                      <DialogTitle>
+                        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                          <Typography variant="h6" style={{ fontWeight: "bold" }}>
+                            Confirmar Eliminación
+                          </Typography>
+                        </div>
+                      </DialogTitle>
+                      <DialogContent>
+                        <Typography>
+                          ¿Estás seguro de que deseas continuar? Solo el usuario se podrá dar de alta nuevamente como empleado.
+                        </Typography>
+                      </DialogContent>
+                      <DialogActions>
+                        <Button onClick={handleCloseModal} color="primary" variant="outlined">
+                          Cancelar
+                        </Button>
+                        <Button
+                          onClick={() => handleDelete(employee.id)}
+                          color="error"
+                          variant="contained"
+                          style={{ color: "white" }}
+                        >
+                          Eliminar
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
+                  </Card>                  
                 ))
               )}
             </div>

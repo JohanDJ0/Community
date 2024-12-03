@@ -5,6 +5,7 @@ import '../../css/App.css';
 import logo from '../../assets/Logo.png';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import noImage from '../../assets/NoImagen.png';
+import { Snackbar, Alert } from '@mui/material';
 
 interface Reward {
   id: number;
@@ -25,6 +26,8 @@ const Rewards: React.FC<ServicesProps> = ({ darkMode }) => {
   const isSmallScreen = useMediaQuery('(max-width:600px)');
   const [availablePoints, setAvailablePoints] = useState(0);
   const token = localStorage.getItem('token');
+  const [openSnackbar, setOpenSnackbar] = useState(false); // Estado para abrir el Snackbar
+  const [message, setMessage] = useState(''); // Estado para el mensaje a mostrar
 
   useEffect(() => {
     const fetchRewards = async () => {
@@ -46,7 +49,7 @@ const Rewards: React.FC<ServicesProps> = ({ darkMode }) => {
         }
     
         const data = await response.json();
-        console.log('Datos recibidos:', data); // Verifica la respuesta del servidor
+        //console.log('Datos recibidos:', data); // Verifica la respuesta del servidor
     
         if (data.result && Array.isArray(data.result.data)) {
           const mappedRewards = data.result.data.map((reward: any) => ({
@@ -72,6 +75,32 @@ const Rewards: React.FC<ServicesProps> = ({ darkMode }) => {
   
     fetchRewards();
   }, [token, availablePoints]);
+
+  const handleCanjear = (id: number) => {
+    console.log(`Canjeando recompensa con ID: ${id}`);
+    fetch(`/myRewards/redeem`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ params: { token: token, reward_id: id } }),
+    })
+    .then(response => response.json())
+    .then((data) => {
+      if (data.result) {
+        //console.log("Se canjeó con exito la recompensa:", data.result);
+        setRewards((prev) => prev.filter((reward) => reward.id !== id));
+        setAvailablePoints(prevPoints => prevPoints - data.result.community_points);
+        setMessage('¡Recompensa canjeada con éxito! Se notificará al dueño del negocio.');
+        setOpenSnackbar(true);
+      } else {
+        console.error("Error al canjear la recompensa:", data.result || "Error desconocido");
+      }
+    })
+    .catch((error) => {
+      console.error("Error al canjear la recompensa:", error.message || "Error desconocido");
+    });
+  };
   
   return (
     <div className={`first-div ${darkMode ? 'dark' : 'light'}`}>
@@ -165,6 +194,12 @@ const Rewards: React.FC<ServicesProps> = ({ darkMode }) => {
                       variant="contained"
                       color={reward.userPoints >= reward.requiredPoints ? 'primary' : 'secondary'}
                       style={{ marginTop: '10px' }}
+                      disabled={reward.userPoints < reward.requiredPoints} // Desactiva el botón si los puntos son insuficientes
+                      onClick={() => {
+                        if (reward.userPoints >= reward.requiredPoints) {
+                          handleCanjear(reward.id); // Llama al método con el parámetro (por ejemplo, reward.id)
+                        }
+                      }}
                     >
                       {reward.userPoints >= reward.requiredPoints
                         ? 'Canjear'
@@ -177,6 +212,16 @@ const Rewards: React.FC<ServicesProps> = ({ darkMode }) => {
           </div>
         </div>
       </div>
+      <Snackbar
+      open={openSnackbar}
+      autoHideDuration={6000} // Tiempo que durará visible el Snackbar
+      onClose={() => setOpenSnackbar(false)} // Cierra el Snackbar
+      anchorOrigin={{ vertical: 'top', horizontal: 'center' }} // Centra el Snackbar en la parte superior
+      >
+        <Alert onClose={() => setOpenSnackbar(false)} severity="success">
+          {message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

@@ -224,30 +224,30 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
                 {service?.name || 'Nombre del servicio no disponible'}
               </Typography>
               <div
-                  style={{
-                    position: 'absolute',
-                    bottom: '10px',
-                    left: '10px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    color: 'white', // Asegura que el texto y estrellas sean visibles
-                    padding: '5px',
-                  }}
+                style={{
+                  position: 'absolute',
+                  bottom: '10px',
+                  left: '10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  color: 'white', // Asegura que el texto y estrellas sean visibles
+                  padding: '5px',
+                }}
+              >
+                <Rating
+                  name="read-only"
+                  value={service.qualification || 0}
+                  precision={0.5}
+                  readOnly
+                />
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  style={{ marginLeft: '10px' ,fontWeight: 'bold', color: 'white'}}
                 >
-                  <Rating
-                    name="read-only"
-                    value={service.qualification || 0}
-                    precision={0.5}
-                    readOnly
-                  />
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    style={{ marginLeft: '10px' ,}}
-                  >
-                    {service.qualification ? service.qualification.toFixed(1) : '0.0'}
-                  </Typography>
-                </div>
+                  {service.qualification ? service.qualification.toFixed(1) : '0.0'}
+                </Typography>
+              </div>
             </Box>
 
             <CardContent>
