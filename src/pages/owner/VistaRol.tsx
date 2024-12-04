@@ -19,9 +19,13 @@ const VistaRol: React.FC<ServicesProps> = ({ darkMode }) => {
   const [businessPhone, setBusinessPhone] = useState<string>('');
   const [businessEmail, setBusinessEmail] = useState<string>('');
   const [isValid, setIsValid] = useState<boolean>(true);
-
+  const [isPaymentApproved, setIsPaymentApproved] = useState(false);
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth0();
+
+  const handlePaymentSuccess = () => {
+    setIsPaymentApproved(true);
+  };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedRole = event.target.value;
@@ -206,27 +210,30 @@ const VistaRol: React.FC<ServicesProps> = ({ darkMode }) => {
 
               {/* Botón de PayPal */}
               <div>
-                <p style={{ textAlign: 'left', marginLeft: '10px', fontSize: '18px' }}>
+                <p style={{ textAlign: "left", marginLeft: "10px", fontSize: "18px" }}>
                   Forma de Pago
                 </p>
-                
+
                 <div
                   style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: '100%', 
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "100%",
                   }}
                 >
-                  <div style={{ width: '300px', height: 'auto' }}>
-                    {<PayPalButtonsComponent />}
+                  <div style={{ width: "300px", height: "auto" }}>
+                    <PayPalButtonsComponent onPaymentSuccess={handlePaymentSuccess} />
                   </div>
                 </div>
               </div>
 
-              <Button variant="contained" color="primary" onClick={handleSubmit}>
-                Registrar negocio
-              </Button>
+              {/* Botón para registrar negocio */}
+              {isPaymentApproved && (
+                <Button variant="contained" color="primary" onClick={handleSubmit}>
+                  Registrar negocio
+                </Button>
+              )}
             </div>
           </Fade>
         </div>

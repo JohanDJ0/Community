@@ -1,7 +1,7 @@
 import React from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
-const PayPalButtonsComponent = () => {
+const PayPalButtonsComponent = ({ onPaymentSuccess }) => {
   const initialOptions = {
     "client-id": "AZ5BUeUrpQM4EFmt5eTBcuR00JPHZsX63-tGHHssjVq09DGtrwTieK4I2VaUx4zggN0MtT0xgMOaqkox",
     currency: "MXN",
@@ -23,6 +23,9 @@ const PayPalButtonsComponent = () => {
   const onApprove = (data, actions) => {
     return actions.order.capture().then(function (details) {
       alert("Pago completo, gracias " + details.payer.name.given_name);
+      if (onPaymentSuccess) {
+        onPaymentSuccess(); // Notifica al componente principal
+      }
     });
   };
 
