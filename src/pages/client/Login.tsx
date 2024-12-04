@@ -34,9 +34,14 @@ const Login: React.FC = () => {
         // Almacena el rol y el token en el localStorage
         if (odooResponse === 'owner') {
           setUserRole('owner');
-          const serviceId = data.result?.owner_service
+          const serviceId = data.result?.owner_service;
           localStorage.setItem('rol', 'owner');
-          localStorage.setItem('service', serviceId)
+          localStorage.setItem('service', serviceId);
+        } else if (odooResponse === 'employee') {
+          setUserRole('employee');
+          const serviceId = data.result?.employee_service; // Ajusta la clave si es necesario
+          localStorage.setItem('rol', 'employee');
+          localStorage.setItem('service', serviceId);
         } else {
           setUserRole('client');
           localStorage.setItem('rol', 'client');

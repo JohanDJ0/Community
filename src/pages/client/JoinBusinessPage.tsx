@@ -1,6 +1,9 @@
 import React, { useState } from 'react'; // Importamos React y el hook useState para manejar el estado del componente
 import { TextField, Button, Box } from '@mui/material'; // Importamos componentes de Material UI
 import '../../css/App.css';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Snackbar, Alert } from '@mui/material';
+
 // Agrega 'darkMode' como prop
 interface ServicesProps {
   darkMode: boolean;
@@ -13,64 +16,62 @@ const JoinBusinessPage:  React.FC<ServicesProps> = ({ darkMode }) =>  {
   // - isValid para controlar la clase de validación (si es válido o no)
   const [businessName, setBusinessName] = useState(''); 
   const [isValid, setIsValid] = useState(true); 
+  const token = localStorage.getItem('token');
+  const [openSnackbar, setOpenSnackbar] = useState(false); // Estado para abrir el Snackbar
+  const [message, setMessage] = useState(''); // Estado para el mensaje a mostrar
+  const navigate = useNavigate();
 
   // Función que se ejecuta cuando se hace clic en el botón "Unirse"
-  const handleJoinClick = async () => {
-    console.log('Nombre del negocio:', businessName); // Mostramos el valor ingresado en la consola
-
-    const id_user = 14; // ID de usuario estático para esta prueba (se puede reemplazar dinámicamente)
-
-    // Definimos el cuerpo de la solicitud que se enviará al servidor
-    const data = {
-      "params": {
-        access_code: businessName // El código de acceso se toma del valor del input (businessName)
-      }
-    };
-
-    // Realizamos una solicitud POST al backend usando fetch:
-    // - Método POST para enviar datos
-    // - Cabecera para indicar que el contenido es JSON
-    // - El cuerpo de la solicitud contiene el objeto data con el código de acceso
-    const response = await fetch(`/search_service/${id_user}`, {
+  const handleJoinClick = (businessName: string) => {
+    //console.log('Código de acceso ingresado:', businessName);
+    fetch(`/search_service`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data), // Convertimos el objeto a formato JSON
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ params: { access_code: businessName, token: token } })
+    })
+    .then(response => response.json())
+    .then((data) => {
+      if (data.result) {
+        const serviceId = data.result.service;
+        setMessage('¡Éxito! Se cambiará tu menú al tipo empleado.');
+        setOpenSnackbar(true);
+
+        // Retrasar la navegación para que el Snackbar se muestre
+        setTimeout(() => {
+          localStorage.removeItem('rol');
+          localStorage.removeItem('service');
+          localStorage.setItem('rol', 'employee');
+          localStorage.setItem('service', serviceId);
+          navigate("/Services");
+        }, 3000); // Retraso de 3 segundos
+      } else {
+        console.error("Error al cambiar de rol al usuario:", data.result?.Message || "Error desconocido");
+      }
+    })
+    .catch((error) => {
+      console.error("Error al cambiar de rol al usuario: ", error.message || "Error desconocido");
     });
-    
-
-    // Convertimos la respuesta a JSON y la mostramos en la consola
-    const result = await response.json();
-    console.log(result); 
-
-    // Validamos si el campo businessName está vacío:
-    // - Si está vacío, se establece isValid en false (invalid)
-    // - Si tiene contenido, se establece isValid en true (valid)
-    if (businessName.trim() === '') {
-      setIsValid(false); // Si el campo está vacío, indicamos que no es válido
-    } else {
-      setIsValid(true); // Si hay texto, indicamos que es válido
-    }
   };
 
   return (
     // Estructura principal del componente:
     <div className='first-div'>
       <div className='second-div'>
-      <div className={`box-div ${darkMode ? 'dark' : 'light'}`}> 
+        <div className={`box-div ${darkMode ? 'dark' : 'light'}`}> 
           <h2>Unirse a un negocio</h2> {/* Título de la página */}
 
           {/* Caja de texto para ingresar el código de acceso del negocio */}
           <Box mt={2}>
-            <TextField
-              label="Nombre del negocio" // Etiqueta del campo
-              variant="filled" // Estilo del input
-              fullWidth // Ancho completo
-              style={{ marginBottom: '10px' }} // Margen inferior
-              value={businessName} // Enlazamos el valor del input con el estado businessName
-              onChange={(e) => setBusinessName(e.target.value)} // Actualizamos el estado cuando el usuario escribe
-            />
+          <TextField
+            label="Código de acceso"
+            variant="filled"
+            fullWidth
+            style={{ marginBottom: '10px' }}
+            value={businessName}
+            error={businessName.length > 6}
+            helperText={businessName.length > 6 ? "El código no puede superar los 6 caracteres" : ""}
+            onChange={(e) => setBusinessName(e.target.value.slice(0, 6))}
+          />
           </Box>
 
           {/* Botón para unirse al negocio */}
@@ -83,17 +84,22 @@ const JoinBusinessPage:  React.FC<ServicesProps> = ({ darkMode }) =>  {
                   backgroundColor: '#2EC6BD', // Color al hacer hover
                 },
               }}
-              onClick={handleJoinClick} // Llamamos a la función handleJoinClick al hacer clic en el botón
+              onClick={() => handleJoinClick(businessName)} // Pasamos el valor del input a la función
             >
               Unirse
             </Button>
           </Box>
-
-          {/* Muestra el mensaje de validación (basado en el estado isValid) */}
-          <div className={isValid ? 'invalid' : 'valid'}>
-            Validación
-          </div>
         </div>
+        <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000} // Tiempo que durará visible el Snackbar
+        onClose={() => setOpenSnackbar(false)} // Cierra el Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }} // Centra el Snackbar en la parte superior
+        >
+          <Alert onClose={() => setOpenSnackbar(false)} severity="success">
+            {message}
+          </Alert>
+        </Snackbar>
       </div>
     </div>
   );

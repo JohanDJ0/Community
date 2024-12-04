@@ -424,12 +424,12 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
                     value={newReview.description}
                     onChange={(e) => {
                       const value = e.target.value;
-                      if (value.length <= 100) {
+                      if (value.length <= 500) {
                         setNewReview({ ...newReview, description: value });
                       }
                     }}
-                    helperText={`${newReview.description.length}/100 caracteres | ${newReview.description.trim().split(/\s+/).filter(Boolean).length} palabras`}
-                    inputProps={{ maxLength: 100 }}
+                    helperText={`${newReview.description.length}/500 caracteres | ${newReview.description.trim().split(/\s+/).filter(Boolean).length} palabras`}
+                    inputProps={{ maxLength: 500 }}
                   />
                  
                 </FormControl>

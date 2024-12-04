@@ -36,11 +36,12 @@ const MenuD: React.FC<{ toggleDarkMode: () => void }> = ({ toggleDarkMode }) => 
   const [userToken, setUserToken] = useState<string | null>(null);
   const navigate = useNavigate();
   const { t, i18n } = useTranslation("menu");
+  const role = localStorage.getItem('rol');
 
   useEffect(() => {
-    const role = localStorage.getItem('rol');
     const token = localStorage.getItem('token');
-    console.log("Token obtenido desdde menu:", token); // Mostrar el token en la consola
+    //console.log("Token obtenido desdde menu:", token); // Mostrar el token en la consola
+    console.log("Rol obtenido desdde menu:", role);
 
     setUserRole(role);  // Guardar el rol del usuario
     setUserToken(token); // Guardar el token
@@ -96,14 +97,6 @@ const MenuD: React.FC<{ toggleDarkMode: () => void }> = ({ toggleDarkMode }) => 
           </ListItemButton>
         </ListItem>
         <Divider />
-        <ListItem key='Recompensas' disablePadding>
-          <ListItemButton component={Link} to="/Rewards">
-            <ListItemIcon>
-              <EmojiEventsSharpIcon />
-            </ListItemIcon>
-            <ListItemText primary={t("itemListRewards")} />
-          </ListItemButton>
-        </ListItem>
         <ListItem key='Mi negocio' disablePadding>
           <ListItemButton component={Link} to="/MyService">
             <ListItemIcon>
@@ -112,12 +105,22 @@ const MenuD: React.FC<{ toggleDarkMode: () => void }> = ({ toggleDarkMode }) => 
             <ListItemText primary={t("itemListMyService")} />
           </ListItemButton>
         </ListItem>
-        <ListItem key='Empleados' disablePadding>
-          <ListItemButton component={Link} to="/Empleados">
+        {role !== 'employee' && (
+          <ListItem key="Empleados" disablePadding>
+            <ListItemButton component={Link} to="/Empleados">
+              <ListItemIcon>
+                <PersonIcon />
+              </ListItemIcon>
+              <ListItemText primary={t("itemListEmployees")} />
+            </ListItemButton>
+          </ListItem>
+        )}
+        <ListItem key='Recompensas' disablePadding>
+          <ListItemButton component={Link} to="/Rewards">
             <ListItemIcon>
-              <PersonIcon /> 
+              <EmojiEventsSharpIcon />
             </ListItemIcon>
-            <ListItemText primary={t("itemListEmployees")} /> 
+            <ListItemText primary={t("itemListRewards")} />
           </ListItemButton>
         </ListItem>
         <ListItem key='Mis recompensas' disablePadding>
