@@ -6,6 +6,7 @@ import { useMediaQuery } from '@mui/material';
 import '../../css/App.css';
 import noImage from '../../assets/NoImagen.png';
 import HomeIcon from '@mui/icons-material/Home';
+import { API_BASE_URL } from 'components/bdd';
 
 interface Service {
   id: number;
@@ -33,7 +34,7 @@ const Services: React.FC<ServicesProps> = ({ darkMode }) => {
   }
 
   useEffect(() => {
-    fetch("/services", {
+    fetch(`${API_BASE_URL}/services`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
