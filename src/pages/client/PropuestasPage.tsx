@@ -11,7 +11,9 @@ import noImage from '../../assets/NoImagen.png';
 import { useMediaQuery } from '@mui/material';
 import { followService } from 'components/followService';
 import HomeIcon from '@mui/icons-material/Home';
-
+import { coins } from 'components/coins';
+import { Snackbar, Alert } from '@mui/material';
+import { AlertColor } from '@mui/material';
 
 interface ServiceDetail {
   id: number;
@@ -21,7 +23,6 @@ interface ServiceDetail {
   description: string;
   is_following: boolean;
 }
-
 
 interface Proposal {
   id: number;
@@ -33,11 +34,9 @@ interface Proposal {
   close_date: string | null;
 }
 
-
 interface ProposalDetailProps {
   darkMode: boolean;
 }
-
 
 const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
   const { id } = useParams<{ id: string }>();
@@ -53,7 +52,9 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);//Modal
   const token = localStorage.getItem('token');
   const [isFollowing, setIsFollowing] = useState(false); // Hook para el follow del servicio
-
+  const [message, setMessage] = useState(''); // Estado para el mensaje a mostrar
+  const [openSnackbar, setOpenSnackbar] = useState(false); // Estado para abrir el Snackbar
+  const [severity, setSeverity] = useState<AlertColor | undefined>('success');
 
   // Llamar a la API cada 5 segundos
   useEffect(() => {
@@ -159,8 +160,6 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
 
 
     try {
-
-
       const response = await fetch("/proposals/create", {
         method: "POST",
         headers: {
@@ -169,10 +168,26 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
         body: JSON.stringify(newProposalData),
       });
 
-
       if (response.ok) {
         const data = await response.json();
         console.log("Propuesta creada exitosamente:", data);
+
+        if (token) {
+          coins(token).then(coinsSuccess => {
+            if (coinsSuccess) {
+              console.log("Coins actualizados correctamente");
+              setMessage('+1 Community Points');
+              setSeverity('success'); // Cambia el color a verde para éxito
+            } else {
+              console.error("Error al actualizar las monedas");
+              setMessage('Límite alcanzado, mañana podrás conseguir más monedas');
+              setSeverity('warning'); // Cambia el color a amarillo para advertencia
+            }
+            setOpenSnackbar(true);
+          });
+        } else {
+          console.error("Token no disponible");
+        }
         // Aquí puedes actualizar la lista de propuestas o mostrar un mensaje de éxito
       } else {
         console.error("Error al crear la propuesta:", response.status, response.statusText);
@@ -422,6 +437,21 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
 
           <ShareModal open={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} />
         </div>
+
+        <Snackbar
+          open={openSnackbar}
+          onClose={() => setOpenSnackbar(false)}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }} 
+          autoHideDuration={3000}
+        >
+          <Alert 
+            onClose={() => setOpenSnackbar(false)} 
+            severity={severity}
+            sx={{ width: '100%' }}
+          >
+            {message}
+          </Alert>
+        </Snackbar>
       </div>
     </div>
   );

@@ -6,6 +6,8 @@ import '../../css/App.css';
 import { Box, Typography, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from '@mui/material';
 import { Snackbar, Alert } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
+import { coins } from 'components/coins';
+import { AlertColor } from '@mui/material';
 
 
 interface ServicesProps {
@@ -33,9 +35,9 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
   const [deliberationEnded, setDeliberationEnded] = useState(false);
   const [alertMessage, setAlertMessage] = useState<string | null>(null); // Mensaje de alerta
   const [showAlert, setShowAlert] = useState(false); // Visibilidad de la alerta
-
-
-
+  const [message, setMessage] = useState(''); // Estado para el mensaje a mostrar
+  const [openSnackbar, setOpenSnackbar] = useState(false); // Estado para abrir el Snackbar
+  const [severity, setSeverity] = useState<AlertColor | undefined>('success');
 
   useEffect(() => {
     const fetchProposalDetails = async () => {
@@ -184,6 +186,22 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                 ...comments,
                 { author: user?.name || 'Nombre no disponible', text: newComment.trim() }
               ]);
+              if (token) {
+                coins(token).then(coinsSuccess => {
+                  if (coinsSuccess) {
+                    console.log("Coins actualizados correctamente");
+                    setMessage('+1 Community Points');
+                    setSeverity('success'); // Cambia el color a verde para éxito
+                  } else {
+                    console.error("Error al actualizar las monedas");
+                    setMessage('Límite alcanzado, mañana podrás conseguir más monedas');
+                    setSeverity('warning'); // Cambia el color a amarillo para advertencia
+                  }
+                  setOpenSnackbar(true);
+                });
+              } else {
+                console.error("Token no disponible");
+              }
               setNewComment('');
               console.log('Comentario enviado con éxito:', data);
             } else {
@@ -615,6 +633,21 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
           }}
         >
           {alertMessage}
+        </Alert>
+      </Snackbar>
+
+      <Snackbar
+        open={openSnackbar}
+        onClose={() => setOpenSnackbar(false)}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }} 
+        autoHideDuration={3000}
+      >
+        <Alert 
+          onClose={() => setOpenSnackbar(false)} 
+          severity={severity}
+          sx={{ width: '100%' }}
+        >
+          {message}
         </Alert>
       </Snackbar>
 

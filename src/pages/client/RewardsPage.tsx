@@ -154,7 +154,7 @@ const Rewards: React.FC<ServicesProps> = ({ darkMode }) => {
         }}
           >
             {rewards.length === 0 ? (
-              <p>Cargando recompensas...</p>
+              <p>Para poder ver las recompensas disponibles debes seguir a un servicio...</p>
             ) : (
               rewards.map((reward) => (
                 <Card

@@ -20,7 +20,9 @@ import AutoModeSharpIcon from '@mui/icons-material/AutoModeSharp'; // Importa el
 import noImage from '../../assets/NoImagen.png';
 import { followService } from 'components/followService';
 import HomeIcon from '@mui/icons-material/Home';
-
+import { coins } from 'components/coins';
+import { Snackbar, Alert } from '@mui/material';
+import { AlertColor } from '@mui/material';
 
 interface Review {
   name: string; // Nombre de la reseña
@@ -28,7 +30,6 @@ interface Review {
   rating: number; // Calificación
   written_by: string; // Usuario
 }
-
 
 interface ServiceReviewProps {
   id: number;
@@ -39,11 +40,9 @@ interface ServiceReviewProps {
   is_following: boolean;
 }
 
-
 interface ServicesProps {
   darkMode: boolean;
 }
-
 
 const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
   const token = localStorage.getItem("token");
@@ -58,7 +57,9 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
   const [openModal, setOpenModal] = useState(false);
   const isSmallScreen = useMediaQuery('(max-width:600px)');
   const [isFollowing, setIsFollowing] = useState(false); // Hook para el follow del servicio
-
+  const [message, setMessage] = useState(''); // Estado para el mensaje a mostrar
+  const [openSnackbar, setOpenSnackbar] = useState(false); // Estado para abrir el Snackbar
+  const [severity, setSeverity] = useState<AlertColor | undefined>('success');
 
   const [newReview, setNewReview] = useState<Review>({
     name: '',
@@ -67,15 +68,11 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
     written_by: (isAuthenticated && user && user.name) || '',
   });
 
-
-
-
-
-
   const handleCloseModal = () => {
     setOpenModal(false);
     setNewReview({ name: '', description: '', rating: 0, written_by: (isAuthenticated && user && user.name) || '' }); // Resetea el formulario
   };
+
   const handleOpenModal = () => {
     setNewReview({
       name: '',
@@ -85,19 +82,18 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
     });
     setOpenModal(true);
   };
+
   const handleSubmitReview = () => {
     if (!newReview.name || !newReview.description || !newReview.rating) {
       console.error('Todos los campos son obligatorios');
       return;
     }
 
-
     const token = localStorage.getItem("token");
     if (!token) {
       console.error('Token no encontrado');
       return;
     }
-
 
     const reviewData = {
       params: {
@@ -108,7 +104,6 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
         service_id: Number(id),
       },
     };
-
 
     fetch('/reviews/create', {
       method: 'POST',
@@ -123,6 +118,24 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
         if (data.result && data.result.success) {
           console.log("Reseña creada con éxito:", data.result.Message); // Mensaje de éxito
           handleCloseModal(); // Cerrar el modal al crear la reseña con éxito
+
+          if (token) {
+            coins(token).then(coinsSuccess => {
+              if (coinsSuccess) {
+                console.log("Coins actualizados correctamente");
+                setMessage('+1 Community Points');
+                setSeverity('success'); // Cambia el color a verde para éxito
+              } else {
+                console.error("Error al actualizar las monedas");
+                setMessage('Límite alcanzado, mañana podrás conseguir más monedas');
+                setSeverity('warning'); // Cambia el color a amarillo para advertencia
+              }
+              setOpenSnackbar(true);
+            });
+          } else {
+            console.error("Token no disponible");
+          }
+
         } else {
           console.error("Error al crear la reseña:", data.result?.Message || "Error desconocido");
         }
@@ -131,7 +144,6 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
         console.error("Error al crear la reseña:", error.message || "Error desconocido");
       });
   };
-
 
   // Función para obtener reseñas
   const fetchReviews = () => {
@@ -464,6 +476,22 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
 
 
         </div>
+
+        <Snackbar
+          open={openSnackbar}
+          onClose={() => setOpenSnackbar(false)}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }} 
+          autoHideDuration={3000}
+        >
+          <Alert 
+            onClose={() => setOpenSnackbar(false)} 
+            severity={severity}
+            sx={{ width: '100%' }}
+          >
+            {message}
+          </Alert>
+        </Snackbar>
+
       </div>
     </div>
   );

@@ -42,7 +42,7 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
           if (result[0].message) {
             console.log("No debería aparecer nada")
           } else {
-            console.log("Res: ", result[0].message);
+            //console.log("Res: ", result[0].message);
             setRewards(result.map((reward: any) => ({
               id: reward.id,
               name: reward.name,
@@ -66,7 +66,7 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
     try {
       const response = await fetch(`/redeem/get/${idservice}`);
       const data = await response.json();
-      console.log('Recompensas obtenidas:', data);
+      //console.log('Recompensas obtenidas:', data);
 
       if (data.result) {
         // Actualizamos el estado de las recompensas
@@ -106,7 +106,10 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
   // Función para crear una nueva recompensa
   const handleCreateReward = async () => {
     const { name, description, points_required, service_id, image } = newReward;
-    console.log("Valores actuales:", { name, description, points_required, service_id, image });
+    //console.log("Valores actuales:", { name, description, points_required, service_id, image });
+    const newImg = image.split(',')[1]; // Elimina el prefijo "data:image/...;base64,"
+    const encodedImage =  btoa(newImg)
+    /* const decodedImage = atob(newImg); */
   
     // Verifica que los campos obligatorios estén completos
     if (!name || !description || points_required <= 0 || !service_id) {
@@ -133,7 +136,7 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
       });
   
       const data = await response.json();
-      console.log('Respuesta del servidor:', data);
+      /* console.log('Respuesta del servidor:', data); */
   
       // Procesa la respuesta
       if (data.result && data.result.success) {
@@ -145,7 +148,7 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
             name,
             businessName: 'Negocio nuevo',
             requiredPoints: points_required,
-            imageUrl: image || noImage, // Usa la imagen cargada o un placeholder
+            imageUrl: encodedImage || noImage, // Usa la imagen cargada o un placeholder
           },
         ]);
         setSuccessMessage(data.result.message || 'Recompensa creada exitosamente.');
@@ -159,9 +162,6 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
       alert('Hubo un problema al intentar crear la recompensa. Por favor, inténtalo nuevamente.');
     }
   };
-  
-  
-
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -181,10 +181,8 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
     reader.readAsDataURL(file);
   };
 
-
-
   const handleDelete = (id: number) => {
-    console.log(`Eliminando recompensa con ID: ${id}`);
+    //console.log(`Eliminando recompensa con ID: ${id}`);
     fetch(`/rewards/delete/${id}`, {
       method: 'DELETE',
       headers: {
@@ -193,12 +191,12 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
     })
       .then(response => response.json())
       .then((data) => {
-        console.log(data)
+        //console.log(data)
         if (data.success == true) {
-          console.log("Se eliminó la recompensa con éxito"); // Mensaje de éxito
+          //console.log("Se eliminó la recompensa con éxito"); // Mensaje de éxito
           setRewards((prev) => prev.filter((reward) => reward.id !== id));
         } else {
-          console.error("Error al eliminar la recompensa");
+          //console.error("Error al eliminar la recompensa");
         }
       })
       .catch((error) => {
@@ -251,7 +249,7 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
                     <CardMedia
                       component="img"
                       height="120"
-                      image={reward.imageUrl || noImage} // Usa la URL de la imagen o un placeholder
+                      image={reward.imageUrl ? `data:image/jpeg;base64,${atob(reward.imageUrl)}` : noImage}
                       alt={reward.name}
                     />
 
@@ -373,11 +371,11 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
         </Box>
       </Modal>
       <Snackbar
-  open={!!successMessage}  // Solo se muestra si hay un mensaje
-  autoHideDuration={3000}  // Duración de 3 segundos
-  onClose={() => setSuccessMessage(null)} // Cuando se cierra, limpia el mensaje
-  message={successMessage}
-/>
+        open={!!successMessage}  // Solo se muestra si hay un mensaje
+        autoHideDuration={3000}  // Duración de 3 segundos
+        onClose={() => setSuccessMessage(null)} // Cuando se cierra, limpia el mensaje
+        message={successMessage}
+      />
 
     </div>
   );
