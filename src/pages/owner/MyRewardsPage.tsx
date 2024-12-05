@@ -3,6 +3,7 @@ import { Card, CardMedia, CardContent, Typography, Button, Modal, Box, TextField
 import '../../css/App.css'; // Asegúrate de que este archivo tenga los estilos que necesitas.
 import noImage from '../../assets/NoImagen.png';
 import FiberSmartRecordIcon from '@mui/icons-material/FiberSmartRecord';
+import { Snackbar } from '@mui/material';
 
 interface Reward {
   id: number;
@@ -20,39 +21,43 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
   const [rewards, setRewards] = useState<Reward[]>([]);
   const id_service = localStorage.getItem('service');
   const [open, setOpen] = useState<boolean>(false); // Controla si el modal está abierto o cerrado
+  const [successMessage, setSuccessMessage] = useState<string | null>(null); // Estado para el mensaje de éxito
+
   const [newReward, setNewReward] = useState({
     name: '',
     description: '',
     points_required: 0,
-    service_id: '' // Inicializa service_id como cadena vacía
+    service_id: id_service || '', // Inicializa con el valor de localStorage
+    image: '',
   });
+
 
   const isSmallScreen = window.innerWidth < 600; // Ajusta el tamaño de la pantalla según necesites
 
   useEffect(() => {
     fetch(`/rewards/get/${id_service}`)
-    .then((res) => res.json())
-    .then((result) => {
-      if (Array.isArray(result)) {
-        if (result[0].message) {
-          console.log("No debería aparecer nada")
+      .then((res) => res.json())
+      .then((result) => {
+        if (Array.isArray(result)) {
+          if (result[0].message) {
+            console.log("No debería aparecer nada")
+          } else {
+            console.log("Res: ", result[0].message);
+            setRewards(result.map((reward: any) => ({
+              id: reward.id,
+              name: reward.name,
+              businessName: reward.service, // Puedes ajustar este valor según tu lógica
+              requiredPoints: reward.points_required,
+              imageUrl: reward.image,
+            })));
+          }
         } else {
-          console.log("Res: ",result[0].message);
-          setRewards(result.map((reward: any) => ({
-            id: reward.id,
-            name: reward.name,
-            businessName: reward.service, // Puedes ajustar este valor según tu lógica
-            requiredPoints: reward.points_required,
-            imageUrl: reward.image,
-          })));
+          console.error("Formato de datos inesperado:", result);
         }
-      } else {
-        console.error("Formato de datos inesperado:", result);
-      }
-    })
-    .catch((error) => {
-      console.error("Error al obtener los datos:", error);
-    });
+      })
+      .catch((error) => {
+        console.error("Error al obtener los datos:", error);
+      });
 
   }, []);
 
@@ -96,14 +101,16 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
     });
   };
 
+
+
   // Función para crear una nueva recompensa
   const handleCreateReward = async () => {
-    const { name, description, points_required, service_id } = newReward;
-    console.log('Service ID al crear recompensa:', service_id);  // Verifica el ID en el momento de enviar la solicitud
+    const { name, description, points_required, service_id, image } = newReward;
+    console.log("Valores actuales:", { name, description, points_required, service_id, image });
   
-    // Verifica que todos los campos estén completos antes de hacer la solicitud
+    // Verifica que los campos obligatorios estén completos
     if (!name || !description || points_required <= 0 || !service_id) {
-      alert('Por favor, complete todos los campos.');
+      alert('Por favor, complete todos los campos obligatorios.');
       return;
     }
   
@@ -118,17 +125,19 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
             name,
             description,
             points_required,
-            active: true,
-            service_id,  // Enviamos el id del servicio aquí
-          },
+            active: "True", // El valor se pasa como string "True"
+            service_id,
+            image: image || null,
+          }
         }),
       });
   
       const data = await response.json();
       console.log('Respuesta del servidor:', data);
   
+      // Procesa la respuesta
       if (data.result && data.result.success) {
-        // Si la recompensa es creada correctamente, actualizamos la lista de recompensas
+        // Si se crea exitosamente, agrega un placeholder si no hay imagen
         setRewards((prevRewards) => [
           ...prevRewards,
           {
@@ -136,21 +145,43 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
             name,
             businessName: 'Negocio nuevo',
             requiredPoints: points_required,
-            isActive: true,
-            imageUrl: 'https://via.placeholder.com/200x150?text=Nuevo+Producto',
+            imageUrl: image || noImage, // Usa la imagen cargada o un placeholder
           },
         ]);
-        alert(data.result.message);
-        handleClose();
+        setSuccessMessage(data.result.message || 'Recompensa creada exitosamente.');
+        handleClose(); // Cierra el modal
       } else {
-        console.error('Error en la creación de la recompensa:', data.result.message || 'Mensaje no disponible');
-        alert(`Error: ${data.result.message || 'Mensaje no disponible'}`);
+        console.error('Error al crear la recompensa:', data.result?.message);
+        alert(`Error: ${data.result?.message}`);
       }
     } catch (error) {
       console.error('Error al enviar la solicitud:', error);
       alert('Hubo un problema al intentar crear la recompensa. Por favor, inténtalo nuevamente.');
     }
   };
+  
+  
+
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      alert('Por favor selecciona un archivo válido.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64Image = reader.result as string;
+      setNewReward((prevState) => ({
+        ...prevState,
+        image: base64Image, // Actualiza la imagen en Base64
+      }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+
 
   const handleDelete = (id: number) => {
     console.log(`Eliminando recompensa con ID: ${id}`);
@@ -220,9 +251,10 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
                     <CardMedia
                       component="img"
                       height="120"
-                      image={reward.imageUrl ? `data:image/jpeg;base64,${atob(reward.imageUrl)}` : noImage}
+                      image={reward.imageUrl || noImage} // Usa la URL de la imagen o un placeholder
                       alt={reward.name}
                     />
+
                     <CardContent>
                       <Typography variant="h6">{reward.name}</Typography>
                       <Typography variant="body2" color="text.secondary">
@@ -302,20 +334,24 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
             name="points_required"
             type="number"
             fullWidth
-            value={newReward.points_required}
+            value={newReward.points_required || ''}
             onChange={(e) => {
-              const value = Math.max(0, parseInt(e.target.value) || 0); // Asegura que sea al menos 0
+              const value = parseInt(e.target.value.replace(/^0+/, ''), 10) || 0;
               setNewReward({ ...newReward, points_required: value });
             }}
+
             margin="normal"
           />
+
           <div style={{ marginBottom: '10px' }}>
             <input
               type="file"
               accept="image/*"
               style={{ display: 'block', margin: '10px 0' }}
+              onChange={handleImageUpload} // Asegúrate de llamar a la función aquí
             />
           </div>
+
           <div
             style={{
               display: 'flex',
@@ -336,6 +372,12 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
           </Button>
         </Box>
       </Modal>
+      <Snackbar
+  open={!!successMessage}  // Solo se muestra si hay un mensaje
+  autoHideDuration={3000}  // Duración de 3 segundos
+  onClose={() => setSuccessMessage(null)} // Cuando se cierra, limpia el mensaje
+  message={successMessage}
+/>
 
     </div>
   );

@@ -116,8 +116,15 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
   }
 
 
-  const handleClickOpen = () => setOpen(true);
-  const handleClose = () => {
+  const handleClickOpen = () => {
+    // Limpiar los campos del estado al abrir el modal
+    setProposalName('');
+    setProposalDescription('');
+    setDebateEndDate('');
+    setDeliberationEndDate('');
+    setOpen(true);
+  };
+    const handleClose = () => {
     setOpen(false);
   };
 
