@@ -8,6 +8,8 @@ import { Snackbar, Alert } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import { coins } from 'components/coins';
 import { AlertColor } from '@mui/material';
+import { API_BASE_URL } from 'components/bdd';
+
 
 
 interface ServicesProps {
@@ -46,7 +48,7 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
         console.log('Token obtenido desde propuestas:', token);
 
 
-        const response = await fetch(`/proposalsDetail/${proposalId}`);
+        const response = await fetch(`${API_BASE_URL}/proposalsDetail/${proposalId}`);  
         if (!response.ok) {
           throw new Error('Error al obtener la propuesta');
         }
@@ -166,7 +168,7 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
         };
 
 
-        fetch(`/comment/${proposalId}`, {
+        fetch(`${API_BASE_URL}/comment/${proposalId}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -235,7 +237,7 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
       };
 
 
-      const response = await fetch(`/vote/${proposalId}`, {
+      const response = await fetch(`${API_BASE_URL}/vote/${proposalId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

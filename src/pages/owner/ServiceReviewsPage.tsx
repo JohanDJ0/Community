@@ -23,6 +23,8 @@ import HomeIcon from '@mui/icons-material/Home';
 import { coins } from 'components/coins';
 import { Snackbar, Alert } from '@mui/material';
 import { AlertColor } from '@mui/material';
+import { API_BASE_URL } from 'components/bdd';
+import ShareModal from '../../components/ShareModal';//compartir 
 
 interface Review {
   name: string; // Nombre de la reseña
@@ -60,6 +62,7 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
   const [message, setMessage] = useState(''); // Estado para el mensaje a mostrar
   const [openSnackbar, setOpenSnackbar] = useState(false); // Estado para abrir el Snackbar
   const [severity, setSeverity] = useState<AlertColor | undefined>('success');
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);// modal
 
   const [newReview, setNewReview] = useState<Review>({
     name: '',
@@ -105,7 +108,7 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
       },
     };
 
-    fetch('/reviews/create', {
+    fetch(`${API_BASE_URL}/reviews/create`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -147,7 +150,7 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
 
   // Función para obtener reseñas
   const fetchReviews = () => {
-    fetch(`/reviews/${id}`)
+    fetch(`${API_BASE_URL}/reviews/${id}`)
       .then((res) => {
         if (res.ok) {
           return res.json();
@@ -177,10 +180,10 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
  
     const fetchServiceData = async () => {
       try {
-        const reviewsResponse = await fetch(`/reviews/${id}`);
+        const reviewsResponse = await fetch(`${API_BASE_URL}/reviews/${id}`);
         const reviewsData = await reviewsResponse.json();
  
-        const serviceResponse = await fetch(`/services/${id}`, {
+        const serviceResponse = await fetch(`${API_BASE_URL}/services/${id}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -334,7 +337,7 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
                   <Typography
                     variant="body2"
                     color="text.secondary"
-                    style={{ marginLeft: '10px' ,}}
+                    style={{ marginLeft: '10px' ,fontWeight: 'bold', color: 'white'}}
                   >
                     {service.qualification ? service.qualification.toFixed(1) : '0.0'}
                   </Typography>
@@ -348,7 +351,7 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
                 {/* <Button variant="contained" startIcon={<GradeIcon />} onClick={() => navigate(`/services/${id}/reviews`)}>Reseñas</Button> */}
                 <Button variant="contained" startIcon={<BackHandIcon />} onClick={() => navigate(`/proposal/${id}`)}
                 >Propuestas</Button>
-                <Button variant="outlined" startIcon={<ShareIcon />}>Compartir</Button>
+                <Button variant="outlined" startIcon={<ShareIcon />} onClick={() => setIsShareModalOpen(true)}>Compartir</Button>
                 {!service.is_following && ( // Renderiza el botón solo si is_followed es false
                   <Button onClick={() => handleFollow()} variant="contained" startIcon={<AddIcon />} style={{fontSize: isSmallScreen ? '0.7rem' : '0.9rem',padding: isSmallScreen ? '4px 8px' : '6px 12px',}}>Seguir</Button>
                 )}
@@ -401,6 +404,7 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
 
             </CardContent>
           </Card>
+          <ShareModal open={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} />
 
 
           {/* Botón Crear Reseña */}
@@ -421,7 +425,7 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
             <DialogContent>
               <FormControl fullWidth margin="normal">
                 <TextField
-                  label="Nombre de la reseña"
+                  label="Título  de la reseña"
                   value={newReview.name}
                   onChange={(e) => setNewReview({ ...newReview, name: e.target.value })}
                 />

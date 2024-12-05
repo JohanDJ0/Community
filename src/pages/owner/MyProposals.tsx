@@ -10,6 +10,7 @@ import ShareModal from '../../components/ShareModal';// modal de compartir
 import noImage from '../../assets/NoImagen.png';
 import { useMediaQuery } from '@mui/material';
 import StoreIcon from '@mui/icons-material/Store';
+import { API_BASE_URL } from 'components/bdd';
 
 interface ServiceDetail {
   id: number;
@@ -59,7 +60,7 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
               token: token
             }
           }
-          const serviceResponse = await fetch(`/services/${id}`, {
+          const serviceResponse = await fetch(`${API_BASE_URL}/services/${id}`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -81,7 +82,7 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
 
       try {
         if (id) {
-          const proposalsResponse = await fetch(`/proposals/${id}`);
+          const proposalsResponse = await fetch(`${API_BASE_URL}/proposals/${id}`);
           const proposalsData = await proposalsResponse.json();
           setProposals(proposalsData);
         }
@@ -137,7 +138,7 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
   
     try {
 
-      const response = await fetch("/proposals/create", {
+      const response = await fetch(`${API_BASE_URL}/proposals/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -258,20 +259,30 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
                   <TextField
                     autoFocus
                     margin="dense"
-                    label="Nombre de la Propuesta"
+                    label="Título  de la Propuesta"
                     fullWidth
                     value={proposalName}
                     onChange={(e) => setProposalName(e.target.value)}
                   />
-                  <TextField
-                    margin="dense"
-                    label="Descripción"
-                    fullWidth
-                    multiline
-                    rows={4}
-                    value={proposalDescription}
-                    onChange={(e) => setProposalDescription(e.target.value)}
-                  />
+                    <TextField
+                      margin="dense"
+                      id="description"
+                      label="Descripción"
+                      fullWidth
+                      variant="outlined"
+                      multiline
+                      rows={4}
+                      value={proposalDescription}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (value.length <= 500) {
+                          setProposalDescription(value);
+                        }
+                      }}
+                      helperText={`${proposalDescription.length}/500 caracteres`}
+                      inputProps={{ maxLength: 500 }}
+                    />
+
                   <TextField
                     margin="dense"
                     label="Fin Debate"

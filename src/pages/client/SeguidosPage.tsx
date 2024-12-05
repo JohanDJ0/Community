@@ -6,6 +6,7 @@ import '../../css/App.css';
 import { useNavigate } from 'react-router-dom';
 import noImage from '../../assets/NoImagen.png';
 import PersonIcon from '@mui/icons-material/Person';
+import { API_BASE_URL } from 'components/bdd';
 
 interface Followed {
   id: number,
@@ -36,7 +37,7 @@ const Seguidos: React.FC<ServicesProps> = ({ darkMode }) => {
   ];
 
   useEffect(() => {
-    fetch("/followed", {
+    fetch(` ${API_BASE_URL}/followed`, { 
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -62,7 +63,7 @@ const Seguidos: React.FC<ServicesProps> = ({ darkMode }) => {
   }, []);
 
   const unfollowService = (id: number) => {
-    fetch(`/followed/unlink/${id}`, {
+    fetch(`${API_BASE_URL}/followed/unlink/${id}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

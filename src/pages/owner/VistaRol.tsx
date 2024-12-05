@@ -3,6 +3,7 @@ import { RadioGroup, FormControlLabel, Radio, Button, Typography, TextField, Fad
 import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import PayPalButtonsComponent from '../../components/paypal';
+import { API_BASE_URL } from 'components/bdd';
 
 // Define the props interface including darkMode
 interface ServicesProps {
@@ -56,7 +57,7 @@ const VistaRol: React.FC<ServicesProps> = ({ darkMode }) => {
 
   const handleUserSignup = async () => {
     try {
-      const response = await fetch('/signup', {
+      const response = await fetch(`${API_BASE_URL}/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -82,7 +83,7 @@ const VistaRol: React.FC<ServicesProps> = ({ darkMode }) => {
 
   const handleOwnerSignup = async () => {
     try {
-      const responseUser = await fetch('/signup', {
+      const responseUser = await fetch(`${API_BASE_URL}/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -124,7 +125,7 @@ const VistaRol: React.FC<ServicesProps> = ({ darkMode }) => {
           }
         };
 
-        const responseBusiness = await fetch('/services/create', {
+        const responseBusiness = await fetch(`${API_BASE_URL}/services/create`, {  
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(businessData),
