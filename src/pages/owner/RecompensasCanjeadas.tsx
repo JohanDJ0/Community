@@ -3,6 +3,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, Typography, Tab
 import RedeemIcon from '@mui/icons-material/Redeem';
 import DoneIcon from '@mui/icons-material/Done';
 import { API_BASE_URL } from 'components/bdd';
+import { Snackbar, Alert } from '@mui/material';
 import noImage from '../../assets/NoImagen.png';
 
 interface ServicesProps {
@@ -20,41 +21,11 @@ interface Reward {
 }
 
 const RecompensasCanjedas: React.FC<ServicesProps> = ({ darkMode }) => {
-    // Datos de ejemplo
-    const rewards = [
-    {
-        img: 'https://via.placeholder.com/50',
-        name: 'Recompensa 1',
-        pointsRequired: 100,
-        user: 'Usuario 1',
-        action: 'Entregada',
-    },
-    {
-        img: 'https://via.placeholder.com/50',
-        name: 'Recompensa 2',
-        pointsRequired: 200,
-        user: 'Usuario 2',
-        action: 'Entregada',
-    },
-    {
-        img: 'https://via.placeholder.com/50',
-        name: 'Recompensa 2',
-        pointsRequired: 200,
-        user: 'Usuario 2',
-        action: 'Entregada',
-    },
-    {
-        img: 'https://via.placeholder.com/50',
-        name: 'Recompensa 2',
-        pointsRequired: 200,
-        user: 'Usuario 2',
-        action: 'Entregada',
-    },
-    ];
-
     const [rewardsData, setRewardsData] = useState<Reward[]>([]);
+    const [openSnackbar, setOpenSnackbar] = useState(false); // Estado para abrir el Snackbar
     const [entregadas, setEntregadas] = useState(false);
     const idService = localStorage.getItem('service');
+    const [message, setMessage] = useState(''); // Estado para el mensaje a mostrar
 
     useEffect(() => {
         let isMounted = true;
@@ -101,9 +72,39 @@ const RecompensasCanjedas: React.FC<ServicesProps> = ({ darkMode }) => {
     const handleEntregar = (rewardId: number, user_id: number) => {
         console.log("ID de la recompensa:", rewardId);
         console.log("User:", user_id);
-      
-        // Aquí va la lógica de tu función, por ejemplo, una solicitud de API
-        // fetch('/api/entregar', { method: 'POST', body: JSON.stringify({ id: rewardId, entregada }) })
+
+        fetch(`${API_BASE_URL}/validate_reward_delivery`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({params: {reward_id: rewardId, user_id: user_id}})  
+        })
+        .then(response => response.json())
+        .then((data) => {
+            if (data.result.status == true){
+                console.log("Exito al canjear",data.result);
+
+                setRewardsData(prevRewards =>
+                    prevRewards.map(reward =>
+                        reward.id === rewardId
+                            ? { ...reward, entregada: true } // Actualiza el estado de "entregada"
+                            : reward
+                    )
+                );
+
+                setMessage('Recompensa canjeada correctamente.');
+                setOpenSnackbar(true);
+
+            }else{
+                console.log("Error al canjear");
+                setMessage('No se pudo canjear la recompensa.');
+                setOpenSnackbar(true);
+            }
+        })
+        .catch((error) => {
+            console.error("Error al cambiar de rol al usuario: ", error.message || "Error desconocido");
+        });
     };
   
     return (
@@ -166,6 +167,16 @@ const RecompensasCanjedas: React.FC<ServicesProps> = ({ darkMode }) => {
                         </Table>
                     </TableContainer>
                 </div>
+                <Snackbar
+                open={openSnackbar}
+                autoHideDuration={3000} // Tiempo que durará visible el Snackbar
+                onClose={() => setOpenSnackbar(false)} // Cierra el Snackbar
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }} // Centra el Snackbar en la parte superior
+                >
+                <Alert onClose={() => setOpenSnackbar(false)} severity="success">
+                    {message}
+                </Alert>
+                </Snackbar>
             </div>
         </div>
 
