@@ -1,0 +1,11 @@
+{
+    "breadcrumbName": "Rewards Redeemed",
+    "image": "Picture",
+    "name": "Name",
+    "requiredPoints": "Points required",
+    "user": "User",
+    "status": "State",
+    "deliver": "Deliver",
+    "delivered": "Delivered",
+    "emptyMessage": "No rewards redeemed..."
+}

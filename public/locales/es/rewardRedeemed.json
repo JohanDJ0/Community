@@ -1,0 +1,11 @@
+{
+    "breadcrumbName": "Recompensas canjeadas",
+    "image": "Imagen",
+    "name": "Nombre",
+    "requiredPoints": "Puntos Requeridos",
+    "user": "Usuario",
+    "status": "Estado",
+    "deliver": "Entregar",
+    "delivered": "Entregado",
+    "emptyMessage": "No hay recompensas canjeadas..."
+}

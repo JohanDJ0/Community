@@ -5,6 +5,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import { API_BASE_URL } from 'components/bdd';
 import { Snackbar, Alert } from '@mui/material';
 import noImage from '../../assets/NoImagen.png';
+import { useTranslation } from 'react-i18next';
 
 interface ServicesProps {
     darkMode: boolean;
@@ -26,6 +27,7 @@ const RecompensasCanjedas: React.FC<ServicesProps> = ({ darkMode }) => {
     const [entregadas, setEntregadas] = useState(false);
     const idService = localStorage.getItem('service');
     const [message, setMessage] = useState(''); // Estado para el mensaje a mostrar
+    const { t, i18n } = useTranslation("rewardRedeemed");
 
     useEffect(() => {
         let isMounted = true;
@@ -113,22 +115,22 @@ const RecompensasCanjedas: React.FC<ServicesProps> = ({ darkMode }) => {
                 <div className={`box-div ${darkMode ? 'dark' : 'light'}`}>
                     <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
                     <RedeemIcon style={{ marginRight: '4px' }} />
-                    <span style={{ fontWeight: 'bold' }}>Recompensas canjeadas</span>
+                    <span style={{ fontWeight: 'bold' }}>{t("breadcrumbName")}</span>
                     </div>
                     <TableContainer>
                         <Table>
                         <TableRow>
-                            <TableCell align="center" sx={{display: { xs: "none", sm: "table-cell" },fontWeight: "bold",}}>Imagen</TableCell>
-                            <TableCell sx={{ fontWeight: "bold", }}>Nombre</TableCell>
-                            <TableCell sx={{ fontWeight: "bold",}}>Puntos Requeridos</TableCell>
-                            <TableCell sx={{ fontWeight: "bold", }}>Usuario</TableCell>
-                            <TableCell sx={{fontWeight: "bold",}}>Acción</TableCell>
+                            <TableCell align="center" sx={{display: { xs: "none", sm: "table-cell" },fontWeight: "bold",}}>{t("image")}</TableCell>
+                            <TableCell sx={{ fontWeight: "bold", }}>{t("name")}</TableCell>
+                            <TableCell sx={{ fontWeight: "bold",}}>{t("requiredPoints")}</TableCell>
+                            <TableCell sx={{ fontWeight: "bold", }}>{t("user")}</TableCell>
+                            <TableCell sx={{fontWeight: "bold",}}>{t("status")}</TableCell>
                         </TableRow>
                         <TableBody>
                         {rewardsData.length === 0 ? (
                             <TableRow>
                                 <TableCell colSpan={5} align="center">
-                                    No hay recompensas canjeadas...
+                                    {t("emptyMessage")}
                                 </TableCell>
                             </TableRow>
                         ) : (
