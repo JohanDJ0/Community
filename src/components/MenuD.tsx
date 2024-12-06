@@ -27,6 +27,7 @@ import Typography from '@mui/material/Typography';
 import StoreIcon from '@mui/icons-material/Store';
 import FiberSmartRecordIcon from '@mui/icons-material/FiberSmartRecord';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import RedeemIcon from '@mui/icons-material/Redeem';
 
 const MenuD: React.FC<{ toggleDarkMode: () => void }> = ({ toggleDarkMode }) => {
   const { logout } = useAuth0();
@@ -129,6 +130,14 @@ const MenuD: React.FC<{ toggleDarkMode: () => void }> = ({ toggleDarkMode }) => 
               <FiberSmartRecordIcon />
             </ListItemIcon>
             <ListItemText primary={t("itemListMyRewards")} />
+          </ListItemButton>
+        </ListItem>
+        <ListItem key='Recompensas canjeadas' disablePadding>
+          <ListItemButton component={Link} to="/rewardsRedeemed">
+            <ListItemIcon>
+              <RedeemIcon />
+            </ListItemIcon>
+            <ListItemText primary={t("itemListRewardsRedeemed")} />
           </ListItemButton>
         </ListItem>
         <ListItem key='Lenguaje' disablePadding>
