@@ -7,6 +7,7 @@ import '../../css/App.css';
 import noImage from '../../assets/NoImagen.png';
 import HomeIcon from '@mui/icons-material/Home';
 import { API_BASE_URL } from 'components/bdd';
+import { useTranslation } from 'react-i18next';
 
 interface Service {
   id: number;
@@ -27,13 +28,17 @@ const Services: React.FC<ServicesProps> = ({ darkMode }) => {
   const [filteredData, setFilteredData] = useState<Service[]>([]);
   const navigate = useNavigate();
   const isSmallScreen = useMediaQuery('(max-width:600px)');
+  const { t, i18n } = useTranslation("Services");
   const dataToken = {
     params: {
       token: token
     }
   }
 
+  
+
   useEffect(() => {
+    console.log(token)
     fetch(`${API_BASE_URL}/services`, {
       method: 'POST',
       headers: {
@@ -80,7 +85,7 @@ const Services: React.FC<ServicesProps> = ({ darkMode }) => {
         }}
       >
         <TextField
-          label="Buscar servicio"
+          label={t("search")}
           variant="outlined"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
