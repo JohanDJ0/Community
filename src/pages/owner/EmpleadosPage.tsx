@@ -112,7 +112,7 @@ const EmpleadosPage: React.FC<ServicesProps> = ({ darkMode }) => {
       <div className='second-div'>
         <div className={`box-div ${darkMode ? 'dark' : 'light'}`}>
           <div style={{
-            maxHeight: isSmallScreen ? '400px' : '500px',
+            
             overflowY: 'auto',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>

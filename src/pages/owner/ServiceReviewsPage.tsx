@@ -275,225 +275,211 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
 
 
   return (
-    <div className='first-div'>
-      <div className='second-div'>
-        <div className={`box-div ${darkMode ? 'dark' : 'light'}`} style={{ position: 'relative' }}>
-          <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
-            <HomeIcon style={{ marginRight: '4px' }} />
-            <a onClick={() => navigate("/Services")} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>Inicio</a>
-            <span style={{ margin: '0 8px' }}>/</span>
-            <a onClick={() => navigate(`/services/${service.id}`)} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>{service.name}</a>
-            <span style={{ margin: '0 8px' }}>/</span>
-            <span style={{ fontWeight: 'bold' }}>Reseñas</span>
-          </div>
-          <Card style={{ maxHeight: isSmallScreen ? '400px' : '500px', overflowY: 'auto' }}>
-            <Box position="relative" width="100%" height={isSmallScreen ? '200px' : '300px'}>
-              <CardMedia
-                component="img"
-                height="300"
-                image={service.image ? `data:image/jpg;base64,${atob(service.image)}` :  noImage}
-                alt={service.name}
-                style={{ filter: 'brightness(0.7)' }}
-              />
+    <div className="first-div">
+  <div className="second-div" style={{ position: 'relative' }}>
+    <div
+      className={`box-div ${darkMode ? 'dark' : 'light'}`}
+      style={{ position: 'relative', paddingBottom: '80px' }}  
+    >
+      {/* Breadcrumb */}
+      <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
+        <HomeIcon style={{ marginRight: '4px' }} />
+        <a onClick={() => navigate("/Services")} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>Inicio</a>
+        <span style={{ margin: '0 8px' }}>/</span>
+        <a onClick={() => navigate(`/services/${service.id}`)} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>{service.name}</a>
+        <span style={{ margin: '0 8px' }}>/</span>
+        <span style={{ fontWeight: 'bold' }}>Reseñas</span>
+      </div>
 
+      {/* Card Container */}
+      <Card style={{ overflowY: 'auto' }}>
+        {/* Image and Title */}
+        <Box position="relative" width="100%" height={isSmallScreen ? '200px' : '300px'}>
+          <CardMedia
+            component="img"
+            height={isSmallScreen ? '200' : '300'}
+            image={service.image ? `data:image/jpg;base64,${atob(service.image)}` : noImage}
+            alt={service.name}
+            style={{ filter: 'brightness(0.7)' }}
+          />
 
-
-
-              <Typography
-                variant="h1"
-                className={`fade ${fade ? 'fade-in' : ''}`}
-                style={{
-                  position: 'absolute',
-                  bottom: '30px',
-                  left: '10px',
-                  color: 'white',
-                  padding: '5px',
-                  transition: 'opacity 1s ease', // Transición para la aparición
-                  opacity: fade ? 1 : 0, // Controla la opacidad
-                }}
-              >
-                {serviceName || 'Cargando nombre...'}
-              </Typography>
-              <div
-                  style={{
-                    position: 'absolute',
-                    bottom: '10px',
-                    left: '10px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    color: 'white', // Asegura que el texto y estrellas sean visibles
-                    padding: '5px',
-                  }}
-                >
-                  <Rating
-                    name="read-only"
-                    value={service.qualification || 0}
-                    precision={0.5}
-                    readOnly
-                  />
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    style={{ marginLeft: '10px' ,}}
-                  >
-                    {service.qualification ? service.qualification.toFixed(1) : '0.0'}
-                  </Typography>
-                </div>
-            </Box>
-
-
-            <CardContent>
-              <Stack spacing={2} direction="row">
-                <Button variant="contained" startIcon={<AutoModeSharpIcon />} onClick={handleNovedadesClick}>Novedades</Button>
-                {/* <Button variant="contained" startIcon={<GradeIcon />} onClick={() => navigate(`/services/${id}/reviews`)}>Reseñas</Button> */}
-                <Button variant="contained" startIcon={<BackHandIcon />} onClick={() => navigate(`/proposal/${id}`)}
-                >Propuestas</Button>
-                <Button variant="outlined" startIcon={<ShareIcon />}>Compartir</Button>
-                {!service.is_following && ( // Renderiza el botón solo si is_followed es false
-                  <Button onClick={() => handleFollow()} variant="contained" startIcon={<AddIcon />} style={{fontSize: isSmallScreen ? '0.7rem' : '0.9rem',padding: isSmallScreen ? '4px 8px' : '6px 12px',}}>Seguir</Button>
-                )}
-              </Stack>
-              <CardContent>
-                <Typography variant="h5" align="left" paddingTop="10px">
-                  Reseñas de usuarios
-                </Typography>
-               
-
-
-                {service.reviews.length > 0 ? (
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                    {service.reviews.map((review, index) => (
-                      <Card key={index} sx={{ padding: 2, borderRadius: 2, boxShadow: 2, width: '100%' }}>
-
-
-                        <Typography variant="h6" fontWeight="bold" sx={{ marginBottom: 1, textAlign: 'left' }}>
-                          {review.written_by}
-                        </Typography>
-                        <Stack direction="row" alignItems="center" spacing={2} sx={{ marginBottom: 1 }}>
-                          <Rating value={review.rating} readOnly sx={{ textAlign: 'left' }} />
-                          <Typography variant="subtitle1" fontWeight="bold" sx={{ textAlign: 'left' }}>
-                            {review.name}
-                          </Typography>
-
-
-
-
-                        </Stack>
-
-
-                        <Typography variant="body2" sx={{ textAlign: 'left' }}>
-                          {review.description}
-                        </Typography>
-                      </Card>
-                    ))}
-                  </Box>
-                ) : (
-                  <Typography variant="body2" sx={{ textAlign: 'left' }}>No hay reseñas disponibles.</Typography>
-                )}
-              </CardContent>
-
-
-
-
-
-
-
-
-            </CardContent>
-          </Card>
-
-
-          {/* Botón Crear Reseña */}
-          <Button
-            variant="contained"
-            onClick={handleOpenModal}
+          <Typography
+            variant={isSmallScreen ? 'h5' : 'h1'}
+            className={`fade ${fade ? 'fade-in' : ''}`}
             style={{
               position: 'absolute',
-              bottom: '20px',
-              right: '20px',
-              zIndex: 1,
+              bottom: '30px',
+              left: '10px',
+              color: 'white',
+              padding: '5px',
+              transition: 'opacity 1s ease',
+              opacity: fade ? 1 : 0,
+              fontSize: isSmallScreen ? '1.5rem' : '3rem',
             }}
           >
-            Crear reseña
-          </Button>
-          <Dialog open={openModal} onClose={handleCloseModal}>
-            <DialogTitle>Crear Reseña</DialogTitle>
-            <DialogContent>
-              <FormControl fullWidth margin="normal">
-                <TextField
-                  label="Nombre de la reseña"
-                  value={newReview.name}
-                  onChange={(e) => setNewReview({ ...newReview, name: e.target.value })}
-                />
-              </FormControl>
+            {serviceName || 'Cargando nombre...'}
+          </Typography>
 
+          {/* Rating and Qualification */}
+          <div style={{
+            position: 'absolute',
+            bottom: '10px',
+            left: '10px',
+            display: 'flex',
+            alignItems: 'center',
+            color: 'white',
+            padding: '5px',
+          }}>
+            <Rating
+              name="read-only"
+              value={service.qualification || 0}
+              precision={0.5}
+              readOnly
+            />
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              style={{ marginLeft: '10px' }}
+            >
+              {service.qualification ? service.qualification.toFixed(1) : '0.0'}
+            </Typography>
+          </div>
+        </Box>
 
-              <FormControl fullWidth margin="normal">
-                  <TextField
-                    label="Descripción"
-                    multiline
-                    rows={4}
-                    value={newReview.description}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      if (value.length <= 500) {
-                        setNewReview({ ...newReview, description: value });
-                      }
-                    }}
-                    helperText={`${newReview.description.length}/500 caracteres | ${newReview.description.trim().split(/\s+/).filter(Boolean).length} palabras`}
-                    inputProps={{ maxLength: 500 }}
-                  />
-                 
-                </FormControl>
-
-
-
-
-              {/* <FormControl fullWidth margin="normal">
-                <TextField
-                  label="Nombre de Usuario"
-                  value={user?.name || "Nombre no disponible"} // Mostrar el nombre del usuario
-                  disabled // Puedes deshabilitarlo si deseas que el usuario no pueda editarlo
-                />
-              </FormControl> */}
-
-
-              <FormControl fullWidth margin="normal" sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Rating
-                  name="simple-controlled"
-                  value={newReview.rating}
-                  onChange={(event, newValue) => {
-                    setNewReview({ ...newReview, rating: newValue ?? 0 });
-                  }}
-                />
-              </FormControl>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleCloseModal}>Cancelar</Button>
-              <Button onClick={handleSubmitReview}>Crear Reseña</Button>
-            </DialogActions>
-          </Dialog>
-
-
-        </div>
-
-        <Snackbar
-          open={openSnackbar}
-          onClose={() => setOpenSnackbar(false)}
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }} 
-          autoHideDuration={3000}
-        >
-          <Alert 
-            onClose={() => setOpenSnackbar(false)} 
-            severity={severity}
-            sx={{ width: '100%' }}
+        {/* Buttons */}
+        <CardContent>
+          <Stack
+            spacing={2}
+            direction={isSmallScreen ? 'column' : 'row'}
+            alignItems={isSmallScreen ? 'stretch' : 'center'}
+            sx={{ marginTop: '10px', padding: '10px 0' }}
           >
-            {message}
-          </Alert>
-        </Snackbar>
+            <Button variant="contained" startIcon={<AutoModeSharpIcon />} onClick={handleNovedadesClick} fullWidth={isSmallScreen}>
+              Novedades
+            </Button>
+            <Button variant="contained" startIcon={<BackHandIcon />} onClick={() => navigate(`/proposal/${id}`)} fullWidth={isSmallScreen}>
+              Propuestas
+            </Button>
+            <Button variant="outlined" startIcon={<ShareIcon />} fullWidth={isSmallScreen}>
+              Compartir
+            </Button>
+            {!service.is_following && (
+              <Button
+                onClick={() => handleFollow()}
+                variant="contained"
+                startIcon={<AddIcon />}
+                style={{
+                  fontSize: isSmallScreen ? '0.7rem' : '0.9rem',
+                  padding: isSmallScreen ? '4px 8px' : '6px 12px',
+                }}
+              >
+                Seguir
+              </Button>
+            )}
+          </Stack>
 
-      </div>
+          {/* Reviews Section */}
+          <Typography variant="h5" align="left" paddingTop="10px">
+            Reseñas de usuarios
+          </Typography>
+
+          {service.reviews.length > 0 ? (
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+              {service.reviews.map((review, index) => (
+                <Card key={index} sx={{ padding: 2, borderRadius: 2, boxShadow: 2, width: '100%' }}>
+                  <Typography variant="h6" fontWeight="bold" sx={{ marginBottom: 1, textAlign: 'left' }}>
+                    {review.written_by}
+                  </Typography>
+                  <Stack direction="row" alignItems="center" spacing={2} sx={{ marginBottom: 1 }}>
+                    <Rating value={review.rating} readOnly />
+                    <Typography variant="subtitle1" fontWeight="bold" sx={{ textAlign: 'left' }}>
+                      {review.name}
+                    </Typography>
+                  </Stack>
+                  <Typography variant="body2" sx={{ textAlign: 'left' }}>
+                    {review.description}
+                  </Typography>
+                </Card>
+              ))}
+            </Box>
+          ) : (
+            <Typography variant="body2" sx={{ textAlign: 'left' }}>No hay reseñas disponibles.</Typography>
+          )}
+        </CardContent>
+      </Card>
     </div>
+
+    {/* Button to Create Review */}
+    <Button
+      variant="contained"
+      onClick={handleOpenModal}
+      style={{
+        position: 'absolute',
+        bottom: '20px',
+        right: '20px',
+        zIndex: 10000,
+      }}
+    >
+      Crear reseña
+    </Button>
+
+    {/* Modal for Review Creation */}
+    <Dialog open={openModal} onClose={handleCloseModal}>
+      <DialogTitle>Crear Reseña</DialogTitle>
+      <DialogContent>
+        <FormControl fullWidth margin="normal">
+          <TextField
+            label="Nombre de la reseña"
+            value={newReview.name}
+            onChange={(e) => setNewReview({ ...newReview, name: e.target.value })}
+          />
+        </FormControl>
+        <FormControl fullWidth margin="normal">
+          <TextField
+            label="Descripción"
+            multiline
+            rows={4}
+            value={newReview.description}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (value.length <= 500) {
+                setNewReview({ ...newReview, description: value });
+              }
+            }}
+            helperText={`${newReview.description.length}/500 caracteres | ${newReview.description.trim().split(/\s+/).filter(Boolean).length} palabras`}
+            inputProps={{ maxLength: 500 }}
+          />
+        </FormControl>
+        <FormControl fullWidth margin="normal" sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <Rating
+            name="simple-controlled"
+            value={newReview.rating}
+            onChange={(event, newValue) => {
+              setNewReview({ ...newReview, rating: newValue ?? 0 });
+            }}
+          />
+        </FormControl>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleCloseModal}>Cancelar</Button>
+        <Button onClick={handleSubmitReview}>Crear Reseña</Button>
+      </DialogActions>
+    </Dialog>
+  </div>
+
+  {/* Snackbar */}
+  <Snackbar
+    open={openSnackbar}
+    onClose={() => setOpenSnackbar(false)}
+    anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+    autoHideDuration={3000}
+  >
+    <Alert onClose={() => setOpenSnackbar(false)} severity={severity} sx={{ width: '100%' }}>
+      {message}
+    </Alert>
+  </Snackbar>
+</div>
+
   );
 };
 

@@ -37,7 +37,7 @@ const PayPalButtonsComponent = ({ onPaymentSuccess }) => {
   return (
     <PayPalScriptProvider options={initialOptions}>
       <PayPalButtons
-        style={{ layout: "horizontal", color: "blue", shape: "rect", label: "paypal" }}
+        
         createOrder={(data, actions) => createOrder(data, actions)}
         onApprove={(data, actions) => onApprove(data, actions)}
         onError={(err) => onError(err)}
@@ -46,4 +46,4 @@ const PayPalButtonsComponent = ({ onPaymentSuccess }) => {
   );
 };
 
-export default PayPalButtonsComponent;
+export default PayPalButtonsComponent; 

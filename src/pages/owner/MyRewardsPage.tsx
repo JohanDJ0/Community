@@ -221,7 +221,7 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
           </div>
           <div
             style={{
-              maxHeight: isSmallScreen ? '400px' : '500px',
+              maxHeight: isSmallScreen ? '570px' : '670px',
               overflowY: 'auto',
               marginBottom: '20px',
             }}

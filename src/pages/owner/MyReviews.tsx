@@ -192,31 +192,46 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
 
 
   return (
-    <div className='first-div'>
-      <div className='second-div'>
+    <div className="first-div">
+      <div className="second-div">
         <div className={`box-div ${darkMode ? 'dark' : 'light'}`} style={{ position: 'relative' }}>
-          <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
-              <StoreIcon style={{ marginRight: '4px' }} />
-              <span onClick={() => navigate(`/MyService`)} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>Mi negocio</span>
-              <span style={{ margin: '0 8px' }}>/</span>
-              <span style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>{service.name}</span>
-              <span style={{ margin: '0 8px' }}>/</span>
-              <span style={{ fontWeight: 'bold' }}>Reseñas</span>
-              {/* <span style={{ margin: '0 8px' }}>/</span>
-              <span>Subsección</span> */}
+          {/* Encabezado */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              textAlign: 'left',
+              paddingBottom: '10px',
+            }}
+          >
+            <StoreIcon style={{ marginRight: '4px' }} />
+            <span
+              onClick={() => navigate(`/MyService`)}
+              style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}
+            >
+              Mi negocio
+            </span>
+            <span style={{ margin: '0 8px' }}>/</span>
+            <span style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>
+              {service.name}
+            </span>
+            <span style={{ margin: '0 8px' }}>/</span>
+            <span style={{ fontWeight: 'bold' }}>Reseñas</span>
           </div>
-          <Card style={{ maxHeight: isSmallScreen ? '400px' : '500px', overflowY: 'auto' }}>
+  
+          {/* Tarjeta con imagen y contenido */}
+          <Card style={{ overflowY: 'auto' }}>
+            {/* Imagen con texto sobrepuesto */}
             <Box position="relative" width="100%" height={isSmallScreen ? '200px' : '300px'}>
               <CardMedia
                 component="img"
-                height="300"
-                image={service.image ? `data:image/jpg;base64,${atob(service.image)}` :  noImage}
+                height={isSmallScreen ? '200' : '300'}
+                image={service.image ? `data:image/jpg;base64,${atob(service.image)}` : noImage}
                 alt={service.name}
                 style={{ filter: 'brightness(0.7)' }}
               />
-
               <Typography
-                variant="h1"
+                variant={isSmallScreen ? 'h5' : 'h1'}
                 className={`fade ${fade ? 'fade-in' : ''}`}
                 style={{
                   position: 'absolute',
@@ -224,91 +239,147 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
                   left: '10px',
                   color: 'white',
                   padding: '5px',
-                  transition: 'opacity 1s ease', // Transición para la aparición
-                  opacity: fade ? 1 : 0, // Controla la opacidad
+                  transition: 'opacity 1s ease',
+                  opacity: fade ? 1 : 0,
+                  fontSize: isSmallScreen ? '1.5rem' : '3rem',
                 }}
               >
                 {serviceName || 'Cargando nombre...'}
               </Typography>
               <div
-                  style={{
-                    position: 'absolute',
-                    bottom: '10px',
-                    left: '10px',
+                style={{
+                  position: 'absolute',
+                  bottom: '10px',
+                  left: '10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  color: 'white',
+                  padding: '5px',
+                }}
+              >
+                <Rating
+                  name="read-only"
+                  value={service.qualification || 0}
+                  precision={0.5}
+                  readOnly
+                />
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  style={{ marginLeft: '10px' }}
+                >
+                  {service.qualification ? service.qualification.toFixed(1) : '0.0'}
+                </Typography>
+              </div>
+            </Box>
+  
+            {/* Contenido debajo de la imagen */}
+            <CardContent>
+              {/* Botones */}
+              <Stack
+                spacing={2}
+                direction={isSmallScreen ? 'column' : 'row'}
+                alignItems={isSmallScreen ? 'stretch' : 'center'}
+                sx={{ marginTop: '10px', padding: '10px 0' }}
+              >
+                <Button
+                  variant="contained"
+                  startIcon={<AutoModeSharpIcon />}
+                  onClick={handleNovedadesClick}
+                  fullWidth={isSmallScreen}
+                >
+                  Novedades
+                </Button>
+                <Button
+                  variant="contained"
+                  startIcon={<BackHandIcon />}
+                  onClick={() => navigate(`/MyProposals/${id}`)}
+                  fullWidth={isSmallScreen}
+                >
+                  Propuestas
+                </Button>
+                <Button
+                  variant="outlined"
+                  startIcon={<ShareIcon />}
+                  fullWidth={isSmallScreen}
+                >
+                  Compartir
+                </Button>
+              </Stack>
+  
+              {/* Título de Reseñas */}
+              <Typography variant="h5" align="left" paddingTop="10px">
+                Reseñas de usuarios
+              </Typography>
+  
+              {/* Contenedor de reseñas */}
+              {service.reviews.length > 0 ? (
+                <Box
+                  sx={{
                     display: 'flex',
-                    alignItems: 'center',
-                    color: 'white', // Asegura que el texto y estrellas sean visibles
-                    padding: '5px',
+                    flexDirection: 'column',
+                    gap: 3,
+                    marginTop: '20px',
                   }}
                 >
-                  <Rating
-                    name="read-only"
-                    value={service.qualification || 0}
-                    precision={0.5}
-                    readOnly
-                  />
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    style={{ marginLeft: '10px' ,}}
-                  >
-                    {service.qualification ? service.qualification.toFixed(1) : '0.0'}
-                  </Typography>
-                </div>
-            </Box>
-
-
-            <CardContent>
-              <Stack spacing={2} direction="row">
-                <Button variant="contained" startIcon={<AutoModeSharpIcon />} onClick={handleNovedadesClick}>Novedades</Button>
-                {/* <Button variant="contained" startIcon={<GradeIcon />} onClick={() => navigate(`/services/${id}/reviews`)}>Reseñas</Button> */}
-                <Button variant="contained" startIcon={<BackHandIcon />} onClick={() => navigate(`/MyProposals/${id}`)}>Propuestas</Button>
-                <Button variant="outlined" startIcon={<ShareIcon />}>Compartir</Button>
-              </Stack>
-              <CardContent>
-                <Typography variant="h5" align="left" paddingTop="10px">
-                  Reseñas de usuarios
+                  {service.reviews.map((review, index) => (
+                    <Card
+                      key={index}
+                      sx={{
+                        padding: 2,
+                        borderRadius: 2,
+                        boxShadow: 2,
+                        width: '100%',
+                        border: '1px solid #e0e0e0',
+                      }}
+                    >
+                      <Typography
+                        variant="h6"
+                        fontWeight="bold"
+                        sx={{ marginBottom: 1, textAlign: 'left' }}
+                      >
+                        {review.written_by}
+                      </Typography>
+                      <Stack
+                        direction="row"
+                        alignItems="center"
+                        spacing={2}
+                        sx={{ marginBottom: 1 }}
+                      >
+                        <Rating value={review.rating} readOnly />
+                        <Typography
+                          variant="subtitle1"
+                          fontWeight="bold"
+                          sx={{ textAlign: 'left' }}
+                        >
+                          {review.name}
+                        </Typography>
+                      </Stack>
+                      <Typography variant="body2" sx={{ textAlign: 'left' }}>
+                        {review.description}
+                      </Typography>
+                    </Card>
+                  ))}
+                </Box>
+              ) : (
+                <Typography
+                  variant="body2"
+                  sx={{
+                    textAlign: 'left',
+                    marginTop: '20px',
+                    color: '#757575',
+                  }}
+                >
+                  No hay reseñas disponibles.
                 </Typography>
-               
-
-
-                {service.reviews.length > 0 ? (
-                  <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                    {service.reviews.map((review, index) => (
-                      <Card key={index} sx={{ padding: 2, borderRadius: 2, boxShadow: 2, width: '100%' }}>
-
-
-                        <Typography variant="h6" fontWeight="bold" sx={{ marginBottom: 1, textAlign: 'left' }}>
-                          {review.written_by}
-                        </Typography>
-                        <Stack direction="row" alignItems="center" spacing={2} sx={{ marginBottom: 1 }}>
-                          <Rating value={review.rating} readOnly sx={{ textAlign: 'left' }} />
-                          <Typography variant="subtitle1" fontWeight="bold" sx={{ textAlign: 'left' }}>
-                            {review.name}
-                          </Typography>
-
-
-
-
-                        </Stack>
-
-
-                        <Typography variant="body2" sx={{ textAlign: 'left' }}>
-                          {review.description}
-                        </Typography>
-                      </Card>
-                    ))}
-                  </Box>
-                ) : (
-                  <Typography variant="body2" sx={{ textAlign: 'left' }}>No hay reseñas disponibles.</Typography>
-                )}
-              </CardContent>
+              )}
             </CardContent>
           </Card>
         </div>
       </div>
     </div>
   );
+  
 };
 
 

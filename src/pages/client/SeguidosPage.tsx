@@ -93,7 +93,7 @@ const Seguidos: React.FC<ServicesProps> = ({ darkMode }) => {
             <span style={{ margin: '0 8px' }}>/</span>
             <span>Subsección</span> */}
           </div>
-          <div style={{ maxHeight: isSmallScreen ? '400px' : '500px', overflowY: 'auto' }}>
+          <div style={{  overflowY: 'auto' }}>
             {data.length > 0 ? (
               data.map((servicio) => (
                 <Card 

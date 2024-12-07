@@ -107,37 +107,43 @@ const Rewards: React.FC<ServicesProps> = ({ darkMode }) => {
       <div className="second-div">
         <div className={`box-div ${darkMode ? 'dark' : 'light'}`}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-  {/* Primer div con el ícono y el texto */}
-  <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
-    <EmojiEventsIcon style={{ marginRight: '4px' }} />
-    <span style={{ fontWeight: 'bold' }}>Recompensas</span>
-  </div>
+              {/* Primer div con el ícono y el texto */}
+              <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
+                <EmojiEventsIcon style={{ marginRight: '4px' }} />
+                <span style={{ fontWeight: 'bold' }}>Recompensas</span>
+              </div>
 
-  {/* Segundo div con el logo y puntos */}
-  <div
-    style={{
-      display: 'flex',
-      alignItems: 'center',
-      gap: '10px',
-      overflowY: 'auto', // Solo scroll vertical
-    }}
-  >
-    <Typography variant="h6" color="textPrimary">
-      Tus Puntos Community
-    </Typography>
-    <img
-      src={logo}
-      alt="logo"
-      style={{
-        width: '30px',
-        height: '30px',
-      }}
-    />
-    <Typography variant="h6" color="textSecondary">
-      {availablePoints}
-    </Typography>
-  </div>
-</div>
+              {/* Segundo div con el logo y puntos */}
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  overflowY: 'auto', // Solo scroll vertical
+                }}
+              >
+                <Typography 
+                    variant="h6" 
+                    color="textPrimary"
+                    sx={{ 
+                      display: { xs: 'none', sm: 'block' } // Oculta en pantallas pequeñas (xs), muestra en pantallas mayores (sm en adelante)
+                    }}
+                  >
+                    Tus Puntos Community
+                </Typography>
+                <img
+                  src={logo}
+                  alt="logo"
+                  style={{
+                    width: '30px',
+                    height: '30px',
+                  }}
+                />
+                <Typography variant="h6" color="textSecondary">
+                  {availablePoints}
+                </Typography>
+              </div>
+            </div>
 
 
           <div
@@ -146,7 +152,7 @@ const Rewards: React.FC<ServicesProps> = ({ darkMode }) => {
           flexWrap: 'wrap',
           justifyContent: 'space-around',
           gap: '10px',
-          maxHeight: isSmallScreen ? '400px' : '500px', /* Control de altura */
+          
           overflowY: 'auto', /* Scroll vertical */
           overflowX: 'hidden', /* Evitar scroll horizontal */
           padding: '10px',

@@ -96,7 +96,7 @@ const Services: React.FC<ServicesProps> = ({ darkMode }) => {
             {filteredData.length === 0 ? (
               <p>No se encontraron servicios</p>
             ) : (
-              <div style={{ maxHeight: isSmallScreen ? '400px' : '500px', overflowY: 'auto' }}>
+              <div style={{  overflowY: 'auto' }}>
 
                 <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
                   <HomeIcon style={{ marginRight: '4px' }} />
