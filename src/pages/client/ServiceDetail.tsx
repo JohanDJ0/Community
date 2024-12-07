@@ -93,25 +93,23 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
   return (
     <div className="first-div">
       <div className="second-div">
-        <div className={`box-div ${darkMode ? 'dark' : 'light'}`}>
+        <div className={`box-div ${darkMode ? 'dark' : 'light'}`} style={{ padding: '16px' }}>
+          
+          {/* Breadcrumb */}
           <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
             <HomeIcon style={{ marginRight: '4px' }} />
             <a onClick={() => navigate("/Services")} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>Inicio</a>
             <span style={{ margin: '0 8px' }}>/</span>
             <span style={{ fontWeight: 'bold' }}>{service.name}</span>
-            {/* <span style={{ margin: '0 8px' }}>/</span>
-            <span>Subsección</span> */}
           </div>
-          <Card style={{ overflowY: 'auto' }}>
+  
+          {/* Card with Image and Title */}
+          <Card style={{ overflowY: 'auto', padding: '0' }}>
             <Box position="relative" width="100%" height={isSmallScreen ? '200px' : '300px'}>
               <CardMedia
                 component="img"
-                height="300"
-                image={
-                  service.image
-                    ? `data:image/jpg;base64,${atob(service.image)}`
-                    :  noImage
-                }
+                height={isSmallScreen ? '200' : '300'}
+                image={service.image ? `data:image/jpg;base64,${atob(service.image)}` : noImage}
                 alt={service.name}
                 style={{ filter: 'brightness(0.7)' }}
               />
@@ -123,10 +121,13 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                   left: '10px',
                   color: 'white',
                   padding: '5px',
+                  fontSize: isSmallScreen ? '1.5rem' : '3rem',
                 }}
               >
                 {service.name}
               </Typography>
+  
+              {/* Rating */}
               <div
                 style={{
                   position: 'absolute',
@@ -134,7 +135,7 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                   left: '10px',
                   display: 'flex',
                   alignItems: 'center',
-                  color: 'white', // Asegura que el texto y estrellas sean visibles
+                  color: 'white',
                   padding: '5px',
                 }}
               >
@@ -147,26 +148,27 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                 <Typography
                   variant="body2"
                   color="text.secondary"
-                  style={{ marginLeft: '10px' ,fontWeight: 'bold', color: 'white'}}
+                  style={{ marginLeft: '10px', fontWeight: 'bold', color: 'white' }}
                 >
                   {service.qualification ? service.qualification.toFixed(1) : '0.0'}
                 </Typography>
               </div>
             </Box>
+  
+            {/* Card Content */}
             <CardContent>
-              <Stack spacing={1} direction="row">
-                {/* <Button
-                  variant="contained"
-                  startIcon={<AutoModeSharpIcon />}
-                  style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}
-                >
-                  Novedades
-                </Button> */}
+              {/* Buttons Layout */}
+              <Stack
+                spacing={2}
+                direction={isSmallScreen ? 'column' : 'row'}
+                alignItems="stretch"
+                style={{ marginTop: '10px' }}
+              >
                 <Button
                   variant="contained"
                   startIcon={<GradeIcon />}
                   onClick={() => navigate(`/services/${id}/reviews`)}
-                  style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 4px' : '6px 12px' }}
+                  fullWidth={isSmallScreen}
                 >
                   Reseñas
                 </Button>
@@ -174,22 +176,24 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                   variant="contained"
                   startIcon={<BackHandIcon />}
                   onClick={() => navigate(`/proposal/${id}`)}
-                  style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}
+                  fullWidth={isSmallScreen}
                 >
                   Propuestas
                 </Button>
-                <Button variant="outlined" startIcon={<ShareIcon />} onClick={() => setIsShareModalOpen(true)}>
+                <Button
+                  variant="outlined"
+                  startIcon={<ShareIcon />}
+                  onClick={() => setIsShareModalOpen(true)}
+                  fullWidth={isSmallScreen}
+                >
                   Compartir
                 </Button>
-                {!isFollowing && ( // Renderiza el botón solo si is_followed es false
+                {!isFollowing && (
                   <Button
                     onClick={() => handleFollow()}
                     variant="contained"
                     startIcon={<AddIcon />}
-                    style={{
-                      fontSize: isSmallScreen ? '0.7rem' : '0.9rem',
-                      padding: isSmallScreen ? '4px 8px' : '6px 12px',
-                    }}
+                    fullWidth={isSmallScreen}
                   >
                     Seguir
                   </Button>
@@ -197,80 +201,69 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                 {isFollowing && (
                   <Typography
                     variant="body1"
-                    color="primary" // Puedes usar 'primary' para un color más destacado
+                    color="primary"
                     sx={{
-                      display: 'flex', 
-                      alignItems: 'center', // Para alinear el icono y el texto
-                      fontWeight: 600, // Hace el texto más destacado
-                      fontSize: '1rem', // Ajusta el tamaño de la fuente
-                      marginTop: '8px', // Añade algo de espacio arriba
+                      display: 'flex',
+                      alignItems: 'center',
+                      fontWeight: 600,
+                      fontSize: '1rem',
+                      marginTop: '8px',
                     }}
                   >
-                  <CheckIcon sx={{ marginRight: '8px', fontSize: '1.2rem' }} /> {/* Icono de check */}
-                  Siguiendo
-                </Typography>
+                    <CheckIcon sx={{ marginRight: '8px', fontSize: '1.2rem' }} />
+                    Siguiendo
+                  </Typography>
                 )}
-                {/* <Button
-                  variant="contained"
-                  startIcon={<AddIcon />}
-                  style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}
-                >
-                  Seguir
-                </Button> */}
               </Stack>
+  
+              {/* Description */}
               <Typography
                 variant="body2"
                 color="text.secondary"
                 align="left"
-                paddingBottom={'5px'}
-                style={{ paddingTop: '15px', paddingBottom: '15px' }}
+                style={{
+                  paddingTop: '15px',
+                  paddingBottom: '15px',
+                  textAlign: 'justify',
+                }}
               >
                 {service.description}
               </Typography>
-              <Typography paddingTop="10px">
-                {service.novedades && service.novedades.length > 0 ? (
-                  <Stack spacing={2}>
-                    {service.novedades.map((novedad, index) => (
-                      <Card
-                        key={index}
-                        style={{
-                          padding: '8px',
-                          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-                        }}
-                      >
-                        <CardContent>
-                          <Stack direction="row" justifyContent="space-between" alignItems="center">
-                            <Box>
-                              <Typography variant="subtitle1" fontWeight="bold" style={{ textAlign: 'left' }}>
-                                {novedad.name}
-                              </Typography>
-                              <Typography variant="body2" style={{ textAlign: 'justify' }}>
-                                {novedad.description}
-                              </Typography>
-                            </Box>
-                          </Stack>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </Stack>
-                ) : (
-                  <Typography
-                    variant="h6"
-                    color="text.secondary"
-                    align="center"
-                    style={{ marginTop: '20px' }}
-                  >
-                    No hay novedades disponibles en este momento.
-                  </Typography>
-                )}
-              </Typography>
+  
+              {/* Novedades */}
+              {service.novedades && service.novedades.length > 0 ? (
+                <Stack spacing={2}>
+                  {service.novedades.map((novedad, index) => (
+                    <Card key={index} style={{ padding: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' }}>
+                      <CardContent>
+                        <Stack direction="row" justifyContent="space-between" alignItems="center">
+                          <Box>
+                            <Typography variant="subtitle1" fontWeight="bold" style={{ textAlign: 'left' }}>
+                              {novedad.name}
+                            </Typography>
+                            <Typography variant="body2" style={{ textAlign: 'justify' }}>
+                              {novedad.description}
+                            </Typography>
+                          </Box>
+                        </Stack>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </Stack>
+              ) : (
+                <Typography variant="h6" color="text.secondary" align="center" style={{ marginTop: '20px' }}>
+                  No hay novedades disponibles en este momento.
+                </Typography>
+              )}
             </CardContent>
           </Card>
+  
           <ShareModal open={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} />
         </div>
       </div>
     </div>
   );
+  
 };
 
 export default ServiceDetail;
