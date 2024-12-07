@@ -25,8 +25,8 @@ import RecompensasCanjedas from 'pages/owner/RecompensasCanjeadas';
 const Layout = ({ children, toggleDarkMode }) => {
   const location = useLocation();
 
-   // Bloquear el scroll del body en todas las vistas
-   useEffect(() => {
+  // Bloquear el scroll del body en todas las vistas
+  useEffect(() => {
     document.body.style.overflow = 'hidden'; // Desactiva el scroll en todas las páginas
 
     // Limpiar el efecto al desmontar el componente
@@ -71,7 +71,7 @@ const App = () => {
       <Router>
         <Layout toggleDarkMode={toggleDarkMode}>
           <Routes>
-            <Route path="/" element={<HomePage darkMode={darkMode}  />} />
+            <Route path="/" element={<HomePage darkMode={darkMode} />} />
             <Route path="/Seguidos" element={<SeguidosPage darkMode={darkMode} />} />
             <Route path="/Rewards" element={<RewardsPage darkMode={darkMode} />} />
             <Route path="/JoinBusiness" element={<JoinBusinessPage darkMode={darkMode} />} />
@@ -80,17 +80,17 @@ const App = () => {
             <Route path="/Services" element={<Services darkMode={darkMode} />} />
             <Route path="/services/:id" element={<ServiceDetail darkMode={darkMode} />} />
             <Route path="/VistaRol" element={<VistaRol darkMode={darkMode} />} />
-            <Route path="/MyService" element={<MyServicePage darkMode={darkMode}/>}/>
+            <Route path="/MyService" element={<MyServicePage darkMode={darkMode} />} />
             <Route path="/services/:id/reviews" element={<ServiceReviewsPage darkMode={darkMode} />} />
 
             <Route path="/MyService/:id/reviews" element={<MyReviews darkMode={darkMode} />} />
             <Route path="/MyProposals/:id" element={<MyProposals darkMode={darkMode} />} />
 
-            <Route path='/Empleados' element={<EmpleadosPage darkMode={darkMode}/>}/>
-            <Route path='/MyRewards' element={<MyRewardsPage darkMode={darkMode}/>}/>
-            <Route path="/proposal/:id" element={<PropuestasPage darkMode={darkMode}/>} />
+            <Route path='/Empleados' element={<EmpleadosPage darkMode={darkMode} />} />
+            <Route path='/MyRewards' element={<MyRewardsPage darkMode={darkMode} />} />
+            <Route path="/proposal/:id" element={<PropuestasPage darkMode={darkMode} />} />
             <Route path="/ProposalDetail/:serviceId/:proposalId/:serviceName" element={<ProposalDetail darkMode={darkMode} />} />
-            <Route path='/rewardsRedeemed' element={<RecompensasCanjedas darkMode={darkMode}/>}/>
+            <Route path='/rewardsRedeemed' element={<RecompensasCanjedas darkMode={darkMode} />} />
           </Routes>
         </Layout>
       </Router>
