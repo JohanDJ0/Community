@@ -21,6 +21,7 @@ import PropuestasPage from 'pages/client/PropuestasPage';
 import ProposalDetail from 'pages/client/ProposalDetail';
 import MyProposals from 'pages/owner/MyProposals';
 import RecompensasCanjedas from 'pages/owner/RecompensasCanjeadas';
+import MyProposalDetail from 'pages/owner/MyProposalDetail';
 
 
 const Layout = ({ children, toggleDarkMode }) => {
@@ -102,6 +103,7 @@ const App = () => {
              <Route path='/MyRewards' element={<MyRewardsPage darkMode={darkMode}/>}/>
              <Route path="/proposal/:id" element={<PropuestasPage darkMode={darkMode}/>} />
              <Route path="/ProposalDetail/:serviceId/:proposalId/:serviceName" element={<ProposalDetail darkMode={darkMode} />} />
+             <Route path="/MyProposalDetail/:serviceId/:proposalId/:serviceName" element={<MyProposalDetail darkMode={darkMode} />} />
              <Route path='/rewardsRedeemed' element={<RecompensasCanjedas darkMode={darkMode}/>}/>
            </Routes>
          </Layout>

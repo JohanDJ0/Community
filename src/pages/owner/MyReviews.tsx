@@ -20,6 +20,8 @@ import AutoModeSharpIcon from '@mui/icons-material/AutoModeSharp'; // Importa el
 import noImage from '../../assets/NoImagen.png';
 import { followService } from 'components/followService';
 import StoreIcon from '@mui/icons-material/Store';
+import { API_BASE_URL } from 'components/bdd';
+import ShareModal from '../../components/ShareModal';//compartir 
 
 interface Review {
   name: string; // Nombre de la reseña
@@ -57,6 +59,7 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
   const [openModal, setOpenModal] = useState(false);
   const isSmallScreen = useMediaQuery('(max-width:600px)');
   const [isFollowing, setIsFollowing] = useState(false); // Hook para el follow del servicio
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);// modal
 
 
   const [newReview, setNewReview] = useState<Review>({
@@ -68,7 +71,7 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
 
   // Función para obtener reseñas
   const fetchReviews = () => {
-    fetch(`/reviews/${id}`)
+    fetch(`${API_BASE_URL}/reviews/${id}`)
       .then((res) => {
         if (res.ok) {
           return res.json();
@@ -98,10 +101,10 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
  
     const fetchServiceData = async () => {
       try {
-        const reviewsResponse = await fetch(`/reviews/${id}`);
+        const reviewsResponse = await fetch(`${API_BASE_URL}/reviews/${id}`);
         const reviewsData = await reviewsResponse.json();
  
-        const serviceResponse = await fetch(`/services/${id}`, {
+        const serviceResponse = await fetch(`${API_BASE_URL}/services/${id}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -147,7 +150,7 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
   }, [id, token]);
 
   const handleNovedadesClick = () => {
-    navigate(`/services/${id}`); // Cambia a una ruta relativa
+    navigate(`/MyService`); // Cambia a una ruta relativa
   };
 
 
@@ -250,7 +253,7 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
                   <Typography
                     variant="body2"
                     color="text.secondary"
-                    style={{ marginLeft: '10px' ,}}
+                    style={{ marginLeft: '10px' ,fontWeight: 'bold', color: 'white'}}
                   >
                     {service.qualification ? service.qualification.toFixed(1) : '0.0'}
                   </Typography>
@@ -263,7 +266,7 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
                 <Button variant="contained" startIcon={<AutoModeSharpIcon />} onClick={handleNovedadesClick}>Novedades</Button>
                 {/* <Button variant="contained" startIcon={<GradeIcon />} onClick={() => navigate(`/services/${id}/reviews`)}>Reseñas</Button> */}
                 <Button variant="contained" startIcon={<BackHandIcon />} onClick={() => navigate(`/MyProposals/${id}`)}>Propuestas</Button>
-                <Button variant="outlined" startIcon={<ShareIcon />}>Compartir</Button>
+                <Button variant="outlined" startIcon={<ShareIcon />} onClick={() => setIsShareModalOpen(true)}>Compartir</Button>
               </Stack>
               <CardContent>
                 <Typography variant="h5" align="left" paddingTop="10px">
@@ -305,6 +308,7 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
               </CardContent>
             </CardContent>
           </Card>
+          <ShareModal open={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} />
         </div>
       </div>
     </div>

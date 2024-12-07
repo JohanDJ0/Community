@@ -6,6 +6,7 @@ import logo from '../../assets/Logo.png';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import noImage from '../../assets/NoImagen.png';
 import { Snackbar, Alert } from '@mui/material';
+import { API_BASE_URL } from 'components/bdd';
 
 interface Reward {
   id: number;
@@ -32,7 +33,7 @@ const Rewards: React.FC<ServicesProps> = ({ darkMode }) => {
   useEffect(() => {
     const fetchRewards = async () => {
       try {
-        const response = await fetch('/myRewards', {
+        const response = await fetch(`${API_BASE_URL}/myRewards`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -78,7 +79,7 @@ const Rewards: React.FC<ServicesProps> = ({ darkMode }) => {
 
   const handleCanjear = (id: number) => {
     console.log(`Canjeando recompensa con ID: ${id}`);
-    fetch(`/myRewards/redeem`, {
+    fetch(`${API_BASE_URL}/myRewards/redeem`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

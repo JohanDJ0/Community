@@ -12,6 +12,7 @@ import noImage from '../../assets/NoImagen.png';
 import { followService } from 'components/followService'; // componente que se encarga de seguir a un servicio
 import HomeIcon from '@mui/icons-material/Home';
 import CheckIcon from '@mui/icons-material/Check';
+import { API_BASE_URL } from 'components/bdd';
 
 interface Novedad {
   name: string;
@@ -49,7 +50,7 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
     }
 
     let isMounted = true;
-    fetch(`/services/${id}`, {
+    fetch(`${API_BASE_URL}/services/${id}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

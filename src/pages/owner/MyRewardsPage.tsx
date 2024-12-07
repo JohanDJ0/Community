@@ -4,7 +4,7 @@ import '../../css/App.css'; // Asegúrate de que este archivo tenga los estilos 
 import noImage from '../../assets/NoImagen.png';
 import FiberSmartRecordIcon from '@mui/icons-material/FiberSmartRecord';
 import { Snackbar } from '@mui/material';
-
+import { API_BASE_URL } from 'components/bdd';
 interface Reward {
   id: number;
   name: string;
@@ -35,7 +35,7 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
   const isSmallScreen = window.innerWidth < 600; // Ajusta el tamaño de la pantalla según necesites
 
   useEffect(() => {
-    fetch(`/rewards/get/${id_service}`)
+    fetch(`${API_BASE_URL}/rewards/get/${id_service}`)
       .then((res) => res.json())
       .then((result) => {
         if (Array.isArray(result)) {
@@ -64,7 +64,7 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
   // Función para obtener las recompensas del negocio
   const fetchRewards = async (idservice: string) => {
     try {
-      const response = await fetch(`/redeem/get/${idservice}`);
+      const response = await fetch(`${API_BASE_URL}/redeem/get/${idservice}`);
       const data = await response.json();
       //console.log('Recompensas obtenidas:', data);
 
@@ -118,7 +118,7 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
     }
   
     try {
-      const response = await fetch('/rewards/create', {
+      const response = await fetch( `${API_BASE_URL}/rewards/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -183,7 +183,7 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
 
   const handleDelete = (id: number) => {
     //console.log(`Eliminando recompensa con ID: ${id}`);
-    fetch(`/rewards/delete/${id}`, {
+    fetch(`${API_BASE_URL}/rewards/delete/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json'
@@ -312,7 +312,7 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
             Crear Nueva Recompensa
           </Typography>
           <TextField
-            label="Nombre"
+            label="Título "
             name="name"
             fullWidth
             value={newReward.name}
@@ -324,9 +324,20 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
             name="description"
             fullWidth
             value={newReward.description}
-            onChange={handleChange}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (value.length <= 500) {
+                setNewReward((prev) => ({
+                  ...prev,
+                  [e.target.name]: value,
+                }));
+              }
+            }}
             margin="normal"
+            helperText={`${newReward.description.length}/500 caracteres`}
+            inputProps={{ maxLength: 500 }}
           />
+
           <TextField
             label="Puntos Requeridos"
             name="points_required"

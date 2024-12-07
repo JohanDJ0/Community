@@ -11,6 +11,7 @@ const Login: React.FC = () => {
   const [message, setMessage] = useState(''); // Estado para el mensaje a mostrar
   const [loadingMessage, setLoadingMessage] = useState("Cargando...");
   const navigate = useNavigate();
+  const { logout } = useAuth0();
 
   useEffect(() => {
     if (isAuthenticated && user) {
@@ -35,9 +36,15 @@ const Login: React.FC = () => {
           setMessage('ERROR: Usuario no encontrado');
           setOpenSnackbar(true);
           setLoadingMessage("¡Ups! No encontramos tu usuario, pero no te preocupes. Te redirigiremos al inicio para que puedas registrarte y comenzar.");
+          localStorage.clear();
           // Redirige después de un tiempo para que el usuario pueda leer el mensaje
           setTimeout(() => {
-            navigate('/'); // Redirige a la página principal
+            //navigate('/'); // Redirige a la página principal
+            logout({
+              logoutParams: {
+                returnTo: window.location.origin,
+              },
+            });
           }, 5000);
         }else{
           console.log('Datos recibidos:', data);

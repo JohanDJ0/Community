@@ -7,5 +7,7 @@
     "status": "State",
     "deliver": "Deliver",
     "delivered": "Delivered",
-    "emptyMessage": "No rewards redeemed..."
+    "emptyMessage": "No rewards redeemed...",
+    "successMessage": "Reward redeemed successfully",
+    "errorMessage": "Error redeeming reward"
 }

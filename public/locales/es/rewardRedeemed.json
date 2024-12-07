@@ -7,5 +7,7 @@
     "status": "Estado",
     "deliver": "Entregar",
     "delivered": "Entregado",
-    "emptyMessage": "No hay recompensas canjeadas..."
+    "emptyMessage": "No hay recompensas canjeadas...",
+    "successMessage": "Recompensa canjeada correctamente",
+    "errorMessage": "No se pudo canjear la recompensa"
 }

@@ -6,6 +6,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+import { API_BASE_URL } from 'components/bdd';
 
 interface Employee {
   id: number;
@@ -26,7 +27,7 @@ const EmpleadosPage: React.FC<ServicesProps> = ({ darkMode }) => {
   const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
-    fetch(`/employees/${serviceId}`)
+    fetch(`${API_BASE_URL}/employees/${serviceId}`)
     .then((res) => res.json())
     .then((result: Employee[]) => {
       if (Array.isArray(result)) {
@@ -85,7 +86,7 @@ const EmpleadosPage: React.FC<ServicesProps> = ({ darkMode }) => {
   const handleDelete = (id: number) => {
     console.log(`Eliminando usuario con ID: ${id}`);
 
-    fetch(`/employees/unlink/${serviceId}`, {
+    fetch(`${API_BASE_URL}/employees/unlink/${serviceId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

@@ -9,7 +9,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import { coins } from 'components/coins';
 import { AlertColor } from '@mui/material';
 import { API_BASE_URL } from 'components/bdd';
-
+import StoreIcon from '@mui/icons-material/Store';
 
 
 interface ServicesProps {
@@ -188,22 +188,6 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                 ...comments,
                 { author: user?.name || 'Nombre no disponible', text: newComment.trim() }
               ]);
-              if (token) {
-                coins(token).then(coinsSuccess => {
-                  if (coinsSuccess) {
-                    console.log("Coins actualizados correctamente");
-                    setMessage('+1 Community Points');
-                    setSeverity('success'); // Cambia el color a verde para éxito
-                  } else {
-                    console.error("Error al actualizar las monedas");
-                    setMessage('Límite alcanzado, mañana podrás conseguir más monedas');
-                    setSeverity('warning'); // Cambia el color a amarillo para advertencia
-                  }
-                  setOpenSnackbar(true);
-                });
-              } else {
-                console.error("Token no disponible");
-              }
               setNewComment('');
               console.log('Comentario enviado con éxito:', data);
             } else {
@@ -290,16 +274,18 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
     <div className="first-div">
       <div className="second-div">
         <div className={`box-div ${darkMode ? 'dark' : 'light'}`}>
-          <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
-            <HomeIcon style={{ marginRight: '4px' }} />
-            <a onClick={() => navigate("/Services")} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>Inicio</a>
-            <span style={{ margin: '0 8px' }}>/</span>
-            <a onClick={() => navigate(`/services/${serviceId}`)} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>{serviceName}</a>
-            <span style={{ margin: '0 8px' }}>/</span>
-            <a onClick={() => navigate(`/proposal/${serviceId}`)} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>Propuestas</a>
-            <span style={{ margin: '0 8px' }}>/</span>
-            <span style={{ fontWeight: 'bold' }}>{proposal.name}</span>
-          </div>
+            <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
+                <StoreIcon style={{ marginRight: '4px' }} />
+                <span onClick={() => navigate(`/MyService`)} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>Mi negocio</span>
+                <span style={{ margin: '0 8px' }}>/</span>
+                <span style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>{serviceName}</span>
+                <span style={{ margin: '0 8px' }}>/</span>
+                <span>Propuestas</span>
+                <span style={{ margin: '0 8px' }}>/</span>
+                <span style={{ fontWeight: 'bold' }}>{proposal?.name}</span>
+                {/* <span style={{ margin: '0 8px' }}>/</span>
+                <span>Subsección</span> */}
+            </div>
           <Box display="flex">
             <Box flex={2} pr={4}>
               <Typography variant="h5" gutterBottom color={darkMode ? 'lightgray' : 'textPrimary'}>

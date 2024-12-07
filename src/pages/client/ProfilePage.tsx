@@ -4,6 +4,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import Avatar from '@mui/material/Avatar';
 import { Stack, Box, useMediaQuery } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from 'components/bdd';
 
 interface ServicesProps {
   darkMode: boolean;
@@ -16,9 +17,9 @@ const ProfilePage: React.FC<ServicesProps> = ({ darkMode }) => {
 
   useEffect(() => {
     if (isAuthenticated && user) {
-      const sendUserData = async () => {
+      const sendUserData = async () => {                       
         try {
-          const response = await fetch('/api/users', {
+          const response = await fetch(`${API_BASE_URL}/api/users`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -64,7 +65,7 @@ const ProfilePage: React.FC<ServicesProps> = ({ darkMode }) => {
             <Box>
               <h2 style={{ fontSize: isSmallScreen ? '1.5rem' : '2rem' }}>{user?.name}</h2>
               <p style={{ fontSize: isSmallScreen ? '1rem' : '1.25rem' }}>{user?.email}</p>
-              <p style={{ fontSize: isSmallScreen ? '0.9rem' : '1rem' }}>ID del Usuario: {user?.sub}</p>
+              {/* <p style={{ fontSize: isSmallScreen ? '0.9rem' : '1rem' }}>ID del Usuario: {user?.sub}</p> */}
             </Box>
           </Stack>
         </div>

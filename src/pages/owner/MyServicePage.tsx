@@ -8,6 +8,7 @@ import { Grade as GradeIcon, Share as ShareIcon, BackHand as BackHandIcon, Add a
 import { useAuth0 } from '@auth0/auth0-react';
 import noImage from '../../assets/NoImagen.png';
 import StoreIcon from '@mui/icons-material/Store';
+import { API_BASE_URL } from 'components/bdd';
 
 interface Novedad {
   id:number,
@@ -57,7 +58,7 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
     const idservice = localStorage.getItem('service');
     let isMounted = true;
 
-    fetch(`/myService/${idservice}`)
+    fetch(`${API_BASE_URL}/myService/${idservice}`)
       .then((res) => {
         if (res.ok) {
           return res.json();
@@ -113,7 +114,7 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
     };
 
     // Realizar la solicitud POST para agregar la novedad
-    fetch(`/news/create/${idservice}`, {
+    fetch(`${API_BASE_URL}/news/create/${idservice}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -156,7 +157,7 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
 
   const handleDeleteNovelty = async (id: number) => {
     setLoading(true); // Muestra un indicador de carga si es necesario
-    fetch(`/news/delete/${id}`, {
+    fetch(`${API_BASE_URL}/news/delete/${id}`, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json', }
     })
@@ -332,7 +333,7 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
             autoFocus
             margin="dense"
             id="name"
-            label="Nombre de la novedad"
+            label="Título de la novedad"
             fullWidth
             variant="outlined"
             value={newnovelty.name}
@@ -349,12 +350,12 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
             value={newnovelty.description}
             onChange={(e) => {
               const value = e.target.value;
-              if (value.length <= 100) {
+              if (value.length <= 500) {
                 setNewNovelty({ ...newnovelty, description: value });
               }
             }}
-            helperText={`${newnovelty.description.length}/100 caracteres`}
-            inputProps={{ maxLength: 100 }}
+            helperText={`${newnovelty.description.length}/500 caracteres`}
+            inputProps={{ maxLength: 500 }}
           />
 
         </DialogContent>

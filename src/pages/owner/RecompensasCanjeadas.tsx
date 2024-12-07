@@ -95,12 +95,12 @@ const RecompensasCanjedas: React.FC<ServicesProps> = ({ darkMode }) => {
                     )
                 );
 
-                setMessage('Recompensa canjeada correctamente.');
+                setMessage(t("successMessage"));
                 setOpenSnackbar(true);
 
             }else{
-                console.log("Error al canjear");
-                setMessage('No se pudo canjear la recompensa.');
+                //console.log("Error al canjear");
+                setMessage(t("errorMessage"));
                 setOpenSnackbar(true);
             }
         })
@@ -157,10 +157,10 @@ const RecompensasCanjedas: React.FC<ServicesProps> = ({ darkMode }) => {
                                         onClick={() => handleEntregar(reward.id, reward.user_id)}
                                       >
                                         <DoneIcon sx={{ marginRight: 0.5 }} />
-                                        Entregar
+                                        {t("deliver")}
                                       </Button>
                                     ) : (
-                                      <Typography color="text.secondary">Entregado</Typography>
+                                      <Typography color="text.secondary">{t("delivered")}</Typography>
                                     )}
                                   </TableCell>
                                 </TableRow>
