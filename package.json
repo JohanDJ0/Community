@@ -1,6 +1,7 @@
 {
   "name": "community",
   "proxy": "http://34.51.20.243:8069",
+  "homepage": "http://p5s.707.mytemp.website",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
