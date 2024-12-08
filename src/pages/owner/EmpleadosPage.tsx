@@ -7,6 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import { API_BASE_URL } from 'components/bdd';
+import { useTranslation } from 'react-i18next';
 
 interface Employee {
   id: number;
@@ -25,6 +26,8 @@ const EmpleadosPage: React.FC<ServicesProps> = ({ darkMode }) => {
   const isSmallScreen = window.innerWidth < 600; // Ajusta el tamaño de la pantalla según necesites
   const serviceId = localStorage.getItem('service');
   const [openModal, setOpenModal] = useState(false);
+  const { t, i18n } = useTranslation("Employees");
+
 
   useEffect(() => {
     fetch(`${API_BASE_URL}/employees/${serviceId}`)
@@ -118,7 +121,7 @@ const EmpleadosPage: React.FC<ServicesProps> = ({ darkMode }) => {
           }}>
             <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
               <PersonIcon style={{ marginRight: '4px' }} />
-              <span style={{ fontWeight: 'bold' }}>Empleados</span>
+              <span style={{ fontWeight: 'bold' }}>{t("Employees")}</span>
               {/* <span style={{ margin: '0 8px' }}>/</span>
               <span>Sección</span>
               <span style={{ margin: '0 8px' }}>/</span>
@@ -131,7 +134,7 @@ const EmpleadosPage: React.FC<ServicesProps> = ({ darkMode }) => {
               margin: '10px 0',
             }}>
               {employees.length === 0 ? (
-                <p>Parece que no tienes empleados...</p>
+                <p>{t("Mensaje")}</p>
               ) : (
                 employees.map((employee) => (
                   <Card
@@ -165,7 +168,7 @@ const EmpleadosPage: React.FC<ServicesProps> = ({ darkMode }) => {
                         variant="contained"
                         style={{ marginTop: '10px' }}
                       >
-                        Dar de baja
+                       {t("Unsubscribe")}
                     </Button>
                     </CardContent>
 
@@ -173,18 +176,18 @@ const EmpleadosPage: React.FC<ServicesProps> = ({ darkMode }) => {
                       <DialogTitle>
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                           <Typography variant="h6" style={{ fontWeight: "bold" }}>
-                            Confirmar Eliminación
+                          {t("ConfirmDeletion")}
                           </Typography>
                         </div>
                       </DialogTitle>
                       <DialogContent>
                         <Typography>
-                          ¿Estás seguro de que deseas continuar? Solo el usuario se podrá dar de alta nuevamente como empleado.
+                        {t("AlertMessage")}
                         </Typography>
                       </DialogContent>
                       <DialogActions>
                         <Button onClick={handleCloseModal} color="primary" variant="outlined">
-                          Cancelar
+                        {t("Cancel")}
                         </Button>
                         <Button
                           onClick={() => handleDelete(employee.id)}
@@ -192,7 +195,7 @@ const EmpleadosPage: React.FC<ServicesProps> = ({ darkMode }) => {
                           variant="contained"
                           style={{ color: "white" }}
                         >
-                          Eliminar
+                          {t("Eliminate")}
                         </Button>
                       </DialogActions>
                     </Dialog>

@@ -105,7 +105,7 @@ const Services: React.FC<ServicesProps> = ({ darkMode }) => {
 
                 <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
                   <HomeIcon style={{ marginRight: '4px' }} />
-                  <span style={{ fontWeight: 'bold' }}>Inicio</span>
+                  <span style={{ fontWeight: 'bold' }}>{t("Home")}</span>
                   {/* <span style={{ margin: '0 8px' }}>/</span>
                   <span>Sección</span>
                   <span style={{ margin: '0 8px' }}>/</span>

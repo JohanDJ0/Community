@@ -7,6 +7,7 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import noImage from '../../assets/NoImagen.png';
 import { Snackbar, Alert } from '@mui/material';
 import { API_BASE_URL } from 'components/bdd';
+import { useTranslation } from 'react-i18next';
 
 interface Reward {
   id: number;
@@ -29,6 +30,7 @@ const Rewards: React.FC<ServicesProps> = ({ darkMode }) => {
   const token = localStorage.getItem('token');
   const [openSnackbar, setOpenSnackbar] = useState(false); // Estado para abrir el Snackbar
   const [message, setMessage] = useState(''); // Estado para el mensaje a mostrar
+  const { t, i18n } = useTranslation("Rewards");
 
   useEffect(() => {
     const fetchRewards = async () => {
@@ -111,7 +113,7 @@ const Rewards: React.FC<ServicesProps> = ({ darkMode }) => {
   {/* Primer div con el ícono y el texto */}
   <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
     <EmojiEventsIcon style={{ marginRight: '4px' }} />
-    <span style={{ fontWeight: 'bold' }}>Recompensas</span>
+    <span style={{ fontWeight: 'bold' }}>{t("Rewards")}</span>
   </div>
 
   {/* Segundo div con el logo y puntos */}
@@ -124,7 +126,7 @@ const Rewards: React.FC<ServicesProps> = ({ darkMode }) => {
     }}
   >
     <Typography variant="h6" color="textPrimary">
-      Tus Puntos Community
+    {t("CommunityPoints")}
     </Typography>
     <img
       src={logo}
@@ -155,7 +157,7 @@ const Rewards: React.FC<ServicesProps> = ({ darkMode }) => {
         }}
           >
             {rewards.length === 0 ? (
-              <p>Para poder ver las recompensas disponibles debes seguir a un servicio...</p>
+              <p> {t("Message")}.</p>
             ) : (
               rewards.map((reward) => (
                 <Card
@@ -203,8 +205,8 @@ const Rewards: React.FC<ServicesProps> = ({ darkMode }) => {
                       }}
                     >
                       {reward.userPoints >= reward.requiredPoints
-                        ? 'Canjear'
-                        : 'Puntos insuficientes'}
+                        ? t("Redeem")
+                        : t("Insufficientpoints")}
                     </Button>
                   </CardContent>
                 </Card>

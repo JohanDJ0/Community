@@ -2,16 +2,23 @@ import React, { useState, useEffect } from 'react';
 import '../../css/App.css';
 import ShareModal from '../../components/ShareModal';//compartir 
 import { useParams, useNavigate } from 'react-router-dom';
-import { Card, CardMedia, CardContent, Typography, Box, Button, Stack, Rating, useMediaQuery, Dialog, DialogActions, DialogContent, DialogTitle, TextField,IconButton
+import {
+  Card, CardMedia, CardContent, Typography, Box, Button, Stack, Rating, useMediaQuery, Dialog, DialogActions, DialogContent, DialogTitle, TextField, IconButton
 } from '@mui/material';
 import { Grade as GradeIcon, Share as ShareIcon, BackHand as BackHandIcon, Add as AddIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { useAuth0 } from '@auth0/auth0-react';
+import { Edit as EditIcon } from '@mui/icons-material';
 import noImage from '../../assets/NoImagen.png';
 import StoreIcon from '@mui/icons-material/Store';
+
 import { API_BASE_URL } from 'components/bdd';
+import EditServiceModal from '../../components/EditServiceModal';
+import { useTranslation } from 'react-i18next';
+
+
 
 interface Novedad {
-  id:number,
+  id: number,
   name: string;
   description: string;
 }
@@ -31,9 +38,12 @@ interface ServicesProps {
 }
 
 const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { user, isAuthenticated } = useAuth0();
+  const { t, i18n } = useTranslation("MyService");
   const [service, setService] = useState<ServiceReviewProps>({
     id: 0,
     name: '',
@@ -91,6 +101,16 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
     };
   }, [id]);
 
+
+
+  const handleEditService = (updatedService: { name: string; description: string; image: string | null | false }) => {
+    // Aquí puedes hacer la llamada a la API para guardar los cambios
+    setService((prev) => ({
+      ...prev,
+      ...updatedService,
+    }));
+  };
+
   // Función para crear una novedad
   const handleCreateNovelty = () => {
     if (!newnovelty.name || !newnovelty.description) {
@@ -141,9 +161,9 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
             },
           ],
         }));
-        
-        
-        
+
+
+
         setOpenModal(false);
         // Resetear los campos de novedad
         setNewNovelty({ name: '', description: '' });
@@ -179,14 +199,14 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
         setLoading(false); // Detén el indicador de carga
       });
   };
-  
+
   return (
     <div className="first-div">
       <div className="second-div">
         <div className={`box-div ${darkMode ? 'dark' : 'light'}`}>
           <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
             <StoreIcon style={{ marginRight: '4px' }} />
-            <span style={{ fontWeight: 'bold' }}>Mi negocio</span>
+            <span style={{ fontWeight: 'bold' }}>{t("Myservice")}</span>
             {/* <span style={{ margin: '0 8px' }}>/</span>
             <span>Sección</span>
             <span style={{ margin: '0 8px' }}>/</span>
@@ -224,6 +244,7 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
               >
                 {service?.name || 'Nombre del servicio no disponible'}
               </Typography>
+
               <div
                 style={{
                   position: 'absolute',
@@ -244,7 +265,7 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
                 <Typography
                   variant="body2"
                   color="text.secondary"
-                  style={{ marginLeft: '10px' ,fontWeight: 'bold', color: 'white'}}
+                  style={{ marginLeft: '10px', fontWeight: 'bold', color: 'white' }}
                 >
                   {service.qualification ? service.qualification.toFixed(1) : '0.0'}
                 </Typography>
@@ -255,9 +276,9 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
               <Stack spacing={1} direction="row" justifyContent="space-between" alignItems="center">
                 <Box>
                   <Stack spacing={2} direction="row" justifyContent="flex-start" alignItems="center">
-                  <Button variant="contained" startIcon={<GradeIcon />} onClick={() => navigate(`/MyService/${service.id}/reviews`)}>Reseñas</Button>
-                  <Button variant="contained" startIcon={<BackHandIcon />} onClick={() => navigate(`/MyProposals/${service.id}`)}>Propuestas</Button>
-                  <Button variant="outlined" startIcon={<ShareIcon />} onClick={() => setIsShareModalOpen(true)}>Compartir</Button>
+                    <Button variant="contained" startIcon={<GradeIcon />} onClick={() => navigate(`/MyService/${service.id}/reviews`)}>{t("Reviews")}</Button>
+                    <Button variant="contained" startIcon={<BackHandIcon />} onClick={() => navigate(`/MyProposals/${service.id}`)}>{t("Proposals")}</Button>
+                    <Button variant="outlined" startIcon={<ShareIcon />} onClick={() => setIsShareModalOpen(true)}>{t("Share")}</Button>
                   </Stack>
                 </Box>
 
@@ -272,7 +293,7 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
                   }}
                 >
                   <Typography variant="h6" fontWeight="bold" color={darkMode ? 'white' : 'text.primary'}>
-                    Código de Acceso
+                    {t("AccessCode")}
                   </Typography>
                   <Typography variant="body1" color={darkMode ? 'white' : 'text.secondary'}>
                     {service?.access_code ?? 'No disponible'}
@@ -281,36 +302,36 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
               </Stack>
 
               {service?.novedades && Array.isArray(service.novedades) && service.novedades.length > 0 ? (
-  <Stack spacing={2} style={{ marginTop: '10px' }}>
-    {/* <Typography variant="h6">Novedades</Typography> */}
+                <Stack spacing={2} style={{ marginTop: '10px' }}>
+                  {/* <Typography variant="h6">Novedades</Typography> */}
 
-    {service.novedades.map((novedad, index) => {
-      return (
-        <Card key={novedad.id} style={{ padding: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' }}>
-          <CardContent>
-            <Stack direction="row" justifyContent="space-between" alignItems="center">
-              <Box>
-                <Typography variant="subtitle1" fontWeight="bold" style={{ textAlign: 'left' }}>
-                  {novedad.name}
+                  {service.novedades.map((novedad, index) => {
+                    return (
+                      <Card key={novedad.id} style={{ padding: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' }}>
+                        <CardContent>
+                          <Stack direction="row" justifyContent="space-between" alignItems="center">
+                            <Box>
+                              <Typography variant="subtitle1" fontWeight="bold" style={{ textAlign: 'left' }}>
+                                {novedad.name}
+                              </Typography>
+                              <Typography variant="body2" style={{ textAlign: 'justify' }}>
+                                {novedad.description}
+                              </Typography>
+                            </Box>
+                            <IconButton color="error" onClick={() => handleDeleteNovelty(novedad.id)}>
+                              <DeleteIcon />
+                            </IconButton>
+                          </Stack>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </Stack>
+              ) : (
+                <Typography variant="body2" color="text.secondary" style={{ marginTop: '20px' }}>
+                  No hay novedades disponibles
                 </Typography>
-                <Typography variant="body2" style={{ textAlign: 'justify' }}>
-                  {novedad.description}
-                </Typography>
-              </Box>
-              <IconButton color="error" onClick={() => handleDeleteNovelty(novedad.id)}>
-                <DeleteIcon />
-              </IconButton>
-            </Stack>
-          </CardContent>
-        </Card>
-      );
-    })}
-  </Stack>
-) : (
-  <Typography variant="body2" color="text.secondary" style={{ marginTop: '20px' }}>
-    No hay novedades disponibles
-  </Typography>
-)}
+              )}
 
 
             </CardContent>
@@ -318,8 +339,18 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
 
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px' }}>
             <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={() => setOpenModal(true)}>
-              Crear Novedad
+              {t("Createnovelty")}
             </Button>
+            <IconButton color="primary" onClick={() => setIsEditModalOpen(true)}>
+              <EditIcon />
+            </IconButton>
+
+            <EditServiceModal
+              open={isEditModalOpen}
+              onClose={() => setIsEditModalOpen(false)}
+              service={service}
+              onSave={handleEditService}
+            />
           </div>
         </div>
       </div>
@@ -327,22 +358,23 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
       <ShareModal open={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} />
 
       <Dialog open={openModal} onClose={() => setOpenModal(false)} aria-labelledby="modal-title">
-        <DialogTitle id="modal-title">Crear Novedad</DialogTitle>
+        <DialogTitle id="modal-title">{t("CreatenoveltyM")}</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
             margin="dense"
             id="name"
-            label="Título de la novedad"
+
+            label={t("NameNovelty")}
             fullWidth
             variant="outlined"
             value={newnovelty.name}
             onChange={(e) => setNewNovelty({ ...newnovelty, name: e.target.value })}
           />
-        <TextField
+          <TextField
             margin="dense"
             id="description"
-            label="Descripción de la novedad"
+            label={t("DescriptionNovelty")}
             fullWidth
             variant="outlined"
             multiline
@@ -354,20 +386,23 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
                 setNewNovelty({ ...newnovelty, description: value });
               }
             }}
-            helperText={`${newnovelty.description.length}/500 caracteres`}
+
+            helperText={`${newnovelty.description.length}/${t("Characters")}`}
             inputProps={{ maxLength: 500 }}
           />
 
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenModal(false)} color="primary">
-            Cancelar
+            {t("Cancel")}
           </Button>
           <Button onClick={handleCreateNovelty} color="primary">
-            Crear
+            {t("Create")}
           </Button>
+
         </DialogActions>
       </Dialog>
+
     </div>
 
   );
