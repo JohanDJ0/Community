@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import PayPalButtonsComponent from '../../components/paypal';
 import { API_BASE_URL } from 'components/bdd';
+import { Snackbar, Alert } from '@mui/material';
+
 // Define the props interface including darkMode
 interface ServicesProps {
   darkMode: boolean;
@@ -23,8 +25,13 @@ const VistaRol: React.FC<ServicesProps> = ({ darkMode }) => {
   const [isPaymentApproved, setIsPaymentApproved] = useState(false);
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth0();
+  const [openSnackbar, setOpenSnackbar] = useState(false); // Estado para abrir el Snackbar
+  const [message, setMessage] = useState(''); // Estado para el mensaje a mostrar
 
   const handlePaymentSuccess = () => {
+    //console.log("EXCITON");
+    setMessage("Pago aprobado"); // Establece el mensaje del Snackbar
+    setOpenSnackbar(true); // Muestra el Snackbar
     setIsPaymentApproved(true);
   };
 
@@ -321,6 +328,17 @@ const VistaRol: React.FC<ServicesProps> = ({ darkMode }) => {
             </div>
           </Fade>
         </div>
+
+        <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000} // Tiempo que durará visible el Snackbar
+        onClose={() => setOpenSnackbar(false)} // Cierra el Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }} // Centra el Snackbar en la parte superior
+        >
+        <Alert onClose={() => setOpenSnackbar(false)} severity="success">
+            {message}
+        </Alert>
+        </Snackbar>
       </div>
     </div>
   );

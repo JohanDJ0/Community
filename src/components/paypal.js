@@ -22,7 +22,7 @@ const PayPalButtonsComponent = ({ onPaymentSuccess }) => {
 
   const onApprove = (data, actions) => {
     return actions.order.capture().then(function (details) {
-      alert("Pago completo, gracias " + details.payer.name.given_name);
+      //alert("Pago completo, gracias " + details.payer.name.given_name);
       if (onPaymentSuccess) {
         onPaymentSuccess(); // Notifica al componente principal
       }
@@ -31,7 +31,7 @@ const PayPalButtonsComponent = ({ onPaymentSuccess }) => {
 
   const onError = (err) => {
     console.error("Ocurrió un error con el pago: ", err);
-    alert("Hubo un error procesando el pago. Por favor, inténtalo de nuevo.");
+    //alert("Hubo un error procesando el pago. Por favor, inténtalo de nuevo.");
   };
 
   return (
