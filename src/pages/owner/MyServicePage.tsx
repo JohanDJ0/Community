@@ -26,7 +26,7 @@ interface Novedad {
 interface ServiceReviewProps {
   id: number;
   name: string;
-  image: string | null | false;
+  image: string;
   qualification: number;
   description: string;
   novedades: Novedad[];
@@ -47,7 +47,7 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
   const [service, setService] = useState<ServiceReviewProps>({
     id: 0,
     name: '',
-    image: null,
+    image: '',
     qualification: 0,
     description: '',
     novedades: [],
@@ -103,11 +103,11 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
 
 
 
-  const handleEditService = (updatedService: { name: string; description: string; image: string | null | false }) => {
+  const handleEditService = (updatedService: { name: string; description: string; image: string }) => {
     // Aquí puedes hacer la llamada a la API para guardar los cambios
     setService((prev) => ({
       ...prev,
-      ...updatedService,
+      ...updatedService
     }));
   };
 
