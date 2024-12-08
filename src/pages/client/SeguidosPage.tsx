@@ -6,6 +6,7 @@ import '../../css/App.css';
 import { useNavigate } from 'react-router-dom';
 import noImage from '../../assets/NoImagen.png';
 import PersonIcon from '@mui/icons-material/Person';
+import { useTranslation } from 'react-i18next';
 
 interface Followed {
   id: number,
@@ -25,11 +26,12 @@ const Seguidos: React.FC<ServicesProps> = ({ darkMode }) => {
   const navigate = useNavigate();
   const isSmallScreen = useMediaQuery('(max-width:600px)');
   const tokenU = localStorage.getItem('token');
+  const { t, i18n } = useTranslation("Seguidos");
   const serviciosSeguidos = [
     {
       id: 1,
       name: "Ciber1",
-      image: "https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg", 
+      image: "https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg",
       qualification: 4.5,
       description: "Descripción del Servicio A",
     }
@@ -45,20 +47,20 @@ const Seguidos: React.FC<ServicesProps> = ({ darkMode }) => {
         }
       })
     })
-    .then((res) => res.json())
-    .then((response) => {
-      // Asegúrate de que 'response.result' sea un array antes de actualizar el estado
-      if (response.result && Array.isArray(response.result)) {
-        setData(response.result);
-      } else {
-        console.error("Formato de datos inesperado:", response);
-        setData([]); // Establece un array vacío si el resultado no es un array
-      }
-    })
-    .catch((error) => {
-      console.error('Error al obtener los datos:', error);
-      setData([]); // Establece un array vacío en caso de error
-    });
+      .then((res) => res.json())
+      .then((response) => {
+        // Asegúrate de que 'response.result' sea un array antes de actualizar el estado
+        if (response.result && Array.isArray(response.result)) {
+          setData(response.result);
+        } else {
+          console.error("Formato de datos inesperado:", response);
+          setData([]); // Establece un array vacío si el resultado no es un array
+        }
+      })
+      .catch((error) => {
+        console.error('Error al obtener los datos:', error);
+        setData([]); // Establece un array vacío en caso de error
+      });
   }, []);
 
   const unfollowService = (id: number) => {
@@ -71,14 +73,14 @@ const Seguidos: React.FC<ServicesProps> = ({ darkMode }) => {
         }
       })
     })
-    .then((res) => res.json())
-    .then((response) => {
-      console.log("Se dejo de seguir al negocio")
-      setData((prev) => prev.filter((servicio) => servicio.id !== id));
-    })
-    .catch((error) => {
-      console.error('Error al obtener los datos:', error);
-    });
+      .then((res) => res.json())
+      .then((response) => {
+        console.log("Se dejo de seguir al negocio")
+        setData((prev) => prev.filter((servicio) => servicio.id !== id));
+      })
+      .catch((error) => {
+        console.error('Error al obtener los datos:', error);
+      });
   };
 
   return (
@@ -87,7 +89,7 @@ const Seguidos: React.FC<ServicesProps> = ({ darkMode }) => {
         <div className={`box-div ${darkMode ? 'dark' : 'light'}`}>
           <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
             <PersonIcon style={{ marginRight: '4px' }} />
-            <span style={{ fontWeight: 'bold' }}>Seguidos</span>
+            <span style={{ fontWeight: 'bold' }}>{t("Followin")}</span>
             {/* <span style={{ margin: '0 8px' }}>/</span>
             <span>Sección</span>
             <span style={{ margin: '0 8px' }}>/</span>
@@ -96,23 +98,23 @@ const Seguidos: React.FC<ServicesProps> = ({ darkMode }) => {
           <div style={{ maxHeight: isSmallScreen ? '400px' : '500px', overflowY: 'auto' }}>
             {data.length > 0 ? (
               data.map((servicio) => (
-                <Card 
-                  key={servicio.id} 
-                  style={{ 
-                    marginBottom: '20px', 
-                    display: 'flex', 
+                <Card
+                  key={servicio.id}
+                  style={{
+                    marginBottom: '20px',
+                    display: 'flex',
                     flexDirection: isSmallScreen ? 'column' : 'row',
                     cursor: 'pointer'
                   }}
                 >
                   <CardMedia
                     component="img"
-                    style={{ 
+                    style={{
                       width: isSmallScreen ? '100%' : '180px',
                       height: isSmallScreen ? 'auto' : '180px',
                       objectFit: 'cover',
                       marginBottom: isSmallScreen ? '10px' : '0'
-                    }} 
+                    }}
                     image={servicio.image ? `data:image/jpeg;base64,${atob(servicio.image)}` : noImage}
                     alt={servicio.name}
                     onClick={() => navigate(`/services/${servicio.id}`)}
@@ -122,18 +124,19 @@ const Seguidos: React.FC<ServicesProps> = ({ darkMode }) => {
                       <Typography variant="h5" component="div" onClick={() => navigate(`/services/${servicio.id}`)}>
                         {servicio.name} | {servicio.direction}
                       </Typography>
-                      <Button 
+                      <Button
                         onClick={() => unfollowService(servicio.id)}
-                        variant="contained" 
-                        style={{ 
-                          backgroundColor: '#2EC6BD', 
-                          color: 'white', 
+                        variant="contained"
+                        style={{
+                          backgroundColor: '#2EC6BD',
+                          color: 'white',
                           padding: '5px 10px',
                           marginTop: '5px'
-                        }} 
+                        }}
                       >
-                        Dejar de seguir
+                        {t("Button")}
                       </Button>
+
                     </div>
                     <div style={{ marginTop: '10px', textAlign: 'left' }}>
                       <Rating

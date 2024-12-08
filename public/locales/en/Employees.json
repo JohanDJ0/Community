@@ -1,0 +1,9 @@
+{
+    "Employees":"Employees",
+    "Mensaje":"It seems you don't have employees...",
+    "Unsubscribe":"Unsubscribe",
+    "ConfirmDeletion":"Confirm Deletion",
+    "AlertMessage":"Are you sure you want to continue? Only the user can register as an employee again.",
+    "Cancel":"Cancel",
+    "Eliminate":"Eliminate"
+}

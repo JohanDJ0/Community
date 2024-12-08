@@ -4,6 +4,7 @@ import '../../css/App.css'; // Asegúrate de que este archivo tenga los estilos 
 import noImage from '../../assets/NoImagen.png';
 import FiberSmartRecordIcon from '@mui/icons-material/FiberSmartRecord';
 import { Snackbar } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 interface Reward {
   id: number;
@@ -22,7 +23,7 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
   const id_service = localStorage.getItem('service');
   const [open, setOpen] = useState<boolean>(false); // Controla si el modal está abierto o cerrado
   const [successMessage, setSuccessMessage] = useState<string | null>(null); // Estado para el mensaje de éxito
-
+  const { t, i18n } = useTranslation("MyRewards");
   const [newReward, setNewReward] = useState({
     name: '',
     description: '',
@@ -213,7 +214,7 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
         >
           <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
             <FiberSmartRecordIcon style={{ marginRight: '4px' }} />
-            <span style={{ fontWeight: 'bold' }}>Mis recompensas</span>
+            <span style={{ fontWeight: 'bold' }}>{t("MyRewards")}</span>
             {/* <span style={{ margin: '0 8px' }}>/</span>
             <span>Sección</span>
             <span style={{ margin: '0 8px' }}>/</span>
@@ -227,7 +228,7 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
             }}
           >
             {rewards.length === 0 ? (
-              <p>No tienes recompensas, ¡empieza creando una!</p>
+              <p>{t("Message")}</p>
             ) : (
               <div
                 style={{
@@ -256,10 +257,10 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
                     <CardContent>
                       <Typography variant="h6">{reward.name}</Typography>
                       <Typography variant="body2" color="text.secondary">
-                        Negocio: {reward.businessName}
+                      {t("Service")} {reward.businessName}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        Puntos necesarios: {reward.requiredPoints}
+                      {t("Pointsneeded")} {reward.requiredPoints}
                       </Typography>
                       <Button
                         onClick={() => handleDelete(reward.id)} // Reemplaza `reward.id` con el valor que necesitas pasar
@@ -267,7 +268,7 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
                         color="error"
                         style={{ marginTop: '10px' }}
                       >
-                        Eliminar
+                        {t("Eliminate")}
                       </Button>
                     </CardContent>
                   </Card>
@@ -288,7 +289,7 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
             }}
             onClick={handleOpen}
           >
-            Crear Nueva Recompensa
+            {t("CreateReward")}
           </Button>
         </div>
       </div>
@@ -309,10 +310,10 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
           }}
         >
           <Typography variant="h6" gutterBottom>
-            Crear Nueva Recompensa
+          {t("CreateReward")}
           </Typography>
           <TextField
-            label="Nombre"
+            label={t("Name")}
             name="name"
             fullWidth
             value={newReward.name}
@@ -320,7 +321,7 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
             margin="normal"
           />
           <TextField
-            label="Descripción"
+            label={t("Description")}
             name="description"
             fullWidth
             value={newReward.description}
@@ -328,7 +329,7 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
             margin="normal"
           />
           <TextField
-            label="Puntos Requeridos"
+            label={t("RequiredPoints")}
             name="points_required"
             type="number"
             fullWidth
@@ -366,7 +367,7 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
             fullWidth
             style={{ marginTop: '20px' }}
           >
-            Crear Recompensa
+            {t("CreateReward")}
           </Button>
         </Box>
       </Modal>

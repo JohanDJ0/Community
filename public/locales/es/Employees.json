@@ -1,0 +1,9 @@
+{
+    "Employees":"Empleados",
+    "Mensaje":"Parece que no tienes empleados...",
+    "Unsubscribe":"Dar de baja",
+    "ConfirmDeletion":"Confirmar Eliminación",
+    "AlertMessage":"¿Estás seguro de que deseas continuar? Solo el usuario se podrá dar de alta nuevamente como empleado.",
+    "Cancel":"Cancelar",
+    "Eliminate":"Eliminar"
+}
