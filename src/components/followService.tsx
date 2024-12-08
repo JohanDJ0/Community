@@ -1,6 +1,8 @@
+import { API_BASE_URL } from './bdd';
+
 export const followService = async (id: number, token: string): Promise<boolean> => {
   try {
-    const response = await fetch(`/follow/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/followService/${id}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { API_BASE_URL } from "./bdd";
 
 interface Service {
   id: number;
@@ -20,7 +21,7 @@ const ImageCarousel: React.FC<ServicesProps> = ({ darkMode }) =>{
 
   useEffect(() => {
     setLoading(true); // Establece el estado de carga en true al iniciar la solicitud
-    fetch("/services")
+    fetch(`${API_BASE_URL}/services`)
       .then((res) => res.json())
       .then((result: Service[]) => {
         if (Array.isArray(result)) {

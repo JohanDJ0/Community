@@ -17,6 +17,7 @@ import ListItemText from '@mui/material/ListItemText';
 import HomeIcon from '@mui/icons-material/Home';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useNavigate } from 'react-router-dom';
+import {API_BASE_URL} from './bdd';
 
 interface Notis {
   id: number;
@@ -44,7 +45,7 @@ const Header: React.FC<{ toggleDarkMode: () => void }> = ({ toggleDarkMode }) =>
       params: { token: localStorage.getItem('token') }
     };
 
-    fetch("/notifications", {
+    fetch(`${API_BASE_URL}/notifications`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -83,7 +84,7 @@ const Header: React.FC<{ toggleDarkMode: () => void }> = ({ toggleDarkMode }) =>
   };
 
   const clickNoti = (route: string, id: number) => {
-    fetch(`/notifications/read/${id}`)
+    fetch(`${API_BASE_URL}/notifications/read/${id}`)
       .then((res) => res.json())
       .then((data) => {
         console.log("Notificación leida con éxito");

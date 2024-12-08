@@ -1,6 +1,8 @@
+import { API_BASE_URL } from "./bdd";
+
 export const coins = async (token: string): Promise<boolean> => {
     try {
-      const response = await fetch('/coins', {
+      const response = await fetch(`${API_BASE_URL}/coins`, { 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
