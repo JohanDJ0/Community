@@ -10,7 +10,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { Edit as EditIcon } from '@mui/icons-material';
 import noImage from '../../assets/NoImagen.png';
 import StoreIcon from '@mui/icons-material/Store';
-
+import { Snackbar, Alert } from '@mui/material';
 import { API_BASE_URL } from 'components/bdd';
 import EditServiceModal from '../../components/EditServiceModal';
 import { useTranslation } from 'react-i18next';
@@ -39,6 +39,8 @@ interface ServicesProps {
 
 const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false); // Estado para abrir el Snackbar
+  const [message, setMessage] = useState(''); // Estado para el mensaje a mostrar
 
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
@@ -104,6 +106,8 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
 
 
   const handleEditService = (updatedService: { name: string; description: string; image: string }) => {
+    setMessage(t("UpdateSuccess"));
+    setOpenSnackbar(true);
     // Aquí puedes hacer la llamada a la API para guardar los cambios
     setService((prev) => ({
       ...prev,
@@ -341,9 +345,9 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
             <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={() => setOpenModal(true)}>
               {t("Createnovelty")}
             </Button>
-            <IconButton color="primary" onClick={() => setIsEditModalOpen(true)}>
-              <EditIcon />
-            </IconButton>
+            <Button color="primary" onClick={() => setIsEditModalOpen(true)}>
+              <EditIcon /> {t("editInfo")}
+            </Button>
 
             <EditServiceModal
               open={isEditModalOpen}
@@ -352,6 +356,17 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
               onSave={handleEditService}
             />
           </div>
+
+          <Snackbar
+          open={openSnackbar}
+          autoHideDuration={4000} // Tiempo que durará visible el Snackbar
+          onClose={() => setOpenSnackbar(false)} // Cierra el Snackbar
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }} // Centra el Snackbar en la parte superior
+          >
+            <Alert onClose={() => setOpenSnackbar(false)} severity="success">
+              {message}
+            </Alert>
+          </Snackbar>
         </div>
       </div>
 

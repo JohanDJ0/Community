@@ -6,11 +6,12 @@
     "AccessCode":"Access Code",
     "Createnovelty":"Create novelty",
     "CreatenoveltyM":"Create novelty",
+    "editInfo":"Edit information",
     "NameNovelty":"Name of the novelty",
     "DescriptionNovelty":"Description of the novelty",
     "Characters":"500 characters",
     "Create":"Create",
-    "Cancel":"Cancel"
- 
-
+    "Cancel":"Cancel",
+    "UpdateSuccess":"The information has been updated successfully. In a moment, the service image will be updated.",
+    "UpdateError":"Error updating the information."
 }
