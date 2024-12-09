@@ -182,7 +182,7 @@ const MyRewardsPage: React.FC<ServicesProps> = ({ darkMode }) => {
     };
     reader.readAsDataURL(file);
   };
-
+  
   const handleDelete = (id: number) => {
     //console.log(`Eliminando recompensa con ID: ${id}`);
     fetch(`${API_BASE_URL}/rewards/delete/${id}`, {
