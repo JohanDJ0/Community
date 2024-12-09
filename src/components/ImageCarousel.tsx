@@ -64,23 +64,42 @@ const ImageCarousel: React.FC<ServicesProps> = ({ darkMode }) =>{
     pauseOnHover: false,
     draggable: false,
     swipe: false,
+    responsive: [
+      {
+        breakpoint: 1024, // Tablets
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1,
+        },
+      },
+      {
+        breakpoint: 600, // Teléfonos
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+        },
+      },
+    ],
   };
+  
 
   const imageStyle: React.CSSProperties = {
     width: "calc(100% - 20px)",
-    height: "300px",
+    aspectRatio: "16/9", // Relación de aspecto de la imagen
     objectFit: "cover",
     borderRadius: "10px",
     margin: "0 10px",
   };
+  
 
   const textStyle: React.CSSProperties = {
     textAlign: "center",
     marginTop: "10px",
     fontSize: "1.5rem",
-    color: "#333",
+    color: darkMode ? "#ccc" : "#333", // Ajusta los colores
     fontWeight: "bold",
   };
+  
 
   return (
     <div style={{ width: "100%", margin: "0 auto", overflow: "hidden",color: darkMode ? '#aaa' : '#000'  }}>

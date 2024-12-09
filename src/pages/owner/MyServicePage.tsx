@@ -210,15 +210,11 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
         <div className={`box-div ${darkMode ? 'dark' : 'light'}`}>
           <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
             <StoreIcon style={{ marginRight: '4px' }} />
-            <span style={{ fontWeight: 'bold' }}>{t("Myservice")}</span>
-            {/* <span style={{ margin: '0 8px' }}>/</span>
-            <span>Sección</span>
-            <span style={{ margin: '0 8px' }}>/</span>
-            <span>Subsección</span> */}
+            <span style={{ fontWeight: 'bold' }}>Mi negocio</span>
           </div>
           <Card
             style={{
-              maxHeight: isSmallScreen ? '400px' : '500px',
+              /* maxHeight: isSmallScreen ? '500px' : '600px', */
               overflowY: 'auto',
               position: 'relative',
             }}
@@ -256,7 +252,7 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
                   left: '10px',
                   display: 'flex',
                   alignItems: 'center',
-                  color: 'white', // Asegura que el texto y estrellas sean visibles
+                  color: 'white',
                   padding: '5px',
                 }}
               >
@@ -277,12 +273,44 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
             </Box>
 
             <CardContent>
-              <Stack spacing={1} direction="row" justifyContent="space-between" alignItems="center">
+              <Stack
+                spacing={1}
+                direction={isSmallScreen ? 'column' : 'row'}
+                justifyContent="space-between"
+                alignItems="center"
+              >
                 <Box>
-                  <Stack spacing={2} direction="row" justifyContent="flex-start" alignItems="center">
-                    <Button variant="contained" startIcon={<GradeIcon />} onClick={() => navigate(`/MyService/${service.id}/reviews`)}>{t("Reviews")}</Button>
-                    <Button variant="contained" startIcon={<BackHandIcon />} onClick={() => navigate(`/MyProposals/${service.id}`)}>{t("Proposals")}</Button>
-                    <Button variant="outlined" startIcon={<ShareIcon />} onClick={() => setIsShareModalOpen(true)}>{t("Share")}</Button>
+                  <Stack
+                    spacing={2}
+                    direction={isSmallScreen ? 'column' : 'row'}
+                    justifyContent="flex-start"
+                    alignItems="center"
+                    width="100%"
+                  >
+                    <Button
+                      variant="contained"
+                      startIcon={<GradeIcon />}
+                      onClick={() => navigate(`/MyService/${service.id}/reviews`)}
+                      fullWidth={isSmallScreen}
+                    >
+                      Reseñas
+                    </Button>
+                    <Button
+                      variant="contained"
+                      startIcon={<BackHandIcon />}
+                      onClick={() => navigate(`/MyProposals/${service.id}`)}
+                      fullWidth={isSmallScreen}
+                    >
+                      Propuestas
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      startIcon={<ShareIcon />}
+                      onClick={() => setIsShareModalOpen(true)}
+                      fullWidth={isSmallScreen}
+                    >
+                      Compartir
+                    </Button>
                   </Stack>
                 </Box>
 
@@ -292,12 +320,16 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
                     padding: '20px',
                     border: '1px solid #ddd',
                     borderRadius: '12px',
-                    width: '300px',
+                    width: isSmallScreen ? '100%' : '300px',
                     backgroundColor: darkMode ? '#333' : '#f9f9f9',
                   }}
                 >
-                  <Typography variant="h6" fontWeight="bold" color={darkMode ? 'white' : 'text.primary'}>
-                    {t("AccessCode")}
+                  <Typography
+                    variant="h6"
+                    fontWeight="bold"
+                    color={darkMode ? 'white' : 'text.primary'}
+                  >
+                    Código de Acceso
                   </Typography>
                   <Typography variant="body1" color={darkMode ? 'white' : 'text.secondary'}>
                     {service?.access_code ?? 'No disponible'}
@@ -307,37 +339,37 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
 
               {service?.novedades && Array.isArray(service.novedades) && service.novedades.length > 0 ? (
                 <Stack spacing={2} style={{ marginTop: '10px' }}>
-                  {/* <Typography variant="h6">Novedades</Typography> */}
-
-                  {service.novedades.map((novedad, index) => {
-                    return (
-                      <Card key={novedad.id} style={{ padding: '8px', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' }}>
-                        <CardContent>
-                          <Stack direction="row" justifyContent="space-between" alignItems="center">
-                            <Box>
-                              <Typography variant="subtitle1" fontWeight="bold" style={{ textAlign: 'left' }}>
-                                {novedad.name}
-                              </Typography>
-                              <Typography variant="body2" style={{ textAlign: 'justify' }}>
-                                {novedad.description}
-                              </Typography>
-                            </Box>
-                            <IconButton color="error" onClick={() => handleDeleteNovelty(novedad.id)}>
-                              <DeleteIcon />
-                            </IconButton>
-                          </Stack>
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
+                  {service.novedades.map((novedad, index) => (
+                    <Card
+                      key={novedad.id}
+                      style={{
+                        padding: '8px',
+                        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+                      }}
+                    >
+                      <CardContent>
+                        <Stack direction="row" justifyContent="space-between" alignItems="center">
+                          <Box>
+                            <Typography variant="subtitle1" fontWeight="bold" style={{ textAlign: 'left' }}>
+                              {novedad.name}
+                            </Typography>
+                            <Typography variant="body2" style={{ textAlign: 'justify' }}>
+                              {novedad.description}
+                            </Typography>
+                          </Box>
+                          <IconButton color="error" onClick={() => handleDeleteNovelty(novedad.id)}>
+                            <DeleteIcon />
+                          </IconButton>
+                        </Stack>
+                      </CardContent>
+                    </Card>
+                  ))}
                 </Stack>
               ) : (
                 <Typography variant="body2" color="text.secondary" style={{ marginTop: '20px' }}>
                   No hay novedades disponibles
                 </Typography>
               )}
-
-
             </CardContent>
           </Card>
 
@@ -405,7 +437,6 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
             helperText={`${newnovelty.description.length}/${t("Characters")}`}
             inputProps={{ maxLength: 500 }}
           />
-
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenModal(false)} color="primary">
@@ -419,7 +450,6 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
       </Dialog>
 
     </div>
-
   );
 };
 

@@ -234,7 +234,7 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
   return (
     <div className='first-div'>
       <div className='second-div'>
-        <div className={`box-div ${darkMode ? 'dark' : 'light'}`}>
+        <div className={`box-div ${darkMode ? 'dark' : 'light'}`} style={{ position: 'relative' }}>
           <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
             <HomeIcon style={{ marginRight: '4px' }} />
             <a onClick={() => navigate("/Services")} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>Inicio</a>
@@ -243,8 +243,10 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
             <span style={{ margin: '0 8px' }}>/</span>
             <span style={{ fontWeight: 'bold' }}>Propuestas</span>
           </div>
-          <Card style={{ maxHeight: isSmallScreen ? '400px' : '500px', overflowY: 'auto' }}>
-            <Box position="relative" width="100%" height="300px">
+  
+          <Card style={{ overflowY: 'auto' }}>
+            {/* Imagen con texto sobrepuesto */}
+            <Box position="relative" width="100%" height={isSmallScreen ? '200px' : '300px'}>
               <CardMedia
                 component="img"
                 height={isSmallScreen ? '200' : '300'}
@@ -261,6 +263,8 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
                   left: '10px',
                   color: 'white',
                   padding: '5px',
+                  transition: 'opacity 1s ease',
+                  fontSize: isSmallScreen ? '1.5rem' : '3rem',
                 }}
               >
                 {service.name}
@@ -285,28 +289,19 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
                 <Typography
                   variant="body2"
                   color="text.secondary"
-                  style={{ marginLeft: '10px' ,fontWeight: 'bold', color: 'white'}}
+
+                  style={{ marginLeft: '10px', fontWeight: 'bold', color: 'white' }}
+
                 >
                   {service.qualification ? service.qualification.toFixed(1) : '0.0'}
                 </Typography>
               </div>
-
-
             </Box>
-
-
-            {/* <CardContent>
-              <Typography variant="body2" color="text.secondary" align='left' paddingBottom={'5px'} style={{ paddingTop: '15px', paddingBottom: '15px' }}>
-                {service.description || "Sin descripción disponible"}
-              </Typography>
-            </CardContent> */}
-
-
+  
             <CardContent>
-              <Stack spacing={1} direction="row">
-                <Button variant="contained" startIcon={<AutoModeSharpIcon />} style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }} onClick={handleNovedadesClick}>Novedades</Button>
-                <Button variant="contained" startIcon={<GradeIcon />} style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 4px' : '6px 12px' }} onClick={() => navigate(`/services/${id}/reviews`)}>Reseñas</Button>
-                {/* <Button variant="contained" startIcon={<BackHandIcon />} style={{ fontSize: isSmallScreen ? '0.7rem' : '0.9rem', padding: isSmallScreen ? '4px 8px' : '6px 12px' }}>Propuestas</Button> */}
+              <Stack spacing={2} direction={isSmallScreen ? 'column' : 'row'} alignItems={isSmallScreen ? 'stretch' : 'center'} sx={{ marginTop: '10px', padding: '10px 0' }}>
+                <Button variant="contained" startIcon={<AutoModeSharpIcon />} onClick={handleNovedadesClick}>Novedades</Button>
+                <Button variant="contained" startIcon={<GradeIcon />} onClick={() => navigate(`/services/${id}/reviews`)}>Reseñas</Button>
                 <Button variant="outlined" startIcon={<ShareIcon />} onClick={() => setIsShareModalOpen(true)}> Compartir</Button>
                 {!isFollowing && ( // Renderiza el botón solo si is_followed es false
                   <Button
@@ -338,12 +333,7 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
                 </Typography>
                 )}
               </Stack>
-
-
-
-
-
-
+  
               <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>Crear Nueva Propuesta</DialogTitle>
                 <DialogContent>
@@ -375,7 +365,7 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
                   <TextField
                     margin="dense"
                     label="Fin Debate"
-                    type="datetime-local"  // Cambiado a "datetime-local"
+                    type="datetime-local"
                     fullWidth
                     InputLabelProps={{ shrink: true }}
                     value={debateEndDate}
@@ -384,7 +374,7 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
                   <TextField
                     margin="dense"
                     label="Fin Deliberación"
-                    type="datetime-local"  // Cambiado a "datetime-local"
+                    type="datetime-local"
                     fullWidth
                     InputLabelProps={{ shrink: true }}
                     value={deliberationEndDate}
@@ -396,11 +386,8 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
                   <Button onClick={handleSave} color="primary">Guardar</Button>
                 </DialogActions>
               </Dialog>
-
-
             </CardContent>
-
-
+  
             <CardContent>
               {proposals.length > 0 && proposals.some((proposal) => proposal.name) ? (
                 <TableContainer component={Paper}>
@@ -425,27 +412,21 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
                             <Chip
                               label={proposal.status || "No disponible"}
                               style={{
-                                backgroundColor: proposal.status === "Completo" ? '#2EC6BD' : '#fdd835', // Color dinámico
+                                backgroundColor: proposal.status === "Completo" ? '#2EC6BD' : '#fdd835',
                                 color: '#000',
                               }}
                             />
                           </TableCell>
-
-
                           <TableCell>
                             <div style={{ display: 'flex', alignItems: 'center' }}>
                               <Avatar style={{ width: 24, height: 24, marginRight: 8 }} />
                               <span>{proposal.written_by || "Desconocido"}</span>
                             </div>
                           </TableCell>
-
-
                           <TableCell>{proposal.close_date || "Sin fecha"}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
-
-
                   </Table>
                 </TableContainer>
               ) : (
@@ -454,21 +435,18 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
                 </Typography>
               )}
             </CardContent>
-
-
           </Card>
           <Box display="flex" justifyContent="flex-end" alignItems="flex-end" p={0} style={{ overflow: 'hidden' }}>
             <Button variant="contained" color="primary" onClick={handleClickOpen}>Crear Propuesta</Button>
           </Box>
-
-
+  
           <ShareModal open={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} />
         </div>
-
+  
         <Snackbar
           open={openSnackbar}
           onClose={() => setOpenSnackbar(false)}
-          anchorOrigin={{ vertical: 'top', horizontal: 'center' }} 
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
           autoHideDuration={3000}
         >
           <Alert 
@@ -482,6 +460,7 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
       </div>
     </div>
   );
+  
 };
 
 
