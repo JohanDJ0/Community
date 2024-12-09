@@ -17,7 +17,7 @@ root.render(
     <Auth0Provider 
     domain={domain} 
     clientId={clientId} 
-    redirectUri="http://localhost:3000/Login"
+    redirectUri="https://nexus-community.xyz/Login"
     >
     <App />
     </Auth0Provider>
