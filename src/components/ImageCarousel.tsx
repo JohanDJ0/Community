@@ -19,17 +19,32 @@ const ImageCarousel: React.FC<ServicesProps> = ({ darkMode }) =>{
   const [data, setData] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true); // Nuevo estado para manejar la carga
 
+  const dataToken = {
+    params: {
+      token: localStorage.getItem("token")
+    }
+  }
+
+
   useEffect(() => {
     setLoading(true); // Establece el estado de carga en true al iniciar la solicitud
-    fetch(`${API_BASE_URL}/services`)
+    fetch(`${API_BASE_URL}/services`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(dataToken),
+    })
       .then((res) => res.json())
-      .then((result: Service[]) => {
-        if (Array.isArray(result)) {
-          setData(result);
+      .then((response) => {
+        console.log(response.result)
+        if (response.result && Array.isArray(response.result)) {
+          const services: Service[] = response.result; // Aseguramos el tipo
+          setData(services);
+          setLoading(false);
         } else {
-          console.error("Formato de datos inesperado:", result);
+          console.error("Formato de datos inesperado:", response);
         }
-        setLoading(false); // Establece el estado de carga en false una vez que se obtienen los datos
       })
       .catch((error) => {
         console.error("Error al obtener los datos:", error);
