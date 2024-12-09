@@ -18,12 +18,17 @@ import HomeIcon from '@mui/icons-material/Home';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useNavigate } from 'react-router-dom';
 import {API_BASE_URL} from './bdd';
+import { useTranslation } from 'react-i18next';
 
 interface Notis {
   id: number;
   message: string;
   route: string;
   number: string;
+  tipo: string;
+  usuario_mencionado: string;
+  objeto_solicitado: string;
+  servicio_mencionado: string;
 }
 
 
@@ -39,6 +44,7 @@ const Header: React.FC<{ toggleDarkMode: () => void }> = ({ toggleDarkMode }) =>
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [notis, setNotis] = useState<Notis[]>([]);
+  const { t, i18n } = useTranslation("notifications");
 
   const fetchNotifications = () => {
     const dataN = {
@@ -54,7 +60,8 @@ const Header: React.FC<{ toggleDarkMode: () => void }> = ({ toggleDarkMode }) =>
     })
     .then((res) => res.json())
     .then((result) => {
-      const finalRes = result['result'];
+      const finalRes = result.result;
+      console.log(finalRes);
       setNotis(finalRes);  // Guarda las notificaciones
     })
     .catch((error) => {
@@ -105,7 +112,19 @@ const Header: React.FC<{ toggleDarkMode: () => void }> = ({ toggleDarkMode }) =>
         ) : (
           notis.map((item) => (
             <ListItem button onClick={() => clickNoti(item.route, item.id)}>
-              <ListItemText primary={item.message} />
+              {item.tipo === 'new_employee' ? (
+                  <ListItemText primary={t("newEmployeeMsg") + item.usuario_mencionado} />
+              ) : item.tipo === 'redeemed_reward' ? (
+                  <ListItemText primary={item.usuario_mencionado + t("redeemReward") + item.objeto_solicitado }/>
+              ) : item.tipo === 'new_reward' ? (
+                  <ListItemText primary={t("new_reward") + item.objeto_solicitado} />
+              ) : item.tipo === 'new_proposal_owner' ? (
+                  <ListItemText primary={t("new_proposal_owner") + item.servicio_mencionado + ' : ' + item.objeto_solicitado } />
+              ) : item.tipo === 'new_review' ? (
+                  <ListItemText primary={item.usuario_mencionado + t("new_review") + item.objeto_solicitado} />
+              ) : item.tipo === 'new_news' ? (
+                  <ListItemText primary={t("new_news") + item.servicio_mencionado} />
+              ) : null}
             </ListItem>
           ))
         )}
@@ -128,8 +147,6 @@ const Header: React.FC<{ toggleDarkMode: () => void }> = ({ toggleDarkMode }) =>
           <Typography variant="h6" noWrap component="div" sx={{ color: (theme) => theme.palette.text.primary }}>
             Community
           </Typography>
-
- 
 
           <Box sx={{ flexGrow: 1 }} />
 
