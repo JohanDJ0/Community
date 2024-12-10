@@ -153,7 +153,7 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                   color="text.secondary"
                   style={{ marginLeft: '10px', fontWeight: 'bold', color: 'white' }}
                 >
-                  {service.qualification ? service.qualification.toFixed(1) : '0.0'}
+                  {service.qualification ? service.qualification.toFixed(1) : t("NoEval")}
                 </Typography>
               </div>
             </Box>

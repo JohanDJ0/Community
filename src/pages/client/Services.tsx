@@ -99,7 +99,7 @@ const Services: React.FC<ServicesProps> = ({ darkMode }) => {
         <div className='second-div3'>
           <div className={`box-div ${darkMode ? 'dark' : 'light'}`}>
             {filteredData.length === 0 ? (
-              <p>No se encontraron servicios</p>
+              <p>{t("notFound")}</p>
             ) : (
               <div style={{  overflowY: 'auto' }}>
 
@@ -141,11 +141,13 @@ const Services: React.FC<ServicesProps> = ({ darkMode }) => {
                             readOnly
                           />
                           <Typography variant="body2" color="text.secondary" style={{ marginLeft: '10px' }}>
-                            {item.qualification.toFixed(1)}
+                            {item.qualification === 0.0 
+                              ? t("notEval") 
+                              : item.qualification.toFixed(1)}
                           </Typography>
                         </div>
                         <Typography variant="body2" color="text.secondary">
-                          {typeof item.description === "string" ? item.description : "No disponible"}
+                          {typeof item.description === "string" ? item.description : t("notAval")}
                         </Typography>
                       </CardContent>
                     </div>

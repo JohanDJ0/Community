@@ -65,6 +65,8 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
   });
   const isSmallScreen = useMediaQuery('(max-width:600px)');
   const [novelties, setNovelties] = useState<Novedad[]>([]);
+  const [messageAccessCode, setMessageAccessCode] = useState('');
+  const [openSnackbarAccessCode, setOpenSnackbarAccessCode] = useState(false); // Estado para abrir el Snackbar 
 
   useEffect(() => {
     const idservice = localStorage.getItem('service');
@@ -179,6 +181,17 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
       });
   };
 
+  const handleCopy = () => {
+    if (service?.access_code) {
+        navigator.clipboard.writeText(service.access_code)
+            .then(() => {
+                setMessageAccessCode(t("copiedCode"));
+                setOpenSnackbarAccessCode(true);
+            })
+            .catch(() => setMessageAccessCode('Error al copiar el código'));
+    }
+  };
+
   const handleDeleteNovelty = async (id: number) => {
     setLoading(true); // Muestra un indicador de carga si es necesario
     fetch(`${API_BASE_URL}/news/delete/${id}`, {
@@ -267,7 +280,7 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
                   color="text.secondary"
                   style={{ marginLeft: '10px', fontWeight: 'bold', color: 'white' }}
                 >
-                  {service.qualification ? service.qualification.toFixed(1) : '0.0'}
+                  {service.qualification ? service.qualification.toFixed(1) : t("NoEval")}
                 </Typography>
               </div>
             </Box>
@@ -315,24 +328,31 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
                 </Box>
 
                 <Box
+                  onClick={handleCopy}
                   sx={{
-                    marginLeft: '20px',
-                    padding: '20px',
-                    border: '1px solid #ddd',
-                    borderRadius: '12px',
-                    width: isSmallScreen ? '100%' : '300px',
-                    backgroundColor: darkMode ? '#333' : '#f9f9f9',
+                      marginLeft: '20px',
+                      padding: '20px',
+                      border: '1px solid #ddd',
+                      borderRadius: '12px',
+                      width: { xs: '100%', sm: '300px' },
+                      backgroundColor: darkMode ? '#333' : '#f9f9f9',
+                      cursor: 'pointer', // Cambia el puntero al pasar sobre el elemento
+                      transition: 'background-color 0.3s, transform 0.3s', // Efecto suave de hover
+                      '&:hover': {
+                          backgroundColor: darkMode ? '#444' : '#eaeaea',
+                          transform: 'scale(1.02)', // Incremento visual
+                      },
                   }}
                 >
                   <Typography
-                    variant="h6"
-                    fontWeight="bold"
-                    color={darkMode ? 'white' : 'text.primary'}
+                      variant="h6"
+                      fontWeight="bold"
+                      color={darkMode ? 'white' : 'text.primary'}
                   >
-                    {t("AccessCode")}
+                      {t("AccessCode")}
                   </Typography>
                   <Typography variant="body1" color={darkMode ? 'white' : 'text.secondary'}>
-                    {service?.access_code ?? 'No disponible'}
+                      {service?.access_code ?? 'No disponible'}
                   </Typography>
                 </Box>
               </Stack>
@@ -398,6 +418,17 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
             <Alert onClose={() => setOpenSnackbar(false)} severity="success">
               {message}
             </Alert>
+          </Snackbar>
+
+          <Snackbar
+            open={openSnackbarAccessCode}
+            autoHideDuration={3000} // Tiempo que durará visible el Snackbar
+            onClose={() => setOpenSnackbarAccessCode(false)} // Cierra el Snackbar
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }} // Centra el Snackbar en la parte superior
+          >
+          <Alert onClose={() => setOpenSnackbarAccessCode(false)} severity="success">
+              {messageAccessCode}
+          </Alert>
           </Snackbar>
         </div>
       </div>

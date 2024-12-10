@@ -13,7 +13,12 @@
    "CreateReviews":"Crear Reseña",
     "NewProposal":"Crear Nueva Reseña",
     "Proposalname":"Nombre de la Reseña",
+    "Reviewsname":"Tiutulo de la reseña",
     "Description":"Descripción",
     "Cancel":"Cancelar",
-    "CreateReview":"Crear Reseña"
+    "CreateReview":"Crear Reseña",
+    "NoEval": "Aún no podemos calificar el servicio...",
+    "loading": "Cargando...",
+    "plusCoin": "+1 Punto Community",
+    "errorCoin": "Límite alcanzado, mañana podrás conseguir más monedas"
 }

@@ -107,7 +107,7 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
   }, [id]);
 
   if (!service) {
-    return <p>Cargando detalles del servicio...</p>;
+    return <p>{t("loading")}</p>;
   }
 
   const handleClickOpen = () => setOpen(true);
@@ -238,7 +238,7 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
                 color="text.secondary"
                 style={{ marginLeft: '10px', fontWeight: 'bold', color: 'white' }}
               >
-                {service.qualification ? service.qualification.toFixed(1) : '0.0'}
+                {service.qualification ? service.qualification.toFixed(1) : t("notEval")}
               </Typography>
             </div>
           </Box>
@@ -298,7 +298,7 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
               </DialogContent>
               <DialogActions>
                 <Button onClick={handleClose} color="primary">{t("Cancel")}</Button>
-                <Button onClick={handleSave} color="primary">Guardar</Button>
+                <Button onClick={handleSave} color="primary">{t("Save")}</Button>
               </DialogActions>
             </Dialog>
           </CardContent>

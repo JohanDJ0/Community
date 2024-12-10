@@ -118,7 +118,7 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
 
 
   if (!service) {
-    return <p>Cargando detalles del servicio...</p>;
+    return <p>{t("loading")}</p>;
   }
 
 
@@ -181,11 +181,11 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
           coins(token).then(coinsSuccess => {
             if (coinsSuccess) {
               console.log("Coins actualizados correctamente");
-              setMessage('+1 Community Points');
+              setMessage(t("successCoin"));
               setSeverity('success'); // Cambia el color a verde para éxito
             } else {
               console.error("Error al actualizar las monedas");
-              setMessage('Límite alcanzado, mañana podrás conseguir más monedas');
+              setMessage(t("errorCoin"));
               setSeverity('warning'); // Cambia el color a amarillo para advertencia
             }
             setOpenSnackbar(true);
@@ -295,7 +295,7 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
                   style={{ marginLeft: '10px', fontWeight: 'bold', color: 'white' }}
 
                 >
-                  {service.qualification ? service.qualification.toFixed(1) : '0.0'}
+                  {service.qualification ? service.qualification.toFixed(1) : t("notEval")}
                 </Typography>
               </div>
             </Box>
@@ -385,7 +385,7 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
                 </DialogContent>
                 <DialogActions>
                   <Button onClick={handleClose} color="primary">{t("Cancel")}</Button>
-                  <Button onClick={handleSave} color="primary">Guardar</Button>
+                  <Button onClick={handleSave} color="primary">{t("Save")}</Button>
                 </DialogActions>
               </Dialog>
             </CardContent>
@@ -433,13 +433,13 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
                 </TableContainer>
               ) : (
                 <Typography variant="body1" color="text.secondary" align="center" style={{ padding: '20px' }}>
-                  No hay propuestas aún.
+                  ¨{t("noProp")}
                 </Typography>
               )}
             </CardContent>
           </Card>
           <Box display="flex" justifyContent="flex-end" alignItems="flex-end" p={0} style={{ overflow: 'hidden' }}>
-            <Button variant="contained" color="primary" onClick={handleClickOpen}>Crear Propuesta</Button>
+            <Button variant="contained" color="primary" onClick={handleClickOpen}>{t("CreateProposal")}</Button>
           </Box>
   
           <ShareModal open={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} />

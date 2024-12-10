@@ -94,7 +94,7 @@ const Rewards: React.FC<ServicesProps> = ({ darkMode }) => {
         //console.log("Se canjeó con exito la recompensa:", data.result);
         setRewards((prev) => prev.filter((reward) => reward.id !== id));
         setAvailablePoints(prevPoints => prevPoints - data.result.community_points);
-        setMessage('¡Recompensa canjeada con éxito! Se notificará al dueño del negocio.');
+        setMessage(t("succesRedeem"));
         setOpenSnackbar(true);
       } else {
         console.error("Error al canjear la recompensa:", data.result || "Error desconocido");

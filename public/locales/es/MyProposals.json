@@ -19,15 +19,33 @@
     "enddebate":"Fin Debate",
     "enddeliberation":"Fin deliberacion",
     "Cancel":"Cancelar",
+    "Save":"Guardar",
 
     "Home":"Inicio",
     "Follow":"Seguir",
     "Following":"Siguiendo",
 
-    "Complete":"Completo"
-
-
-
-
-    
+    "Complete":"Completo",
+    "notEval": "Aún no podemos calificar el servicio...",
+    "loading": "Cargando...",
+    "successCoin": "+1 Punto Community",
+    "errorCoin": "Límite alcanzado, mañana podrás conseguir más monedas",
+    "noProp": "No hay propuestas aún.",
+    "NoAvailableName": "Nombre no disponible",
+    "aprove": "Aprobar",
+    "reject": "Rechazar",
+    "meh": "Me abstengo",
+    "vote": "Vota ahora",
+    "voteThanks": "¡Gracias por votar!",
+    "dobleVoto": "Ya has votado en esta propuesta.",
+    "errorVoto": "Ocurrió un error al enviar el voto.",
+    "proposalDetail": "Detalles de la propuesta",
+    "comments": "Comentarios",
+    "sendComment": "Enviar comentario",
+    "propEstado": "Estado de la propuesta",
+    "noEstate": "No disponible",
+    "Toma": "Toma de decisiones/comentarios",
+    "tiempo": "Tiempo restante",
+    "result": "Resultado: ",
+    "writeComment": "Escribe tu comentario aquí..."
 }

@@ -156,7 +156,7 @@ const Seguidos: React.FC<ServicesProps> = ({ darkMode }) => {
               ))
             ) : (
               <Typography variant="body1" color="text.secondary" style={{ textAlign: 'center', marginTop: '20px' }}>
-                No tienes servicios seguidos.
+                {t("notFollow")}
               </Typography>
             )}
           </div>

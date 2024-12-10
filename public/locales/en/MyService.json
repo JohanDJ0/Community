@@ -18,10 +18,13 @@
     "Editservice":"Edit Service",
     "Name":"Name",
     "Descripción":"Description",
+    "update":"Update",
 
 
-    "Home":"Inicio",
+    "Home":"Home",
     "Follow":"To Follow",
     "Following":"Following",
-    "NoNews":"There are no news at this time."
+    "NoNews":"There are no news at this time.",
+    "NoEval": "We can't evaluate the service yet...",
+    "copiedCode": "Code copied!"
 }

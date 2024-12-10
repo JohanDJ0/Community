@@ -10,7 +10,7 @@ import { coins } from 'components/coins';
 import { AlertColor } from '@mui/material';
 import { API_BASE_URL } from 'components/bdd';
 import StoreIcon from '@mui/icons-material/Store';
-
+import { useTranslation } from 'react-i18next';
 
 interface ServicesProps {
   darkMode: boolean;
@@ -40,6 +40,7 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
   const [message, setMessage] = useState(''); // Estado para el mensaje a mostrar
   const [openSnackbar, setOpenSnackbar] = useState(false); // Estado para abrir el Snackbar
   const [severity, setSeverity] = useState<AlertColor | undefined>('success');
+  const { t, i18n } = useTranslation("MyProposals");
 
   useEffect(() => {
     const fetchProposalDetails = async () => {
@@ -266,7 +267,7 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
     return `${days}d ${hours}h ${minutes}m ${remainingSeconds}s`;
   };
   if (!proposal) {
-    return <Typography>Loading...</Typography>; // Mientras se carga la propuesta
+    return <Typography>{t("loading")}</Typography>; // Mientras se carga la propuesta
   }
 
 
@@ -274,18 +275,18 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
     <div className="first-div">
       <div className="second-div">
         <div className={`box-div ${darkMode ? 'dark' : 'light'}`}>
-            <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
-                <StoreIcon style={{ marginRight: '4px' }} />
-                <span onClick={() => navigate(`/MyService`)} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>Mi negocio</span>
-                <span style={{ margin: '0 8px' }}>/</span>
-                <span style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>{serviceName}</span>
-                <span style={{ margin: '0 8px' }}>/</span>
-                <span>Propuestas</span>
-                <span style={{ margin: '0 8px' }}>/</span>
-                <span style={{ fontWeight: 'bold' }}>{proposal?.name}</span>
-                {/* <span style={{ margin: '0 8px' }}>/</span>
-                <span>Subsección</span> */}
-            </div>
+          <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
+              <StoreIcon style={{ marginRight: '4px' }} />
+              <span onClick={() => navigate(`/MyService`)} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>{t("Myservice")}</span>
+              <span style={{ margin: '0 8px' }}>/</span>
+              <span style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>{serviceName}</span>
+              <span style={{ margin: '0 8px' }}>/</span>
+              <span>{t("Proposals")}</span>
+              <span style={{ margin: '0 8px' }}>/</span>
+              <span style={{ fontWeight: 'bold' }}>{proposal?.name}</span>
+              {/* <span style={{ margin: '0 8px' }}>/</span>
+              <span>Subsección</span> */}
+          </div>
           <Box display="flex">
             <Box flex={2} pr={4}>
               <Typography variant="h5" gutterBottom color={darkMode ? 'lightgray' : 'textPrimary'}>
@@ -294,7 +295,7 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
 
 
               <Typography variant="subtitle1" color={darkMode ? 'lightgray' : 'textSecondary'} gutterBottom>
-                Detalles de propuesta
+                {t("proposalDetail")}
               </Typography>
               <Divider />
               <Typography variant="body2" mt={2} color={darkMode ? 'lightgray' : 'textSecondary'}>
@@ -305,7 +306,7 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
               <Box mt={2} style={{ maxHeight: '200px', overflowY: 'auto' }}>
                 {comments.length > 0 && (
                   <Typography variant="body2" color={darkMode ? 'lightgray' : 'textSecondary'}>
-                    Comentarios:
+                    {t("comments")}:
                   </Typography>
                 )}
                 <Stack spacing={1}>
@@ -364,10 +365,10 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                     style={{ width: '100%', height: '60px' }}
                     value={newComment}
                     onChange={handleCommentChange}
-                    placeholder="Escribe tu comentario aquí"
+                    placeholder={t("writeComment")}
                   />
                   <Button variant="contained" color="primary" style={{ marginTop: '8px' }} onClick={handleCommentSubmit}>
-                    Enviar comentario
+                    {t("sendComment")}
                   </Button>
                 </Box>
               )}
@@ -392,7 +393,7 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                     }}
                   >
                     <Typography variant="body2" color={darkMode ? 'lightgray' : 'textPrimary'}>
-                      Estado de la propuesta:
+                      {t("propEstado")}:
                     </Typography>
 
 
@@ -409,7 +410,7 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                         margin: '10px auto', // Centra la etiqueta en el contenedor
                       }}
                     >
-                      {proposal?.status || 'Estado no disponible'}
+                      {proposal?.status || t("noEstate")}
                     </Typography>
                   </Box>
 
@@ -417,7 +418,7 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
 
 
                   <Typography variant="body2" color={darkMode ? 'lightgray' : 'textPrimary'}>
-                    Toma de decisiones/comentarios
+                    {t("Toma")}
                   </Typography>
                   <Box
                     mt={2}
@@ -430,7 +431,7 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                     justifyContent="center"
                   >
                     <Typography variant="h6" color={darkMode ? '#fff' : '#000'} fontWeight="bold" sx={{ textAlign: 'center' }}>
-                      Tiempo restante: {formatTime(timeRemaining)}
+                      {t("tiempo")}: {formatTime(timeRemaining)}
                     </Typography>
                   </Box>
                 </Box>
@@ -450,7 +451,7 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                     }}
                   >
                     <Typography variant="body2" color={darkMode ? 'lightgray' : 'textPrimary'}>
-                      Estado de la propuesta:
+                      {t("propEstado")}:
                     </Typography>
                     <Typography
                       variant="h6"
@@ -485,7 +486,7 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                       fontWeight="bold"
                       textAlign="center"
                     >
-                      Resultado:
+                      {t("result")}:
                     </Typography>
                     <Typography
                       variant="body1"
@@ -527,7 +528,7 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                         }}
                       >
                         <Typography variant="body2" color={darkMode ? 'lightgray' : 'textPrimary'}>
-                          Estado de la propuesta:
+                          {t("propEstado")}:
                         </Typography>
 
 
@@ -552,7 +553,7 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
 
 
                       <Typography variant="h6" color={darkMode ? 'lightgray' : 'textPrimary'} gutterBottom>
-                        Vota ahora:
+                        {t("vote")}:
                       </Typography>
                       <Stack spacing={1}>
                         <Button
@@ -564,7 +565,7 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                             color: 'white',
                           }}
                         >
-                          Aprobar
+                          {t("aprove")}
                         </Button>
                         <Button
                           variant="contained"
@@ -575,7 +576,7 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                             color: 'white',
                           }}
                         >
-                          Rechazar
+                          {t("reject")}
                         </Button>
                         <Button
                           variant="contained"
@@ -586,13 +587,13 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                             color: 'white',
                           }}
                         >
-                          Me abstengo
+                          {t("meh")}
                         </Button>
                       </Stack>
                     </>
                   ) : (
                     <Typography variant="body2" color={darkMode ? 'lightgray' : 'textPrimary'}>
-                      ¡Gracias por votar!
+                      {t("voteThanks")}
                     </Typography>
                   )}
                 </Box>

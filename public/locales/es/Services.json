@@ -1,5 +1,7 @@
 {
     "search":"Buscar un servicio",
-    "Home":"Inicio"
-
+    "Home":"Inicio",
+    "notFound": "No se encontraron servicios",
+    "notEval": "Aún no podemos calificar el servicio...",
+    "notAval": "No disponible"
 }

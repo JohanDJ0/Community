@@ -1,4 +1,7 @@
 {
     "search":"Search a service",
-    "Home":"Home"
+    "Home":"Home",
+    "notFound": "No services found",
+    "notEval": "We can't evaluate the service yet...",
+    "notAval": "Not available"
 }

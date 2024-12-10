@@ -19,13 +19,33 @@
     "enddebate":"End of debate",
     "enddeliberation":"End deliberation",
     "Cancel":"Cancel",
+    "Save":"Save",
 
     "Home":"Home",
     "Follow":"To Follow",
     "Following":"Following",
 
-    "Complete":"Complete"
-
-
-
+    "Complete":"Complete",
+    "notEval": "We can't evaluate the service yet...",
+    "loading": "Loading...",
+    "successCoin": "+1 Community Point",
+    "errorCoin": "Limit reached, tomorrow you will be able to get more coins",
+    "noProp": "There are no proposals yet.",
+    "NoAvailableName": "No available name",
+    "aprove": "Approve",
+    "reject": "Reject",
+    "meh": "Meh",
+    "vote": "Vote now",
+    "voteThanks": "Thanks for voting!",
+    "dobleVoto": "You have already voted on this proposal.",
+    "errorVoto": "An error occurred while sending the vote.",
+    "proposalDetail": "Proposal details",
+    "comments": "Comments",
+    "sendComment": "Send comment",
+    "propEstado": "Proposal status",
+    "noEstate": "Not available",
+    "Toma": "Decision making/comments",
+    "tiempo": "Time remaining", 
+    "result": "Result: ",
+    "writeComment": "Write your comment here..."
 }

@@ -9,6 +9,7 @@ import Footer from 'components/Footer';
 import Equipo from 'assets/Equipo.jpeg';
 import { useAuth0 } from '@auth0/auth0-react';
 import MAHL from '../../img/mahl.jpg';
+import NoImg from '../../assets/NoImagen.png';
 
 interface ServicesProps {
   darkMode: boolean;
@@ -74,7 +75,7 @@ const HomePage: React.FC<ServicesProps> = ({ darkMode }) => {
           animation: `${bounce} 1s infinite`,
         }}
       >
-        Descubra la comunidad
+        Descubra Community
       </Button>
     </div>
 

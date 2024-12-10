@@ -13,8 +13,11 @@
     "CreateReviews":"Create Review",
     "NewReviews":"Create New Review",
     "Reviewsname":"Review Name",
-    "Description":"Descriptión",
+    "Description":"Description",
     "Cancel":"Cancel",
-    "CreateReview":"Create Review"
-    
+    "CreateReview":"Create Review",
+    "NoEval": "We can't evaluate the service yet...",
+    "loading": "Loading...",
+    "plusCoin": "+1 Community Point",
+    "errorCoin": "Limit reached, tomorrow you will be able to get more coins"
 }

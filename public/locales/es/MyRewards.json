@@ -7,6 +7,6 @@
     "CreateReward":"Crear nueva recompensa",
     "Name":"Nombre",
     "Description":"Descripción",
-    "RequiredPoints":"Puntos requeridos"
-    
+    "RequiredPoints":"Puntos requeridos",
+    "succesRedeem": "¡Recompensa canjeada con éxito! Se notificará al dueño del negocio."
 }

@@ -159,7 +159,7 @@ const EditServiceModal: React.FC<EditServiceModalProps> = ({ open, onClose, serv
           {t("Cancel")}
         </Button>
         <Button onClick={handleSave} color="primary" variant="contained">
-          Guardar
+          {t("update")}
         </Button>
       </DialogActions>
     </Dialog>

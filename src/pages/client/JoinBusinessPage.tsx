@@ -3,6 +3,8 @@ import { TextField, Button, Box } from '@mui/material'; // Importamos componente
 import '../../css/App.css';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Snackbar, Alert } from '@mui/material';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import { useTranslation } from 'react-i18next';
 
 // Agrega 'darkMode' como prop
 interface ServicesProps {
@@ -20,6 +22,7 @@ const JoinBusinessPage:  React.FC<ServicesProps> = ({ darkMode }) =>  {
   const [openSnackbar, setOpenSnackbar] = useState(false); // Estado para abrir el Snackbar
   const [message, setMessage] = useState(''); // Estado para el mensaje a mostrar
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation("joinService");
 
   // Función que se ejecuta cuando se hace clic en el botón "Unirse"
   const handleJoinClick = (businessName: string) => {
@@ -33,7 +36,7 @@ const JoinBusinessPage:  React.FC<ServicesProps> = ({ darkMode }) =>  {
     .then((data) => {
       if (data.result) {
         const serviceId = data.result.service;
-        setMessage('¡Éxito! Se cambiará tu menú al tipo empleado.');
+        setMessage(t("success"));
         setOpenSnackbar(true);
 
         // Retrasar la navegación para que el Snackbar se muestre
@@ -58,12 +61,20 @@ const JoinBusinessPage:  React.FC<ServicesProps> = ({ darkMode }) =>  {
     <div className='first-div'>
       <div className='second-div'>
         <div className={`box-div ${darkMode ? 'dark' : 'light'}`}> 
-          <h2>Unirse a un negocio</h2> {/* Título de la página */}
+        <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
+          <ExitToAppIcon style={{ marginRight: '4px' }} />
+          <span style={{ fontWeight: 'bold' }}>{t("Unirse")}</span>
+          {/* <span style={{ margin: '0 8px' }}>/</span>
+          <span>Sección</span>
+          <span style={{ margin: '0 8px' }}>/</span>
+          <span>Subsección</span> */}
+        </div>
+          <h2>{t("Unirse")}</h2> {/* Título de la página */}
 
           {/* Caja de texto para ingresar el código de acceso del negocio */}
           <Box mt={2}>
           <TextField
-            label="Código de acceso"
+            label={t("accessCode")}
             variant="filled"
             fullWidth
             style={{ marginBottom: '10px' }}
@@ -86,7 +97,7 @@ const JoinBusinessPage:  React.FC<ServicesProps> = ({ darkMode }) =>  {
               }}
               onClick={() => handleJoinClick(businessName)} // Pasamos el valor del input a la función
             >
-              Unirse
+              {t("join")}
             </Button>
           </Box>
         </div>

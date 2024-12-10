@@ -1,6 +1,6 @@
 {
     "Followin":"Seguidos",
-    "Button":"Dejar de seguir"
-
+    "Button":"Dejar de seguir",
+    "notFollow": "No tienes servicios seguidos."
 
 }

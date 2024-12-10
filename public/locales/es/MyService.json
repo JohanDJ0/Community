@@ -19,11 +19,13 @@
     "Editservice":"Editar Servicio",
     "Name":"Nombre",
     "Descripción":"Descripción",
+    "update":"Actualizar",
 
 
     "Home":"Inicio",
     "Follow":"Seguir",
     "Following":"Siguiendo",
-    "NoNews":"No hay novedades disponibles en este momento.."
-
+    "NoNews":"No hay novedades disponibles en este momento..",
+    "NoEval": "Aún no podemos calificar el servicio...",
+    "copiedCode": "Código copiado!"
 }

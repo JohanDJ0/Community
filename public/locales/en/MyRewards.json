@@ -7,6 +7,6 @@
     "CreateReward":"Create New Reward",
     "Name":"Name",
     "Description":"Description",
-    "RequiredPoints":"Required Points"
-    
+    "RequiredPoints":"Required Points",
+    "succesRedeem": "Reward redeemed successfully. It will be notified to the business owner."
 }
