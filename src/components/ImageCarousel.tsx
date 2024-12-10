@@ -3,6 +3,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { API_BASE_URL } from "./bdd";
+import noImage from '../../src/assets/NoImagen.png'
 
 interface Service {
   id: number;
@@ -113,7 +114,7 @@ const ImageCarousel: React.FC<ServicesProps> = ({ darkMode }) =>{
                 src={
                   service.image
                     ? `data:image/jpeg;base64,${atob(service.image)}`
-                    : "https://w.wallhaven.cc/full/o5/wallhaven-o5xmv9.jpg"
+                    : noImage
                 }
                 alt={service.name}
                 style={imageStyle}
