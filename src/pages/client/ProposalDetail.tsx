@@ -99,6 +99,14 @@ const ProposalDetail: React.FC<ServicesProps> = ({ darkMode }) => {
     fetchProposalDetails();
     console.log('Estado actual de la propuesta:', proposal);
 
+    // Configura el intervalo para que se ejecute cada 5 segundos
+    const intervalId = setInterval(() => {
+      fetchProposalDetails();
+    }, 5000);
+
+    // Limpia el intervalo cuando el componente se desmonte o cambie el ID de la propuesta
+    return () => clearInterval(intervalId);
+
 
   }, [proposalId]);
 

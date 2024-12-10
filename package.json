@@ -1,6 +1,5 @@
 {
   "name": "community",
-  "proxy": "http://34.51.20.243:8069",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
