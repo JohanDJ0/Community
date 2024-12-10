@@ -293,7 +293,7 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
             <span style={{ margin: '0 8px' }}>/</span>
             <span style={{ fontWeight: 'bold' }}>{t("Reviews")}</span>
           </div>
-          <Card style={{ maxHeight: isSmallScreen ? '400px' : '500px', overflowY: 'auto' }}>
+          <Card style={{ overflowY: 'auto' }}>
             <Box position="relative" width="100%" height={isSmallScreen ? '200px' : '300px'}>
               <CardMedia
                 component="img"
