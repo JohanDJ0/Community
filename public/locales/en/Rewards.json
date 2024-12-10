@@ -3,5 +3,6 @@
     "CommunityPoints":"Your Community Points",
     "Message":"In order to see the available rewards you must follow a service...",
     "Redeem":"Redeem",
-    "Insufficientpoints":"Insufficient points"
+    "Insufficientpoints":"Insufficient points",
+    "succesRedeem": "Reward redeemed successfully, the owner of the service will be notified"
 }

@@ -3,5 +3,6 @@
     "CommunityPoints":"Tus Puntos Community",
     "Message":"Para ver las recompensas disponibles debes seguir un servicio...",
     "Redeem":"Canjear",
-    "Insufficientpoints":"Puntos insuficientes"
+    "Insufficientpoints":"Puntos insuficientes",
+    "succesRedeem": "Recompensa canjeada correctamente, se le notificará al dueño del servicio"
 }
