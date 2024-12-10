@@ -321,7 +321,7 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
                     <TableCell>
                       <Chip
                         label={proposal.status || "No disponible"}
-                        style={{ backgroundColor: '#fdd835', color: '#000' }}
+                        style={{ backgroundColor: proposal.status === "Completo" ? '#2EC6BD' : '#fdd835',}}
                       />
                     </TableCell>
                     <TableCell>
