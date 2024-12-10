@@ -1,0 +1,31 @@
+{
+    "Myservice":"My Service",
+    "Proposals":"Proposals",
+    "News":"News",
+    "MyReviews":"Reviews",
+    "Share":"Share",
+
+    "Title":"Title",
+    "State":"State",
+    "Createdby":"Created by",
+    "Closingdate":"Closing date",
+
+    "Noproposals":"There are no proposals yet.",
+    "CreateProposal":"Create Proposal",
+
+    "NewProposal":"Create New Proposal",
+    "Proposalname":"Proposal name",
+    "Description":"Description",
+    "enddebate":"End of debate",
+    "enddeliberation":"End deliberation",
+    "Cancel":"Cancel",
+
+    "Home":"Home",
+    "Follow":"To Follow",
+    "Following":"Following",
+
+    "Complete":"Complete"
+
+
+
+}

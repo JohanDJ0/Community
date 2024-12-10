@@ -22,6 +22,7 @@ import { followService } from 'components/followService';
 import StoreIcon from '@mui/icons-material/Store';
 import { API_BASE_URL } from 'components/bdd';
 import ShareModal from '../../components/ShareModal';//compartir 
+import { useTranslation } from 'react-i18next';
 
 interface Review {
   name: string; // Nombre de la reseña
@@ -60,6 +61,7 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
   const isSmallScreen = useMediaQuery('(max-width:600px)');
   const [isFollowing, setIsFollowing] = useState(false); // Hook para el follow del servicio
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);// modal
+  const { t, i18n } = useTranslation("MyReviews");
 
 
   const [newReview, setNewReview] = useState<Review>({
@@ -200,15 +202,15 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
         <div className={`box-div ${darkMode ? 'dark' : 'light'}`} style={{ position: 'relative' }}>
           <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
               <StoreIcon style={{ marginRight: '4px' }} />
-              <span onClick={() => navigate(`/MyService`)} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>Mi negocio</span>
+              <span onClick={() => navigate(`/MyService`)} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>{t("Myservice")}</span>
               <span style={{ margin: '0 8px' }}>/</span>
               <span style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>{service.name}</span>
               <span style={{ margin: '0 8px' }}>/</span>
-              <span style={{ fontWeight: 'bold' }}>Reseñas</span>
+              <span style={{ fontWeight: 'bold' }}>{t("MyReviews")}</span>
               {/* <span style={{ margin: '0 8px' }}>/</span>
               <span>Subsección</span> */}
           </div>
-          <Card style={{ maxHeight: isSmallScreen ? '400px' : '500px', overflowY: 'auto' }}>
+          <Card style={{  overflowY: 'auto' }}>
             <Box position="relative" width="100%" height={isSmallScreen ? '200px' : '300px'}>
               <CardMedia
                 component="img"
@@ -263,14 +265,14 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
 
             <CardContent>
               <Stack spacing={2} direction="row">
-                <Button variant="contained" startIcon={<AutoModeSharpIcon />} onClick={handleNovedadesClick}>Novedades</Button>
+                <Button variant="contained" startIcon={<AutoModeSharpIcon />} onClick={handleNovedadesClick}>{t("News")}</Button>
                 {/* <Button variant="contained" startIcon={<GradeIcon />} onClick={() => navigate(`/services/${id}/reviews`)}>Reseñas</Button> */}
-                <Button variant="contained" startIcon={<BackHandIcon />} onClick={() => navigate(`/MyProposals/${id}`)}>Propuestas</Button>
-                <Button variant="outlined" startIcon={<ShareIcon />} onClick={() => setIsShareModalOpen(true)}>Compartir</Button>
+                <Button variant="contained" startIcon={<BackHandIcon />} onClick={() => navigate(`/MyProposals/${id}`)}>{t("Proposals")}</Button>
+                <Button variant="outlined" startIcon={<ShareIcon />} onClick={() => setIsShareModalOpen(true)}>{t("Share")}</Button>
               </Stack>
               <CardContent>
                 <Typography variant="h5" align="left" paddingTop="10px">
-                  Reseñas de usuarios
+                  {t("Userreviews")}
                 </Typography>
                
 

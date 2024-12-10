@@ -1,0 +1,33 @@
+{
+    "Myservice":"Mi Servicio",
+    "Proposals":"Propuestas",
+    "News":"Novedades",
+    "MyReviews":"Reseñas",
+    "Share":"Compartir",
+
+    "Title":"Titulo",
+    "State":"Estado",
+    "Createdby":"Creado por",
+    "Closingdate":"Fecha de cierre",
+
+    "Noproposals":"No hay propuestas aún.",
+    "CreateProposal":"Crear Propuesta",
+
+    "NewProposal":"Crear Nueva Propuesta",
+    "Proposalname":"Nombre de la Propuesta",
+    "Description":"Descripción",
+    "enddebate":"Fin Debate",
+    "enddeliberation":"Fin deliberacion",
+    "Cancel":"Cancelar",
+
+    "Home":"Inicio",
+    "Follow":"Seguir",
+    "Following":"Siguiendo",
+
+    "Complete":"Completo"
+
+
+
+
+    
+}

@@ -16,6 +16,7 @@ import { Snackbar, Alert } from '@mui/material';
 import { AlertColor } from '@mui/material';
 import { API_BASE_URL } from 'components/bdd';
 import CheckIcon from '@mui/icons-material/Check';
+import { useTranslation } from 'react-i18next';
 
 interface ServiceDetail {
   id: number;
@@ -57,6 +58,7 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
   const [message, setMessage] = useState(''); // Estado para el mensaje a mostrar
   const [openSnackbar, setOpenSnackbar] = useState(false); // Estado para abrir el Snackbar
   const [severity, setSeverity] = useState<AlertColor | undefined>('success');
+  const { t, i18n } = useTranslation("MyProposals");
 
   // Llamar a la API cada 5 segundos
   useEffect(() => {
@@ -237,11 +239,11 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
         <div className={`box-div ${darkMode ? 'dark' : 'light'}`} style={{ position: 'relative' }}>
           <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
             <HomeIcon style={{ marginRight: '4px' }} />
-            <a onClick={() => navigate("/Services")} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>Inicio</a>
+            <a onClick={() => navigate("/Services")} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>{t("Home")}</a>
             <span style={{ margin: '0 8px' }}>/</span>
             <a onClick={() => navigate(`/services/${service.id}`)} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>{service.name}</a>
             <span style={{ margin: '0 8px' }}>/</span>
-            <span style={{ fontWeight: 'bold' }}>Propuestas</span>
+            <span style={{ fontWeight: 'bold' }}>{t("Proposals")}</span>
           </div>
   
           <Card style={{ overflowY: 'auto' }}>
@@ -300,9 +302,9 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
   
             <CardContent>
               <Stack spacing={2} direction={isSmallScreen ? 'column' : 'row'} alignItems={isSmallScreen ? 'stretch' : 'center'} sx={{ marginTop: '10px', padding: '10px 0' }}>
-                <Button variant="contained" startIcon={<AutoModeSharpIcon />} onClick={handleNovedadesClick}>Novedades</Button>
-                <Button variant="contained" startIcon={<GradeIcon />} onClick={() => navigate(`/services/${id}/reviews`)}>Reseñas</Button>
-                <Button variant="outlined" startIcon={<ShareIcon />} onClick={() => setIsShareModalOpen(true)}> Compartir</Button>
+                <Button variant="contained" startIcon={<AutoModeSharpIcon />} onClick={handleNovedadesClick}> {t("News")}</Button>
+                <Button variant="contained" startIcon={<GradeIcon />} onClick={() => navigate(`/services/${id}/reviews`)}>{t("MyReviews")}</Button>
+                <Button variant="outlined" startIcon={<ShareIcon />} onClick={() => setIsShareModalOpen(true)}> {t("Share")}</Button>
                 {!isFollowing && ( // Renderiza el botón solo si is_followed es false
                   <Button
                     onClick={() => handleFollow()}
@@ -313,7 +315,7 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
                       padding: isSmallScreen ? '4px 8px' : '6px 12px',
                     }}
                   >
-                    Seguir
+                    {t("Follow")}
                   </Button>
                 )}
                 {isFollowing && (
@@ -329,25 +331,25 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
                     }}
                   >
                   <CheckIcon sx={{ marginRight: '8px', fontSize: '1.2rem' }} /> {/* Icono de check */}
-                  Siguiendo
+                  {t("Following")}
                 </Typography>
                 )}
               </Stack>
   
               <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Crear Nueva Propuesta</DialogTitle>
+                <DialogTitle>{t("NewProposal")}</DialogTitle>
                 <DialogContent>
                   <TextField
                     autoFocus
                     margin="dense"
-                    label="Título de la Propuesta"
+                    label={t("Proposalname")}
                     fullWidth
                     value={proposalName}
                     onChange={(e) => setProposalName(e.target.value)}
                   />
                   <TextField
                   margin="dense"
-                  label="Descripción"
+                  label={("Description")}
                   fullWidth
                   multiline
                   rows={4}
@@ -364,7 +366,7 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
 
                   <TextField
                     margin="dense"
-                    label="Fin Debate"
+                    label={t("enddebate")}
                     type="datetime-local"
                     fullWidth
                     InputLabelProps={{ shrink: true }}
@@ -373,7 +375,7 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
                   />
                   <TextField
                     margin="dense"
-                    label="Fin Deliberación"
+                    label={t("enddeliberation")}
                     type="datetime-local"
                     fullWidth
                     InputLabelProps={{ shrink: true }}
@@ -382,7 +384,7 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
                   />
                 </DialogContent>
                 <DialogActions>
-                  <Button onClick={handleClose} color="primary">Cancelar</Button>
+                  <Button onClick={handleClose} color="primary">{t("Cancel")}</Button>
                   <Button onClick={handleSave} color="primary">Guardar</Button>
                 </DialogActions>
               </Dialog>
@@ -393,11 +395,11 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
                 <TableContainer component={Paper}>
                   <Table>
                     <TableHead>
-                      <TableRow>
-                        <TableCell><Typography variant="subtitle2">Título</Typography></TableCell>
-                        <TableCell><Typography variant="subtitle2">Estado</Typography></TableCell>
-                        <TableCell><Typography variant="subtitle2">Creado por</Typography></TableCell>
-                        <TableCell><Typography variant="subtitle2">Fecha de cierre</Typography></TableCell>
+                    <TableRow>
+                        <TableCell><Typography variant="subtitle2">{t("Title")}</Typography></TableCell>
+                        <TableCell><Typography variant="subtitle2">{t("State")}</Typography></TableCell>
+                        <TableCell><Typography variant="subtitle2">{t("Createdby")}</Typography></TableCell>
+                        <TableCell><Typography variant="subtitle2">{t("Closingdate")}</Typography></TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>

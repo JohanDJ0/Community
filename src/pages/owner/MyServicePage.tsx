@@ -210,7 +210,7 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
         <div className={`box-div ${darkMode ? 'dark' : 'light'}`}>
           <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
             <StoreIcon style={{ marginRight: '4px' }} />
-            <span style={{ fontWeight: 'bold' }}>Mi negocio</span>
+            <span style={{ fontWeight: 'bold' }}>{t("Myservice")}</span>
           </div>
           <Card
             style={{
@@ -293,7 +293,7 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
                       onClick={() => navigate(`/MyService/${service.id}/reviews`)}
                       fullWidth={isSmallScreen}
                     >
-                      Reseñas
+                      {t("Reviews")}
                     </Button>
                     <Button
                       variant="contained"
@@ -301,7 +301,7 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
                       onClick={() => navigate(`/MyProposals/${service.id}`)}
                       fullWidth={isSmallScreen}
                     >
-                      Propuestas
+                      {t("Proposals")}
                     </Button>
                     <Button
                       variant="outlined"
@@ -309,7 +309,7 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
                       onClick={() => setIsShareModalOpen(true)}
                       fullWidth={isSmallScreen}
                     >
-                      Compartir
+                      {t("Share")}
                     </Button>
                   </Stack>
                 </Box>
@@ -329,7 +329,7 @@ const MyServicePage: React.FC<ServicesProps> = ({ darkMode }) => {
                     fontWeight="bold"
                     color={darkMode ? 'white' : 'text.primary'}
                   >
-                    Código de Acceso
+                    {t("AccessCode")}
                   </Typography>
                   <Typography variant="body1" color={darkMode ? 'white' : 'text.secondary'}>
                     {service?.access_code ?? 'No disponible'}

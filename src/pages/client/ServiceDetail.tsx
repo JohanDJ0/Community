@@ -13,6 +13,7 @@ import { followService } from 'components/followService'; // componente que se e
 import HomeIcon from '@mui/icons-material/Home';
 import CheckIcon from '@mui/icons-material/Check';
 import { API_BASE_URL } from 'components/bdd';
+import { useTranslation } from 'react-i18next';
 
 interface Novedad {
   name: string;
@@ -41,6 +42,7 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
   const isSmallScreen = useMediaQuery('(max-width:600px)');
   const [isShareModalOpen, setIsShareModalOpen] = useState(false); // modal
   const [isFollowing, setIsFollowing] = useState(false); // Hook para el follow del servicio
+  const { t, i18n } = useTranslation("MyService");
 
   useEffect(() => {
     const dataToken = {
@@ -99,7 +101,7 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
           {/* Breadcrumb */}
           <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
             <HomeIcon style={{ marginRight: '4px' }} />
-            <a onClick={() => navigate("/Services")} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>Inicio</a>
+            <a onClick={() => navigate("/Services")} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>{t("Home")}</a>
             <span style={{ margin: '0 8px' }}>/</span>
             <span style={{ fontWeight: 'bold' }}>{service.name}</span>
           </div>
@@ -171,7 +173,7 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                   onClick={() => navigate(`/services/${id}/reviews`)}
                   fullWidth={isSmallScreen}
                 >
-                  Reseñas
+                  {t("Reviews")}
                 </Button>
                 <Button
                   variant="contained"
@@ -179,7 +181,7 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                   onClick={() => navigate(`/proposal/${id}`)}
                   fullWidth={isSmallScreen}
                 >
-                  Propuestas
+                 {t("Proposals")}
                 </Button>
                 <Button
                   variant="outlined"
@@ -187,7 +189,7 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                   onClick={() => setIsShareModalOpen(true)}
                   fullWidth={isSmallScreen}
                 >
-                  Compartir
+                 {t("Share")}
                 </Button>
                 {!isFollowing && (
                   <Button
@@ -196,7 +198,7 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                     startIcon={<AddIcon />}
                     fullWidth={isSmallScreen}
                   >
-                    Seguir
+                    {t("Follow")}
                   </Button>
                 )}
                 {isFollowing && (
@@ -212,7 +214,7 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                     }}
                   >
                     <CheckIcon sx={{ marginRight: '8px', fontSize: '1.2rem' }} />
-                    Siguiendo
+                    {t("Following")}
                   </Typography>
                 )}
               </Stack>
@@ -253,7 +255,7 @@ const ServiceDetail: React.FC<ServicesProps> = ({ darkMode }) => {
                 </Stack>
               ) : (
                 <Typography variant="h6" color="text.secondary" align="center" style={{ marginTop: '20px' }}>
-                  No hay novedades disponibles en este momento.
+                  {t("NoNews")}
                 </Typography>
               )}
             </CardContent>

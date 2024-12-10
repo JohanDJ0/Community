@@ -26,6 +26,7 @@ import { AlertColor } from '@mui/material';
 import { API_BASE_URL } from 'components/bdd';
 import ShareModal from '../../components/ShareModal';//compartir 
 import CheckIcon from '@mui/icons-material/Check';
+import { useTranslation } from 'react-i18next';
 
 interface Review {
   name: string; // Nombre de la reseña
@@ -64,6 +65,8 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
   const [openSnackbar, setOpenSnackbar] = useState(false); // Estado para abrir el Snackbar
   const [severity, setSeverity] = useState<AlertColor | undefined>('success');
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);// modal
+  const { t, i18n } = useTranslation("MyReviews");
+
 
   const [newReview, setNewReview] = useState<Review>({
     name: '',
@@ -297,11 +300,11 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
       {/* Breadcrumb */}
       <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
         <HomeIcon style={{ marginRight: '4px' }} />
-        <a onClick={() => navigate("/Services")} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>Inicio</a>
+        <a onClick={() => navigate("/Services")} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>{t("Home")}</a>
         <span style={{ margin: '0 8px' }}>/</span>
         <a onClick={() => navigate(`/services/${service.id}`)} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>{service.name}</a>
         <span style={{ margin: '0 8px' }}>/</span>
-        <span style={{ fontWeight: 'bold' }}>Reseñas</span>
+        <span style={{ fontWeight: 'bold' }}>{t("MyReviews")}</span>
       </div>
 
       {/* Card Container */}
@@ -368,13 +371,13 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
             sx={{ marginTop: '10px', padding: '10px 0' }}
           >
             <Button variant="contained" startIcon={<AutoModeSharpIcon />} onClick={handleNovedadesClick} fullWidth={isSmallScreen}>
-              Novedades
+            {t("News")}
             </Button>
             <Button variant="contained" startIcon={<BackHandIcon />} onClick={() => navigate(`/proposal/${id}`)} fullWidth={isSmallScreen}>
-              Propuestas
+            {t("Proposals")}
             </Button>
             <Button variant="outlined" startIcon={<ShareIcon />} fullWidth={isSmallScreen}>
-              Compartir
+            {t("Share")}
             </Button>
             {!service.is_following && (
               <Button
@@ -386,7 +389,7 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
                   padding: isSmallScreen ? '4px 8px' : '6px 12px',
                 }}
               >
-                Seguir
+                {t("Follow")}
               </Button>
             )}
           </Stack>
@@ -394,7 +397,7 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
           {/* Reviews Section */}
     {/* Reviews Section */}
 <Typography variant="h5" align="left" paddingTop="10px">
-  Reseñas de usuarios
+{t("Userreviews")}
 </Typography>
 
 {service.reviews.length > 0 ? (
@@ -437,23 +440,23 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
         zIndex: 10000,
       }}
     >
-      Crear reseña
+      {t("CreateReviews")}
     </Button>
 
     {/* Modal for Review Creation */}
     <Dialog open={openModal} onClose={handleCloseModal}>
-      <DialogTitle>Crear Reseña</DialogTitle>
+      <DialogTitle>{t("NewReviews")}</DialogTitle>
       <DialogContent>
         <FormControl fullWidth margin="normal">
           <TextField
-            label="Nombre de la reseña"
+            label={t("Reviewsname")}
             value={newReview.name}
             onChange={(e) => setNewReview({ ...newReview, name: e.target.value })}
           />
         </FormControl>
         <FormControl fullWidth margin="normal">
           <TextField
-            label="Descripción"
+            label={t("Description")}
             multiline
             rows={4}
             value={newReview.description}
@@ -478,8 +481,8 @@ const ServiceReviewsPage: React.FC<ServicesProps> = ({ darkMode }) => {
         </FormControl>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleCloseModal}>Cancelar</Button>
-        <Button onClick={handleSubmitReview}>Crear Reseña</Button>
+        <Button onClick={handleCloseModal}>{t("Cancel")}</Button>
+        <Button onClick={handleSubmitReview}>{t("CreateReview")}</Button>
       </DialogActions>
     </Dialog>
   </div>

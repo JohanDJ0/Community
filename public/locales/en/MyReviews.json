@@ -1,0 +1,20 @@
+{
+    "Myservice":"My Service",
+    "MyReviews":"Reviews",
+    "News":"News",
+    "Proposals":"Proposals",
+    "Share":"Share",
+    "Userreviews":"User Reviews",
+
+    "Home":"Home",
+    "Follow":"To Follow",
+    "Following":"Following",
+
+    "CreateReviews":"Create Review",
+    "NewReviews":"Create New Review",
+    "Reviewsname":"Review Name",
+    "Description":"Descriptión",
+    "Cancel":"Cancel",
+    "CreateReview":"Create Review"
+    
+}

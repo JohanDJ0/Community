@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import { API_BASE_URL } from './bdd';
 import { Description } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 
 interface EditServiceModalProps {
   open: boolean;
@@ -30,6 +31,7 @@ interface EditServiceModalProps {
 const EditServiceModal: React.FC<EditServiceModalProps> = ({ open, onClose, service, onSave }) => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [updatedService, setUpdatedService] = useState(service);
+  const { t, i18n } = useTranslation("MyService");
 
   // Efecto para actualizar el estado interno cuando el modal se abre y recibe nuevos datos
   useEffect(() => {
@@ -108,19 +110,19 @@ const EditServiceModal: React.FC<EditServiceModalProps> = ({ open, onClose, serv
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>Editar Servicio</DialogTitle>
+      <DialogTitle>{t("Editservice")}</DialogTitle>
       <DialogContent>
         <TextField
           fullWidth
           margin="normal"
-          label="Nombre"
+          label={t("Name")}
           value={updatedService.name}
           onChange={(e) => handleInputChange('name', e.target.value)}
         />
         <TextField
           fullWidth
           margin="normal"
-          label="Descripción"
+          label={t("Description")}
           multiline
           rows={4}
           value={updatedService.description}
@@ -154,7 +156,7 @@ const EditServiceModal: React.FC<EditServiceModalProps> = ({ open, onClose, serv
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="secondary">
-          Cancelar
+          {t("Cancel")}
         </Button>
         <Button onClick={handleSave} color="primary" variant="contained">
           Guardar

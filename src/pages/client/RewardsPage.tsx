@@ -113,7 +113,7 @@ const Rewards: React.FC<ServicesProps> = ({ darkMode }) => {
               {/* Primer div con el ícono y el texto */}
               <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
                 <EmojiEventsIcon style={{ marginRight: '4px' }} />
-                <span style={{ fontWeight: 'bold' }}>Recompensas</span>
+                <span style={{ fontWeight: 'bold' }}>{t("Rewards")}</span>
               </div>
 
               {/* Segundo div con el logo y puntos */}
@@ -132,7 +132,7 @@ const Rewards: React.FC<ServicesProps> = ({ darkMode }) => {
                       display: { xs: 'none', sm: 'block' } // Oculta en pantallas pequeñas (xs), muestra en pantallas mayores (sm en adelante)
                     }}
                   >
-                    Tus Puntos Community
+                    {t("CommunityPoints")}
                 </Typography>
                 <img
                   src={logo}

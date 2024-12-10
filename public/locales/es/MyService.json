@@ -4,6 +4,7 @@
     "Proposals":"Propuestas",
     "Share":"Compartir",
     "AccessCode":"Código de Acceso",
+
     "Createnovelty":"Crear Novedad",
     "CreatenoveltyM":"Crear Novedad",
     "editInfo":"Editar información",
@@ -13,5 +14,16 @@
     "Create":"Crear",
     "Cancel":"Cancelar",
     "UpdateSuccess":"La información se ha actualizado correctamente. En un momento se actualizará la imagen del servicio.",
-    "UpdateError":"Error al actualizar la información."
+    "UpdateError":"Error al actualizar la información.",
+
+    "Editservice":"Editar Servicio",
+    "Name":"Nombre",
+    "Descripción":"Descripción",
+
+
+    "Home":"Inicio",
+    "Follow":"Seguir",
+    "Following":"Siguiendo",
+    "NoNews":"No hay novedades disponibles en este momento.."
+
 }

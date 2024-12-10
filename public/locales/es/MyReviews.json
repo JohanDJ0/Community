@@ -1,0 +1,19 @@
+{
+    "Myservice":"Mi Servicio",
+    "MyReviews":"Reseñas",
+    "News":"Novedades",
+    "Proposals":"Propuestas",
+    "Share":"Compartir",
+    "Userreviews":"Reseñas de Usuarios",
+    
+    "Home":"Inicio",
+    "Follow":"Seguir",
+    "Following":"Siguiendo",
+
+   "CreateReviews":"Crear Reseña",
+    "NewProposal":"Crear Nueva Reseña",
+    "Proposalname":"Nombre de la Reseña",
+    "Description":"Descripción",
+    "Cancel":"Cancelar",
+    "CreateReview":"Crear Reseña"
+}

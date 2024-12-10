@@ -165,6 +165,7 @@ const HomePage: React.FC<ServicesProps> = ({ darkMode }) => {
               fontFamily: "'Poppins', sans-serif",
               color: darkMode ? '#fff' : '#000',
               fontSize: isSmallScreen ? '1.5rem' : '2rem',
+              marginTop: '20px',
             }}
             >
               ¿Qué ofrece Community?

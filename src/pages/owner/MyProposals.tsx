@@ -11,6 +11,8 @@ import noImage from '../../assets/NoImagen.png';
 import { useMediaQuery } from '@mui/material';
 import StoreIcon from '@mui/icons-material/Store';
 import { API_BASE_URL } from 'components/bdd';
+import { useTranslation } from 'react-i18next';
+
 
 interface ServiceDetail {
   id: number;
@@ -49,6 +51,8 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);//Modal
   const token = localStorage.getItem('token');
   const [isFollowing, setIsFollowing] = useState(false); // Hook para el follow del servicio
+  const { t, i18n } = useTranslation("MyProposals");
+
 
   // Llamar a la API cada 5 segundos
   useEffect(() => {
@@ -180,11 +184,11 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
         {/* Encabezado */}
         <div style={{ display: 'flex', alignItems: 'center', textAlign: 'left', paddingBottom: '10px' }}>
           <StoreIcon style={{ marginRight: '4px' }} />
-          <span onClick={() => navigate(`/MyService`)} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>Mi negocio</span>
+          <span onClick={() => navigate(`/MyService`)} style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>{t("Myservice")}</span>
           <span style={{ margin: '0 8px' }}>/</span>
           <span style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>{service.name}</span>
           <span style={{ margin: '0 8px' }}>/</span>
-          <span style={{ fontWeight: 'bold' }}>Propuestas</span>
+          <span style={{ fontWeight: 'bold' }}>{t("Proposals")}</span>
         </div>
 
         <Card style={{ overflowY: 'auto' }}>
@@ -243,30 +247,30 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
             {/* Botones debajo de la imagen */}
             <Stack spacing={2} direction={isSmallScreen ? 'column' : 'row'} alignItems={isSmallScreen ? 'stretch' : 'center'} sx={{ marginTop: '10px', padding: '10px 0' }}>
               <Button variant="contained" startIcon={<AutoModeSharpIcon />} onClick={handleNovedadesClick} fullWidth={isSmallScreen}>
-                Novedades
+              {t("News")}
               </Button>
               <Button variant="contained" startIcon={<GradeIcon />} onClick={() => navigate(`/MyService/${service.id}/reviews`)} fullWidth={isSmallScreen}>
-                Reseñas
+              {t("MyReviews")}
               </Button>
               <Button variant="outlined" startIcon={<ShareIcon />} onClick={() => setIsShareModalOpen(true)} fullWidth={isSmallScreen}>
-                Compartir
+              {t("Share")}
               </Button>
             </Stack>
 
             <Dialog open={open} onClose={handleClose}>
-              <DialogTitle>Crear Nueva Propuesta</DialogTitle>
+              <DialogTitle>{t("NewProposal")}</DialogTitle>
               <DialogContent>
                 <TextField
                   autoFocus
                   margin="dense"
-                  label="Nombre de la Propuesta"
+                  label={t("Proposalname")}
                   fullWidth
                   value={proposalName}
                   onChange={(e) => setProposalName(e.target.value)}
                 />
                 <TextField
                   margin="dense"
-                  label="Descripción"
+                  label={("Description")}
                   fullWidth
                   multiline
                   rows={4}
@@ -275,7 +279,7 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
                 />
                 <TextField
                   margin="dense"
-                  label="Fin Debate"
+                  label={t("enddebate")}
                   type="datetime-local"
                   fullWidth
                   InputLabelProps={{ shrink: true }}
@@ -284,7 +288,7 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
                 />
                 <TextField
                   margin="dense"
-                  label="Fin Deliberación"
+                  label={t("enddeliberation")}
                   type="datetime-local"
                   fullWidth
                   InputLabelProps={{ shrink: true }}
@@ -293,7 +297,7 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
                 />
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleClose} color="primary">Cancelar</Button>
+                <Button onClick={handleClose} color="primary">{t("Cancel")}</Button>
                 <Button onClick={handleSave} color="primary">Guardar</Button>
               </DialogActions>
             </Dialog>
@@ -305,10 +309,10 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
                   <Table>
                     <TableHead>
                       <TableRow>
-                        <TableCell><Typography variant="subtitle2">Título</Typography></TableCell>
-                        <TableCell><Typography variant="subtitle2">Estado</Typography></TableCell>
-                        <TableCell><Typography variant="subtitle2">Creado por</Typography></TableCell>
-                        <TableCell><Typography variant="subtitle2">Fecha de cierre</Typography></TableCell>
+                        <TableCell><Typography variant="subtitle2">{t("Title")}</Typography></TableCell>
+                        <TableCell><Typography variant="subtitle2">{t("State")}</Typography></TableCell>
+                        <TableCell><Typography variant="subtitle2">{t("Createdby")}</Typography></TableCell>
+                        <TableCell><Typography variant="subtitle2">{t("Closingdate")}</Typography></TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -342,12 +346,12 @@ const ProposalDetail: React.FC<ProposalDetailProps> = ({ darkMode }) => {
                 </TableContainer>
               ) : (
                 <Typography variant="body1" color="text.secondary" align="center" style={{ padding: '20px' }}>
-                  No hay propuestas aún.
+                  {t("Noproposals")}
                 </Typography>
               )}
             </CardContent>
             <Box display="flex" justifyContent="flex-end" alignItems="flex-end" p={0} style={{ overflow: 'hidden' }}>
-            <Button variant="contained" color="primary" onClick={handleClickOpen}>Crear Propuesta</Button>
+            <Button variant="contained" color="primary" onClick={handleClickOpen}>{t("CreateProposal")}</Button>
         </Box>
         <ShareModal open={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} />
         </Card>
